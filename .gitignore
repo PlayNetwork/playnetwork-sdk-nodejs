@@ -1,0 +1,6 @@
+.DS_Store
+lib-cov
+node_modules
+reports
+/config/
+/npm-debug.log

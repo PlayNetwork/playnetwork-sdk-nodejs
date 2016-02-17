@@ -1,0 +1,27 @@
+{
+  "name": "playnetwork-sdk",
+  "version": "1.0.0",
+  "description": "SDK to make accessing PlayNetwork APIs when writing code in Javascript (Node.js) much easier.",
+  "main": "lib",
+  "scripts": {
+    "test": "gulp test-all"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/PlayNetwork/javascript-sdk.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/PlayNetwork/javascript-sdk/issues"
+  },
+  "homepage": "https://github.com/PlayNetwork/javascript-sdk#readme",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "del": "^2.2.0",
+    "gulp": "^3.9.1",
+    "gulp-eslint": "^2.0.0",
+    "gulp-istanbul": "^0.10.3",
+    "gulp-mocha": "^2.2.0",
+    "nock": "^7.2.1"
+  }
+}

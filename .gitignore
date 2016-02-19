@@ -4,3 +4,4 @@ node_modules
 reports
 /config/
 /npm-debug.log
+test/sandbox

@@ -1,6 +1,6 @@
 {
   "name": "playnetwork-sdk",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "SDK to make accessing PlayNetwork APIs when writing code in Javascript (Node.js) much easier.",
   "main": "lib",
   "scripts": {

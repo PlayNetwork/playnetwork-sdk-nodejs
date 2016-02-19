@@ -4,6 +4,7 @@ var
 	nock = require('nock'),
 
 	KeyProxy = require('../../lib/key'),
+	request = require('../../lib/request'),
 
 	should = chai.should();
 

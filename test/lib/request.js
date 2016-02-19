@@ -2,7 +2,7 @@ var
 	chai = require('chai'),
 	nock = require('nock'),
 
-	Request = require('../../lib/request'),
+	request = require('../../lib/request'),
 
 	should = chai.should();
 
@@ -11,17 +11,29 @@ describe('request', () => {
 	'use strict';
 
 	describe('ctor', () => {
-		it('should be constructable without options...', () => {
-			let request = new Request();
+		it('should properly construct', () => {
+			let
+				req1 = new request.Request({
+					host : 'one'
+				}),
+				req2 = new request.Request({
+					host : 'two'
+				});
 
-			should.exist(request.delete);
-			should.exist(request.get);
-			should.exist(request.head);
-			should.exist(request.on);
-			should.exist(request.post);
-			should.exist(request.put);
-			should.exist(request.settings);
-			request.settings().should.be.empty;
+			req1.settings().should.not.equal(req2.settings());
+		});
+
+		it('should be constructable without options...', () => {
+			let req = new request.Request();
+
+			should.exist(req.delete);
+			should.exist(req.get);
+			should.exist(req.head);
+			should.exist(req.on);
+			should.exist(req.post);
+			should.exist(req.put);
+			should.exist(req.settings);
+			req.settings().should.be.empty;
 		});
 
 		it('should be constructable with options...', () => {
@@ -30,17 +42,17 @@ describe('request', () => {
 					host : 'develop-test-api.apps.playnetwork.com',
 					secure : true
 				},
-				request = new Request(options);
+				req = new request.Request(options);
 
-			should.exist(request.delete);
-			should.exist(request.get);
-			should.exist(request.head);
-			should.exist(request.on);
-			should.exist(request.post);
-			should.exist(request.put);
-			should.exist(request.settings);
-			request.settings().should.not.be.empty;
-			request.settings().should.equal(options);
+			should.exist(req.delete);
+			should.exist(req.get);
+			should.exist(req.head);
+			should.exist(req.on);
+			should.exist(req.post);
+			should.exist(req.put);
+			should.exist(req.settings);
+			req.settings().should.not.be.empty;
+			req.settings().should.equal(options);
 		});
 	});
 
@@ -52,14 +64,14 @@ describe('request', () => {
 						host : `test-${method}.playnetwork.com`,
 						secure : true
 					},
-					request = new Request(options),
+					req = new request.Request(options),
 					requestInfo,
 					responseInfo,
 					statusCode = ['delete', 'head'].indexOf(method) >= 0 ? 204 : 200;
 
 				// capture request and response info
-				request.on('request', (info) => (requestInfo = info));
-				request.on('response', (info) => (responseInfo = info));
+				req.on('request', (info) => (requestInfo = info));
+				req.on('response', (info) => (responseInfo = info));
 
 				afterEach(() => {
 					nock.cleanAll();
@@ -71,7 +83,7 @@ describe('request', () => {
 						[method]('/v0/tests')
 						.reply(statusCode);
 
-					return request[method]({ path : '/v0/tests' })
+					return req[method]({ path : '/v0/tests' })
 						.then((response) => {
 							should.exist(response);
 							response.should.be.empty;
@@ -92,7 +104,7 @@ describe('request', () => {
 						[method]('/v0/tests')
 						.reply(statusCode);
 
-					return request[method](
+					return req[method](
 						{ path : '/v0/tests' },
 						function (err, response) {
 							should.not.exist(err);
@@ -111,7 +123,7 @@ describe('request', () => {
 						[method]('/v0/tests?array=1%2C2%2C3&testing=true')
 						.reply(statusCode);
 
-					return request[method]({
+					return req[method]({
 							pathname : '/v0/tests',
 							query : {
 								array : [1, 2, 3],
@@ -139,7 +151,7 @@ describe('request', () => {
 						[method]('/v0/tests/parse')
 						.reply(statusCode, 'non-parseable');
 
-					request[method]({ path : '/v0/tests/parse' })
+					req[method]({ path : '/v0/tests/parse' })
 						.then(() => (done(new Error('failed parse test'))))
 						.catch((err) => {
 							should.exist(err);
@@ -158,7 +170,7 @@ describe('request', () => {
 						[method]('/v0/tests/status')
 						.reply(409, responseBody);
 
-					request[method](
+					req[method](
 						{ path : '/v0/tests/status' },
 						function (err, response) {
 							should.exist(err);
@@ -172,7 +184,7 @@ describe('request', () => {
 					// increase timeout for DNS resolution
 					this.timeout(15000);
 
-					request[method]({ host : 'bad-host', path : '/' })
+					req[method]({ host : 'bad-host', path : '/' })
 						.then(() => (done(new Error('failed request error test'))))
 						.catch((err) => {
 							should.exist(err);
@@ -191,13 +203,13 @@ describe('request', () => {
 						.socketDelay(5000)
 						.reply(200);
 
-					let timeoutRequest = new Request({
+					let timeoutReq = new request.Request({
 						host : options.host,
 						secure : options.secure,
 						timeout : 1000
 					});
 
-					timeoutRequest[method](
+					timeoutReq[method](
 						{ path : '/v0/tests/timeout' },
 						function (err, result) {
 							should.exist(err);
@@ -223,7 +235,7 @@ describe('request', () => {
 							stringValue : 'testing'
 						};
 
-						return request[method]({ path : '/v0/tests/data' }, data)
+						return req[method]({ path : '/v0/tests/data' }, data)
 							.then((response) => {
 								should.exist(response);
 								response.should.not.be.empty;

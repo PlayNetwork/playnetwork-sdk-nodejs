@@ -23,5 +23,8 @@
     "gulp-istanbul": "^0.10.3",
     "gulp-mocha": "^2.2.0",
     "nock": "^7.2.1"
+  },
+  "dependencies": {
+    "co": "^4.6.0"
   }
 }

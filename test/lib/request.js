@@ -183,6 +183,30 @@ describe('request', () => {
 						});
 				});
 
+				it('should obey timeout', function (done) {
+					this.timeout(5000);
+
+					nock(`https://${options.host}`)
+						[method]('/v0/tests/timeout')
+						.socketDelay(5000)
+						.reply(200);
+
+					let timeoutRequest = new Request({
+						host : options.host,
+						secure : options.secure,
+						timeout : 1000
+					});
+
+					timeoutRequest[method](
+						{ path : '/v0/tests/timeout' },
+						function (err, result) {
+							should.exist(err);
+							should.not.exist(result);
+
+							return done();
+						});
+				});
+
 				if (['post', 'put'].indexOf(method) >= 0) {
 					it('should properly support input data', () => {
 						// intercept outbound request

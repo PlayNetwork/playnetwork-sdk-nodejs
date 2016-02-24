@@ -115,6 +115,7 @@ describe('request', () => {
 							requestInfo.method.should.equal(method.toUpperCase());
 							should.exist(requestInfo.path);
 							requestInfo.path.should.equal('/v0/tests');
+							should.not.exist(requestInfo.query);
 						});
 				});
 
@@ -150,7 +151,7 @@ describe('request', () => {
 					nock(`https://${options.host}`)[method]('/v0/tests/parse')
 						.reply(statusCode, 'non-parseable');
 
-					req[method]({ path : '/v0/tests/parse' })
+					return req[method]({ path : '/v0/tests/parse' })
 						.then(() => (done(new Error('failed parse test'))))
 						.catch((err) => {
 							should.exist(err);
@@ -168,7 +169,7 @@ describe('request', () => {
 					nock(`https://${options.host}`)[method]('/v0/tests/status')
 						.reply(409, responseBody);
 
-					req[method](
+					return req[method](
 						{ path : '/v0/tests/status' },
 						function (err, response) {
 							should.exist(err);
@@ -182,7 +183,7 @@ describe('request', () => {
 					// increase timeout for DNS resolution
 					this.timeout(15000);
 
-					req[method]({ host : 'bad-host', path : '/' })
+					return req[method]({ host : 'bad-host', path : '/' })
 						.then(() => (done(new Error('failed request error test'))))
 						.catch((err) => {
 							should.exist(err);
@@ -206,7 +207,7 @@ describe('request', () => {
 						timeout : 1000
 					});
 
-					timeoutReq[method](
+					return timeoutReq[method](
 						{ path : '/v0/tests/timeout' },
 						function (err, result) {
 							should.exist(err);
@@ -216,8 +217,87 @@ describe('request', () => {
 						});
 				});
 
-				it('should serialize filters correctly', () => {
-					//nock()
+				it('should serialize filters correctly', (done) => {
+					nock(`https://${options.host}`)[method](/v0\/tests\/filters[.]*/)
+						.reply(200);
+
+					return req[method]({
+						pathname : '/v0/tests/filters',
+						query : {
+							clientId : 'clientId',
+							count : 100,
+							filters : {
+								diagnostics : ['online', 'offline'],
+								field : ['field1', 'field2'],
+								keyword : 'keyword',
+								mandatory : {
+									contains : {
+										'm.contains' : 'middle'
+									},
+									endsWith : {
+										'm.endsWith' : 'end'
+									},
+									exact : {
+ 										'm.exact' : 'exact'
+									},
+									exists : {
+										'm.exists' : 'exists'
+									},
+									startsWith : {
+ 										'm.startsWith' : 'start'
+									}
+								},
+								optional : {
+									gte : {
+										'o.gte' : 0
+									},
+									lte : {
+										'o.lte' : 1
+									},
+									missing : {
+										'o.missing' : 'missing'
+									}
+								}
+							},
+							sort : {
+								asc : ['asc1', 'asc2'],
+								desc : ['desc1', 'desc2']
+							},
+							start : 0,
+							token : 'token'
+						}
+					}).then(() => {
+						should.exist(requestInfo);
+						should.exist(requestInfo.query);
+						should.exist(requestInfo.query['filters[mandatory][contains][m.contains]']);
+						requestInfo.query['filters[mandatory][contains][m.contains]'].should.equal('middle');
+						should.exist(requestInfo.query['filters[mandatory][endsWith][m.endsWith]']);
+						requestInfo.query['filters[mandatory][endsWith][m.endsWith]'].should.equal('end');
+						should.exist(requestInfo.query['filters[mandatory][exact][m.exact]']);
+						requestInfo.query['filters[mandatory][exact][m.exact]'].should.equal('exact');
+						should.exist(requestInfo.query['filters[mandatory][exists][m.exists]']);
+						requestInfo.query['filters[mandatory][exists][m.exists]'].should.equal('exists');
+						should.exist(requestInfo.query['filters[mandatory][startsWith][m.startsWith]']);
+						requestInfo.query['filters[mandatory][startsWith][m.startsWith]'].should.equal('start');
+						should.exist(requestInfo.query['filters[optional][gte][o.gte]']);
+						requestInfo.query['filters[optional][gte][o.gte]'].should.equal(0);
+						should.exist(requestInfo.query['filters[optional][lte][o.lte]']);
+						requestInfo.query['filters[optional][lte][o.lte]'].should.equal(1);
+						should.exist(requestInfo.query['filters[optional][missing][o.missing]']);
+						requestInfo.query['filters[optional][missing][o.missing]'].should.equal('missing');
+						should.exist(requestInfo.query['filters[diagnostics]']);
+						requestInfo.query['filters[diagnostics]'].should.equal('online,offline');
+						should.exist(requestInfo.query['filters[field]']);
+						requestInfo.query['filters[field]'].should.equal('field1,field2');
+						should.exist(requestInfo.query['filters[keyword]']);
+						requestInfo.query['filters[keyword]'].should.equal('keyword');
+						should.exist(requestInfo.query['sort[asc]']);
+						requestInfo.query['sort[asc]'].should.equal('asc1,asc2');
+						should.exist(requestInfo.query['sort[desc]']);
+						requestInfo.query['sort[desc]'].should.equal('desc1,desc2');
+
+						return done();
+					}).catch(done);
 				});
 
 				if (['post', 'put'].indexOf(method) >= 0) {

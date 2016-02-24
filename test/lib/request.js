@@ -1,3 +1,6 @@
+/*eslint no-invalid-this: 0*/
+/*eslint no-magic-numbers: 0*/
+/*eslint no-unused-expressions: 0*/
 var
 	chai = require('chai'),
 	nock = require('nock'),
@@ -79,8 +82,7 @@ describe('request', () => {
 
 				it(`should properly ${method} (promise)`, () => {
 					// intercept outbound request
-					nock(`https://${options.host}`)
-						[method]('/v0/tests')
+					nock(`https://${options.host}`)[method]('/v0/tests')
 						.reply(statusCode);
 
 					return req[method]({ path : '/v0/tests' })
@@ -100,8 +102,7 @@ describe('request', () => {
 
 				it(`should properly ${method} (callback)`, () => {
 					// intercept outbound request
-					nock(`https://${options.host}`)
-						[method]('/v0/tests')
+					nock(`https://${options.host}`)[method]('/v0/tests')
 						.reply(statusCode);
 
 					return req[method](
@@ -119,8 +120,7 @@ describe('request', () => {
 
 				it('should properly convert pathname and query to path', () => {
 					// intercept outbound request
-					nock(`https://${options.host}`)
-						[method]('/v0/tests?array=1%2C2%2C3&testing=true')
+					nock(`https://${options.host}`)[method]('/v0/tests?array=1%2C2%2C3&testing=true')
 						.reply(statusCode);
 
 					return req[method]({
@@ -147,8 +147,7 @@ describe('request', () => {
 
 				it('should properly handle non-parseable JSON response', (done) => {
 					// intercept outbound request
-					nock(`https://${options.host}`)
-						[method]('/v0/tests/parse')
+					nock(`https://${options.host}`)[method]('/v0/tests/parse')
 						.reply(statusCode, 'non-parseable');
 
 					req[method]({ path : '/v0/tests/parse' })
@@ -166,8 +165,7 @@ describe('request', () => {
 					// intercept outbound request
 					let responseBody = { message : 'bad input', statusCode : 409 };
 
-					nock(`https://${options.host}`)
-						[method]('/v0/tests/status')
+					nock(`https://${options.host}`)[method]('/v0/tests/status')
 						.reply(409, responseBody);
 
 					req[method](
@@ -198,8 +196,7 @@ describe('request', () => {
 				it('should obey timeout', function (done) {
 					this.timeout(5000);
 
-					nock(`https://${options.host}`)
-						[method]('/v0/tests/timeout')
+					nock(`https://${options.host}`)[method]('/v0/tests/timeout')
 						.socketDelay(5000)
 						.reply(200);
 
@@ -219,11 +216,14 @@ describe('request', () => {
 						});
 				});
 
+				it('should serialize filters correctly', () => {
+					//nock()
+				});
+
 				if (['post', 'put'].indexOf(method) >= 0) {
 					it('should properly support input data', () => {
 						// intercept outbound request
-						nock(`https://${options.host}`)
-							[method]('/v0/tests/data')
+						nock(`https://${options.host}`)[method]('/v0/tests/data')
 							.reply(statusCode, (uri, body) => {
 								return body;
 							});

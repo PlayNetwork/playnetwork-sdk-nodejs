@@ -1,3 +1,4 @@
+/*eslint no-magic-numbers: 0*/
 var
 	chai = require('chai'),
 	co = require('co'),
@@ -94,7 +95,7 @@ describe('key', () => {
 				.times(2) // intercept two requests (token and token3)
 				.reply(201, { token : mockToken });
 
-			co(function* () {
+			co(function *() {
 				let
 					token = yield key.generateToken('clientId', 'secret'),
 					token2,
@@ -128,7 +129,7 @@ describe('key', () => {
 				cacheTokens : false
 			});
 
-			co(function* () {
+			co(function *() {
 				let
 					token = yield key.generateToken('clientId', 'secret'),
 					token2;

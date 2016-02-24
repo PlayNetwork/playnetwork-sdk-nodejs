@@ -9,17 +9,17 @@ var
 module.exports = (() => {
 	'use strict';
 
-	gulp.task('clean', () => (del['coverage', 'reports']));
+	gulp.task('clean', () => (del('coverage', 'reports')));
 
 	gulp.task('lint', () => {
 		return gulp
-			.src(['**/*.js','!node_modules/**','!reports/**'])
+			.src(['**/*.js', '!node_modules/**', '!reports/**'])
 			.pipe(eslint())
 			.pipe(eslint.format())
 			.pipe(eslint.failAfterError());
 	});
 
-	gulp.task('test-all', ['clean','lint','test-unit']);
+	gulp.task('test-all', ['clean', 'lint', 'test-unit']);
 
 	gulp.task('test-unit', ['clean'], () => {
 		return gulp

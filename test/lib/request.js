@@ -78,6 +78,9 @@ describe('request', () => {
 
 				afterEach(() => {
 					nock.cleanAll();
+
+					requestInfo = undefined;
+					responseInfo = undefined;
 				});
 
 				it(`should properly ${method} (promise)`, () => {

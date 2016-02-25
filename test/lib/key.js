@@ -5,7 +5,6 @@ var
 	nock = require('nock'),
 
 	KeyProxy = require('../../lib/key'),
-	request = require('../../lib/request'),
 
 	should = chai.should();
 
@@ -19,14 +18,25 @@ describe('key', () => {
 			clientId : 'clientId',
 			token : 'token',
 			expires : new Date()
-		};
+		},
+		requestInfo,
+		responseInfo;
 
 	mockToken.expires = new Date(
 		mockToken.expires.setUTCDate(
 			mockToken.expires.getUTCDate() + 2));
 
+	afterEach(() => {
+		requestInfo = undefined;
+		responseInfo = undefined;
+	});
+
 	beforeEach(() => {
 		key = new KeyProxy();
+
+		// capture request and response info
+		key.on('request', (info) => (requestInfo = info));
+		key.on('response', (info) => (responseInfo = info));
 	});
 
 	describe('#generateToken', () => {

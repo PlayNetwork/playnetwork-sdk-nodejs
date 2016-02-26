@@ -1,7 +1,9 @@
 # v1.0.2 - 2016/02/29
 
 * Fleshed out documentation for `music` sub-module
-* Added `createBroadcast`, `deleteBroadcast`, `allPlaylists`, `createPlaylist` and `deletePlaylist` to `music` sub-module with tests
+* Added `createBroadcast` and `deleteBroadcast` to `music` sub-module with tests
+* Added `allPlaylists`, `createPlaylist` and `deletePlaylist` to `music` sub-module with tests
+* Added `addPlaylistTrack`, `checkPlaylistTrack`, `deletePlaylistTrack` and `updatePlaylist` to `music` sub-module with tests
 
 # v1.0.1 - 2016/02/26
 

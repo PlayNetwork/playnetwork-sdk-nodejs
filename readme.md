@@ -48,16 +48,29 @@ playnetwork.configure(
 
 The music module is designed to simplify interaction with the [PlayNetwork CURIOMusic API](https://curio-music-api.apps.playnetwork.com/v2/docs). This module supports the following methods:
 
+* addPlaylistTracks
 * allBroadcasts
 * allCollections
+* allCollectionTracks
+* allPlaylists
+* allPlaylistTracks
 * allStations
+* allStationTracks
+* checkPlaylistTrack - todo
 * createBroadcast
+* createPlaylist
 * deleteBroadcast
+* deletePlaylist
+* deletePlaylistTrack - todo
 * getBroadcast
 * getCollection
+* getPlaylist
 * getStation
+* getTracks - todo
+* getTrack - todo
 * mixCollection
 * settings
+* updatePlaylist - todo
 
 ```javascript
 var playnetwork = require('playnetwork-sdk');

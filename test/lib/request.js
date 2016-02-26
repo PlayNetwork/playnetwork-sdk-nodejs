@@ -266,9 +266,7 @@ describe('request', () => {
 									exact : {
  										'm.exact' : 'exact'
 									},
-									exists : {
-										'm.exists' : 'exists'
-									},
+									exists : 'exists',
 									startsWith : {
  										'm.startsWith' : 'start'
 									}
@@ -280,9 +278,7 @@ describe('request', () => {
 									lte : {
 										'o.lte' : 1
 									},
-									missing : {
-										'o.missing' : 'missing'
-									}
+									missing : 'missing'
 								}
 							},
 							sort : {
@@ -301,16 +297,16 @@ describe('request', () => {
 						requestInfo.query['filters[mandatory][endsWith][m.endsWith]'].should.equal('end');
 						should.exist(requestInfo.query['filters[mandatory][exact][m.exact]']);
 						requestInfo.query['filters[mandatory][exact][m.exact]'].should.equal('exact');
-						should.exist(requestInfo.query['filters[mandatory][exists][m.exists]']);
-						requestInfo.query['filters[mandatory][exists][m.exists]'].should.equal('exists');
+						should.exist(requestInfo.query['filters[mandatory][exists]']);
+						requestInfo.query['filters[mandatory][exists]'].should.equal('exists');
 						should.exist(requestInfo.query['filters[mandatory][startsWith][m.startsWith]']);
 						requestInfo.query['filters[mandatory][startsWith][m.startsWith]'].should.equal('start');
 						should.exist(requestInfo.query['filters[optional][gte][o.gte]']);
 						requestInfo.query['filters[optional][gte][o.gte]'].should.equal(0);
 						should.exist(requestInfo.query['filters[optional][lte][o.lte]']);
 						requestInfo.query['filters[optional][lte][o.lte]'].should.equal(1);
-						should.exist(requestInfo.query['filters[optional][missing][o.missing]']);
-						requestInfo.query['filters[optional][missing][o.missing]'].should.equal('missing');
+						should.exist(requestInfo.query['filters[optional][missing]']);
+						requestInfo.query['filters[optional][missing]'].should.equal('missing');
 						should.exist(requestInfo.query['filters[diagnostics]']);
 						requestInfo.query['filters[diagnostics]'].should.equal('online,offline');
 						should.exist(requestInfo.query['filters[field]']);

@@ -170,7 +170,7 @@ describe('request', () => {
 					let responseBody = { message : 'bad input', statusCode : 409 };
 
 					nock(`https://${options.host}`)[method]('/v0/tests/status')
-						.reply(409, responseBody);
+						.reply(responseBody.statusCode, responseBody);
 
 					return req[method](
 						{ path : '/v0/tests/status' },
@@ -179,6 +179,29 @@ describe('request', () => {
 							should.not.exist(response);
 							should.exist(err.message);
 							err.message.should.equal(responseBody.message);
+						});
+				});
+
+				it('should properly retry on 500s', function (done) {
+					// intercept outbound request
+					let responseBody = { message : 'overload', statusCode : 503 };
+
+					// fail twice
+					nock(`https://${options.host}`)[method]('/v0/tests/retry')
+						.times(2)
+						.reply(responseBody.statusCode, responseBody);
+
+					// succeed on 3rd retry
+					nock(`https://${options.host}`)[method]('/v0/tests/retry')
+						.times(1)
+						.reply(200);
+
+					return req[method](
+						{ path : '/v0/tests/retry' },
+						function (err, response) {
+							should.not.exist(err);
+
+							return done();
 						});
 				});
 

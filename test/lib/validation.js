@@ -1,3 +1,5 @@
+/*eslint no-magic-numbers: 0*/
+/*eslint no-unused-expressions: 0*/
 var
 	chai = require('chai'),
 	nock = require('nock'),
@@ -9,6 +11,14 @@ var
 
 describe('validation', () => {
 	'use strict';
+
+	describe('#coalesce', () => {
+		it('should properly return the first non-empty value', () => {
+			validation.coalesce(null, null, null, 'value').should.equal('value');
+			validation.coalesce(undefined, [], null, true).should.be.true;
+			should.not.exist(validation.coalesce(undefined, undefined));
+		});
+	});
 
 	describe('#isEmpty', () => {
 		it('should properly detect blank strings', () => {

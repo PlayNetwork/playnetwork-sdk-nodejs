@@ -1,3 +1,5 @@
+/*eslint no-magic-numbers: 0*/
+/*eslint no-unused-expressions: 0*/
 var
 	chai = require('chai'),
 	co = require('co'),
@@ -17,14 +19,62 @@ describe('key', () => {
 			clientId : 'clientId',
 			token : 'token',
 			expires : new Date()
-		};
+		},
+		requestInfo,
+		responseInfo;
 
 	mockToken.expires = new Date(
 		mockToken.expires.setUTCDate(
 			mockToken.expires.getUTCDate() + 2));
 
+	afterEach(() => {
+		requestInfo = undefined;
+		responseInfo = undefined;
+	});
+
 	beforeEach(() => {
 		key = new KeyProxy();
+
+		// capture request and response info
+		key.on('request', (info) => (requestInfo = info));
+		key.on('response', (info) => (responseInfo = info));
+	});
+
+	describe('ctor', () => {
+		it('should properly construct', () => {
+			let
+				proxy1 = new KeyProxy({
+					host : 'one'
+				}),
+				proxy2 = new KeyProxy({
+					host : 'two'
+				});
+
+			proxy1.settings().host.should.not.equal(proxy2.settings().host);
+		});
+
+		it('should be constructable without options...', () => {
+			let proxy = new KeyProxy();
+			proxy.settings().should.not.be.empty;
+			should.exist(proxy.settings().host);
+			should.exist(proxy.settings().secure);
+		});
+
+		it('should be constructable with options...', () => {
+			let
+				options = {
+					host : 'develop-test-api.apps.playnetwork.com',
+					secure : true
+				},
+				proxy = new KeyProxy(options);
+
+			should.exist(proxy.generateToken);
+			should.exist(proxy.getTokenCacheSize);
+			should.exist(proxy.settings);
+			proxy.settings().should.not.be.empty;
+			proxy.settings().host.should.equal(options.host);
+			proxy.settings().secure.should.equal(options.secure);
+		});
 	});
 
 	describe('#generateToken', () => {
@@ -93,7 +143,7 @@ describe('key', () => {
 				.times(2) // intercept two requests (token and token3)
 				.reply(201, { token : mockToken });
 
-			co(function* () {
+			co(function *() {
 				let
 					token = yield key.generateToken('clientId', 'secret'),
 					token2,
@@ -127,7 +177,7 @@ describe('key', () => {
 				cacheTokens : false
 			});
 
-			co(function* () {
+			co(function *() {
 				let
 					token = yield key.generateToken('clientId', 'secret'),
 					token2;

@@ -65,10 +65,10 @@ describe('music', () => {
 				},
 				proxy = new MusicProxy(options);
 
-			should.exist(proxy.allBroadcastsForStation);
+			should.exist(proxy.allBroadcasts);
 			should.exist(proxy.allCollections);
 			should.exist(proxy.allStations);
-			should.exist(proxy.getBroadcastForStation);
+			should.exist(proxy.getBroadcast);
 			should.exist(proxy.getCollection);
 			should.exist(proxy.getStation);
 			should.exist(proxy.mixCollection);
@@ -79,9 +79,9 @@ describe('music', () => {
 		});
 	});
 
-	describe('#allBroadcastsForStation', () => {
+	describe('#allBroadcasts', () => {
 		it('should require stationId', (done) => {
-			music.allBroadcastsForStation(function (err, result) {
+			music.allBroadcasts(function (err, result) {
 				should.not.exist(result);
 				should.exist(err);
 				should.exist(err.message);
@@ -97,7 +97,7 @@ describe('music', () => {
 				.get('/v2/stations/test/broadcasts')
 				.reply(200, { total : 0 });
 
-			music.allBroadcastsForStation('test')
+			music.allBroadcasts('test')
 				.then((result) => {
 					should.exist(result);
 					should.exist(requestInfo);
@@ -113,7 +113,7 @@ describe('music', () => {
 				.get('/v2/stations/test/broadcasts')
 				.reply(200, { total : 0 });
 
-			music.allBroadcastsForStation('test', function (err, result) {
+			music.allBroadcasts('test', function (err, result) {
 				should.not.exist(err);
 				should.exist(requestInfo);
 
@@ -127,7 +127,7 @@ describe('music', () => {
 				.get(/\/v2\/stations\/test\/broadcasts[.]*/)
 				.reply(200, { total : 0 });
 
-			music.allBroadcastsForStation(
+			music.allBroadcasts(
 				'test',
 				{
 					filters : {
@@ -261,23 +261,9 @@ describe('music', () => {
 		});
 	});
 
-	describe('#getBroadcastForStation', () => {
-		it('should require broadcastId', (done) => {
-			music.getBroadcastForStation()
-				.then(() => {
-					return done(new Error('should require broadcastId'));
-				})
-				.catch((err) => {
-					should.exist(err);
-					should.exist(err.message);
-					err.message.should.contain('broadcastId is required');
-
-					return done();
-				})
-		});
-
+	describe('#createBroadcast', () => {
 		it('should require stationId', (done) => {
-			music.getBroadcastForStation('test')
+			music.createBroadcast()
 				.then(() => {
 					return done(new Error('should require stationId'));
 				})
@@ -290,13 +276,133 @@ describe('music', () => {
 				})
 		});
 
+		it('should properly create broadcast (promise)', (done) => {
+			// intercept outbound request
+			nock('https://curio-music-api.apps.playnetwork.com')
+				.post('/v2/stations/test/broadcasts')
+				.reply(200, { broadcastId : 'test' });
+
+			music.createBroadcast('test')
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch((err) => (done(err)));
+		});
+
+		it('should properly create broadcast (callback)', (done) => {
+			// intercept outbound request
+			nock('https://curio-music-api.apps.playnetwork.com')
+				.post('/v2/stations/test/broadcasts')
+				.reply(200, { broadcastId : 'test' });
+
+			music.createBroadcast('test', function (err, result) {
+				should.not.exist(err);
+				should.exist(result);
+				should.exist(requestInfo);
+
+				return done();
+			});
+		});
+	});
+
+	describe('#deleteBroadcast', () => {
+		it('should require stationId', (done) => {
+			music.deleteBroadcast()
+				.then(() => {
+					return done(new Error('should require stationId'));
+				})
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('stationId is required');
+
+					return done();
+				})
+		});
+
+		it('should require broadcastId', (done) => {
+			music.deleteBroadcast('test')
+				.then(() => {
+					return done(new Error('should require broadcastId'));
+				})
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('broadcastId is required');
+
+					return done();
+				})
+		});
+
+		it('should properly delete broadcast (promise)', (done) => {
+			// intercept outbound request
+			nock('https://curio-music-api.apps.playnetwork.com')
+				.delete('/v2/stations/test/broadcasts/test')
+				.reply(204);
+
+			music.deleteBroadcast('test', 'test')
+				.then(() => {
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch((err) => (done(err)));
+		});
+
+		it('should properly delete broadcast (callback)', (done) => {
+			// intercept outbound request
+			nock('https://curio-music-api.apps.playnetwork.com')
+				.delete('/v2/stations/test/broadcasts/test')
+				.reply(204);
+
+			music.deleteBroadcast('test', 'test', function (err) {
+				should.not.exist(err);
+				should.exist(requestInfo);
+
+				return done();
+			});
+		});
+	});
+
+	describe('#getBroadcast', () => {
+		it('should require stationId', (done) => {
+			music.getBroadcast()
+				.then(() => {
+					return done(new Error('should require stationId'));
+				})
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('stationId is required');
+
+					return done();
+				})
+		});
+
+		it('should require broadcastId', (done) => {
+			music.getBroadcast('test')
+				.then(() => {
+					return done(new Error('should require broadcastId'));
+				})
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('broadcastId is required');
+
+					return done();
+				})
+		});
+
 		it('should properly retrieve broadcast (promise)', (done) => {
 			// intercept outbound request
 			nock('https://curio-music-api.apps.playnetwork.com')
 				.get('/v2/stations/test/broadcasts/test')
 				.reply(200, { total : 0 });
 
-			music.getBroadcastForStation('test', 'test')
+			music.getBroadcast('test', 'test')
 				.then((result) => {
 					should.exist(result);
 					should.exist(requestInfo);
@@ -312,7 +418,7 @@ describe('music', () => {
 				.get('/v2/stations/test/broadcasts/test')
 				.reply(200, { total : 0 });
 
-			music.getBroadcastForStation('test', 'test', function (err, result) {
+			music.getBroadcast('test', 'test', function (err, result) {
 				should.not.exist(err);
 				should.exist(result);
 				should.exist(requestInfo);

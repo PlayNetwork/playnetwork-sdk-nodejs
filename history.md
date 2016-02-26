@@ -1,13 +1,17 @@
-# v1.0.1 - 2016/02/18
+# v1.0.2 - 2016/02/29
 
-* Introduced pattern for SDK sub-module configuration
+* Fleshed out documentation for `music` sub-module
+* Added `createBroadcast`, `deleteBroadcast`, `allPlaylists`, `createPlaylist` and `deletePlaylist` to `music` sub-module with tests
+
+# v1.0.1 - 2016/02/26
+
 * Added object bracket notation conversion for query filters and sort parameters
 * Added validation of parameters for internal `http.request` abstraction
 * Added retry logic to internal `http.request` abstraction
 * Added `#coalesce` function to `validation` module
 * Added `#promiseOrCallback` function to `validation` module
-* Added key-api module with tests
-* Added music-api module with tests
+* Added `key` sub-module with tests
+* Added `music` sub-module with tests
 
 # v1.0.0 - 2016/02/16
 

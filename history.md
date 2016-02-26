@@ -5,6 +5,7 @@
 * Added validation of parameters for internal `http.request` abstraction
 * Added retry logic to internal `http.request` abstraction
 * Added `#coalesce` function to `validation` module
+* Added `#promiseOrCallback` function to `validation` module
 * Added key-api module with tests
 * Added music-api module with tests
 

@@ -10,38 +10,52 @@ npm install playnetwork-sdk
 
 ## Usage
 
-### Configuration
+### Getting Started
 
 * [constructor](#constructor)
+* [options](#options)
 
 ### Music API Module
 
+#### Custom Playlists
+
 * [addPlaylistTracks](#addplaylisttracks)
-* [allBroadcasts](#allbroadcasts)
-* [allCollections](#allcollections)
-* [allCollectionTracks](#allcollectiontracks)
 * [allPlaylists](#allplaylists)
-* [allPlaylistTracks](#allplaylisttracks)
-* [allStations](#allstations)
-* [allStationTracks](#allstationtracks)
-* [allTracks](#alltracks)
 * [checkPlaylistTrack](#checkplaylisttrack)
-* [createBroadcast](#createbroadcast)
 * [createPlaylist](#createplaylist)
-* [deleteBroadcast](#deletebroadcast)
-* [deletePlaylist](#deleteplaylist)
 * [deletePlaylistTrack](#deleteplaylisttrack)
-* [getBroadcast](#getbroadcast)
-* [getCollection](#getcollection)
 * [getPlaylist](#getplaylist)
-* [getStation](#getstation)
-* [getTrack](#gettrack)
-* [getTracks](#gettracks)
-* [mixCollection](#mixcollection)
-* [settings](#settings)
+* [deletePlaylist](#deleteplaylist)
 * [updatePlaylist](#updateplaylist)
 
-### Configuration
+#### Collections
+
+* [allCollections](#allcollections)
+* [getCollection](#getcollection)
+* [mixCollection](#mixcollection)
+
+#### Stations
+
+* [allStations](#allstations)
+* [getStation](#getstation)
+
+#### Broadcasts
+
+* [allBroadcasts](#allbroadcasts)
+* [createBroadcast](#createbroadcast)
+* [deleteBroadcast](#deletebroadcast)
+* [getBroadcast](#getbroadcast)
+
+#### Tracks
+
+* [allCollectionTracks](#allcollectiontracks)
+* [allPlaylistTracks](#allplaylisttracks)
+* [allStationTracks](#allstationtracks)
+* [allTracks](#alltracks)
+* [getTrack](#gettrack)
+* [getTracks](#gettracks)
+
+### Getting Started
 
 #### Constructor
 
@@ -55,7 +69,7 @@ playnetwork.configure(
   '<CLIENT_SECRET>');
 ```
 
-##### Options
+#### #Options
 
 The PlayNetwork SDK allows for a set of additional configuration parameters to be specified as an optional argument to the `#configure` method:
 
@@ -75,6 +89,9 @@ playnetwork.configure(
   '<CLIENT_ID>',
   '<CLIENT_SECRET>',
   settings);
+
+// echo configured settings
+console.log(playnetwork.settings());
 ```
 
 ### Music Module
@@ -216,5 +233,4 @@ client
 #### #getTracks
 #### #getTrack
 #### #mixCollection
-#### #settings
 #### #updatePlaylist

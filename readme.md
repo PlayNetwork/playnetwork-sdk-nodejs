@@ -52,7 +52,7 @@ The music module is designed to simplify interaction with the [PlayNetwork CURIO
 
 This method can be used to add tracks to an existing custom playlist.
 
-##### Usage: `client.music.addPlaylistTracks(playlistId, tracks, callback)`
+**Usage:** `client.music.addPlaylistTracks(playlistId, tracks, callback)`
 
 * playlistId - _(required)_ - defines the station for which broadcasts should be retrieved
 * tracks - _(required)_ - an array of track objects to add to the playlist
@@ -84,7 +84,7 @@ client
 
 This method can be used to retrieve all accessible broadcasts from the API.
 
-##### Usage: `client.music.allBroadcasts(stationId, options, callback)`
+**Usage:** `client.music.allBroadcasts(stationId, options, callback)`
 
 * stationId - _(required)_ - defines the station for which broadcasts should be retrieved
 * options - _(optional)_ - can be used to supply additional filters and sorting instructions
@@ -110,7 +110,7 @@ client
 
 This method can be used to retrieve all accessible collections from the API.
 
-##### Usage: `client.music.allCollections(options, callback)`
+**Usage:** `client.music.allCollections(options, callback)`
 
 * options - _(optional)_ - can be used to supply additional filters and sorting instructions
 * callback - _(optional)_ - a function callback that accepts two arguments
@@ -141,7 +141,7 @@ client
 
 This method can be used to retrieve all custom playlists from the API created by the clientId specified in the `#configure` method.
 
-##### Usage: `client.music.allPlaylists(options, callback)`
+**Usage:** `client.music.allPlaylists(options, callback)`
 
 * options - _(optional)_ - can be used to supply additional filters and sorting instructions
 * callback - _(optional)_ - a function callback that accepts two arguments

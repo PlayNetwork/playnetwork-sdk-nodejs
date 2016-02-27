@@ -527,6 +527,63 @@ describe('music', () => {
 		});
 	});
 
+	describe('#allTracks', () => {
+		it('should properly retrieve all tracks (promise)', (done) => {
+			// intercept outbound request
+			nock('https://curio-music-api.apps.playnetwork.com')
+				.get('/v2/tracks')
+				.reply(200, { total : 0 });
+
+			music.allTracks()
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch((err) => (done(err)));
+		});
+
+		it('should properly retrieve all tracks (callback)', (done) => {
+			// intercept outbound request
+			nock('https://curio-music-api.apps.playnetwork.com')
+				.get('/v2/tracks')
+				.reply(200, { total : 0 });
+
+			music.allTracks(function (err, result) {
+				should.not.exist(err);
+				should.exist(requestInfo);
+
+				return done();
+			});
+		});
+
+		it('should properly support query filters', (done) => {
+			// intercept outbound request
+			nock('https://curio-music-api.apps.playnetwork.com')
+				.get(/\/v2\/tracks[.]*/)
+				.reply(200, { total : 0 });
+
+			music.allTracks({
+				filters : {
+					mandatory : {
+						exact : {
+							'legacy.trackToken' : 12345
+						}
+					}
+				}
+			}).then((result) => {
+				should.exist(result);
+				should.exist(requestInfo);
+				should.exist(requestInfo.query);
+				should.exist(requestInfo.query['filters[mandatory][exact][legacy.trackToken]']);
+				requestInfo.query['filters[mandatory][exact][legacy.trackToken]'].should.equal(12345);
+
+				return done();
+			}).catch((err) => (done(err)));
+		});
+	});
+
 	describe('#checkPlaylistTrack', () => {
 		it('should require playlistId', (done) => {
 			music.checkPlaylistTrack()
@@ -1115,6 +1172,53 @@ describe('music', () => {
 				.reply(200, { total : 0 });
 
 			music.getStation('test', function (err, result) {
+				should.not.exist(err);
+				should.exist(result);
+				should.exist(requestInfo);
+
+				return done();
+			});
+		});
+	});
+
+	describe('#getTrack', () => {
+		it('should require trackAlias', (done) => {
+			music.getTrack()
+				.then(() => {
+					return done(new Error('should require trackAlias'));
+				})
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('trackAlias is required');
+
+					return done();
+				})
+		});
+
+		it('should properly retrieve track (promise)', (done) => {
+			// intercept outbound request
+			nock('https://curio-music-api.apps.playnetwork.com')
+				.get('/v2/tracks/test')
+				.reply(200, { total : 0 });
+
+			music.getTrack('test')
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch((err) => (done(err)));
+		});
+
+		it('should properly retrieve track (callback)', (done) => {
+			// intercept outbound request
+			nock('https://curio-music-api.apps.playnetwork.com')
+				.get('/v2/tracks/test')
+				.reply(200, { total : 0 });
+
+			music.getTrack('test', function (err, result) {
 				should.not.exist(err);
 				should.exist(result);
 				should.exist(requestInfo);

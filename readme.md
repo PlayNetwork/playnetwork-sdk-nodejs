@@ -56,6 +56,7 @@ The music module is designed to simplify interaction with the [PlayNetwork CURIO
 * allPlaylistTracks
 * allStations
 * allStationTracks
+* allTracks
 * checkPlaylistTrack
 * createBroadcast
 * createPlaylist
@@ -67,7 +68,7 @@ The music module is designed to simplify interaction with the [PlayNetwork CURIO
 * getPlaylist
 * getStation
 * getTracks - `TODO`
-* getTrack - `TODO`
+* getTrack
 * mixCollection
 * settings
 * updatePlaylist

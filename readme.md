@@ -10,6 +10,10 @@ npm install playnetwork-sdk
 
 ## Usage
 
+### Configuration
+
+* [constructor](#constructor)
+
 ### Music API Module
 
 * [addPlaylistTracks](#addplaylisttracks)
@@ -39,6 +43,8 @@ npm install playnetwork-sdk
 
 ### Configuration
 
+#### Constructor
+
 The PlayNetwork SDK must be configured with a valid and active `clientId` and `secret` prior to use. If `#configure` is not called, no functionality within the SDK is enabled and all SDK sub-modules (i.e. `music`, `settings`, `content`, etc.) will be `undefined`.
 
 ```javascript
@@ -49,7 +55,7 @@ playnetwork.configure(
   '<CLIENT_SECRET>');
 ```
 
-#### Options
+##### Options
 
 The PlayNetwork SDK allows for a set of additional configuration parameters to be specified as an optional argument to the `#configure` method:
 

@@ -69,7 +69,7 @@ playnetwork.configure(
   '<CLIENT_SECRET>');
 ```
 
-[back to usage](#usage)
+[back to top](#usage)
 
 #### Options
 
@@ -96,7 +96,7 @@ playnetwork.configure(
 console.log(playnetwork.settings());
 ```
 
-[back to usage](#usage)
+[back to top](#usage)
 
 ### Music Module
 
@@ -134,7 +134,7 @@ client
   });
 ```
 
-[back to usage](#usage)
+[back to top](#usage)
 
 #### #allBroadcasts
 
@@ -162,7 +162,7 @@ client
   });
 ```
 
-[back to usage](#usage)
+[back to top](#usage)
 
 #### #allCollections
 
@@ -193,11 +193,11 @@ client
   });
 ```
 
-[back to usage](#usage)
+[back to top](#usage)
 
 #### #allCollectionTracks
 
-[back to usage](#usage)
+[back to top](#usage)
 
 #### #allPlaylists
 
@@ -228,76 +228,76 @@ client
   });
 ```
 
-[back to usage](#usage)
+[back to top](#usage)
 
 #### #allPlaylistTracks
 
-[back to usage](#usage)
+[back to top](#usage)
 
 #### #allStations
 
-[back to usage](#usage)
+[back to top](#usage)
 
 #### #allStationTracks
 
-[back to usage](#usage)
+[back to top](#usage)
 
 #### #allTracks
 
-[back to usage](#usage)
+[back to top](#usage)
 
 #### #checkPlaylistTrack
 
-[back to usage](#usage)
+[back to top](#usage)
 
 #### #createBroadcast
 
-[back to usage](#usage)
+[back to top](#usage)
 
 #### #createPlaylist
 
-[back to usage](#usage)
+[back to top](#usage)
 
 #### #deleteBroadcast
 
-[back to usage](#usage)
+[back to top](#usage)
 
 #### #deletePlaylist
 
-[back to usage](#usage)
+[back to top](#usage)
 
 #### #deletePlaylistTrack
 
-[back to usage](#usage)
+[back to top](#usage)
 
 #### #getBroadcast
 
-[back to usage](#usage)
+[back to top](#usage)
 
 #### #getCollection
 
-[back to usage](#usage)
+[back to top](#usage)
 
 #### #getPlaylist
 
-[back to usage](#usage)
+[back to top](#usage)
 
 #### #getStation
 
-[back to usage](#usage)
+[back to top](#usage)
 
 #### #getTracks
 
-[back to usage](#usage)
+[back to top](#usage)
 
 #### #getTrack
 
-[back to usage](#usage)
+[back to top](#usage)
 
 #### #mixCollection
 
-[back to usage](#usage)
+[back to top](#usage)
 
 #### #updatePlaylist
 
-[back to usage](#usage)
+[back to top](#usage)

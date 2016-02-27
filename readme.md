@@ -61,7 +61,7 @@ The music module is designed to simplify interaction with the [PlayNetwork CURIO
 * createPlaylist
 * deleteBroadcast
 * deletePlaylist
-* deletePlaylistTrack - `TODO`
+* deletePlaylistTrack
 * getBroadcast
 * getCollection
 * getPlaylist
@@ -70,7 +70,7 @@ The music module is designed to simplify interaction with the [PlayNetwork CURIO
 * getTrack - `TODO`
 * mixCollection
 * settings
-* updatePlaylist - `TODO`
+* updatePlaylist
 
 ```javascript
 var playnetwork = require('playnetwork-sdk');

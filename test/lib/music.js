@@ -831,6 +831,97 @@ describe('music', () => {
 		});
 	});
 
+	describe('#deletePlaylistTrack', () => {
+		it('should require playlistId', (done) => {
+			music.deletePlaylistTrack()
+				.then(() => {
+					return done(new Error('should require playlistId'));
+				})
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('playlistId is required');
+
+					return done();
+				})
+		});
+
+		it('should require track', (done) => {
+			music.deletePlaylistTrack('test', function (err, result) {
+				should.not.exist(result);
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('track is required');
+
+				return done();
+			});
+		});
+
+		it('should require track to have identifier', (done) => {
+			music.deletePlaylistTrack(
+				'test',
+				{ test : true },
+				function (err, result) {
+					should.not.exist(result);
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('track is missing identifier');
+
+					return done();
+				});
+		});
+
+		it('should properly check playlist track (promise)', (done) => {
+			// intercept outbound request
+			nock('https://curio-music-api.apps.playnetwork.com')
+				.delete('/v2/playlists/test/tracks/test')
+				.reply(200);
+
+			music.deletePlaylistTrack('test', 'test')
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch((err) => (done(err)));
+		});
+
+		it('should properly create playlist (callback)', (done) => {
+			// intercept outbound request
+			nock('https://curio-music-api.apps.playnetwork.com')
+				.delete('/v2/playlists/test/tracks/test')
+				.reply(200);
+
+			music.deletePlaylistTrack(
+				'test',
+				{ assetId : 'test' },
+				function (err, result) {
+					should.not.exist(err);
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				});
+		});
+
+		it('should properly check playlist track by legacy trackToken', (done) => {
+			// intercept outbound request
+			nock('https://curio-music-api.apps.playnetwork.com')
+				.delete('/v2/playlists/test/tracks/tracktoken:12345')
+				.reply(200);
+
+			music.deletePlaylistTrack('test', { legacy : { trackToken : 12345 }})
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch((err) => (done(err)));
+		});
+	});
+
 	describe('#getBroadcast', () => {
 		it('should require stationId', (done) => {
 			music.getBroadcast()
@@ -1071,6 +1162,68 @@ describe('music', () => {
 				.reply(200, { total : 0 });
 
 			music.mixCollection('test', function (err, result) {
+				should.not.exist(err);
+				should.exist(result);
+				should.exist(requestInfo);
+
+				return done();
+			});
+		});
+	});
+
+	describe('#updatePlaylist', () => {
+		let mockPlaylist = {
+			playlistId : 'test'
+		};
+
+		it('should require playlist details', (done) => {
+			music.updatePlaylist()
+				.then(() => {
+					return done(new Error('should require playlist'));
+				})
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('playlist is required');
+
+					return done();
+				})
+		});
+
+		it('should require playlistId', (done) => {
+			music.updatePlaylist({ other : true }, function (err, result) {
+				should.not.exist(result);
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('playlistId is required');
+
+				return done();
+			});
+		});
+
+		it('should properly update playlist (promise)', (done) => {
+			// intercept outbound request
+			nock('https://curio-music-api.apps.playnetwork.com')
+				.put('/v2/playlists/test')
+				.reply(200, mockPlaylist);
+
+			music.updatePlaylist(mockPlaylist)
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch((err) => (done(err)));
+		});
+
+		it('should properly update playlist (callback)', (done) => {
+			// intercept outbound request
+			nock('https://curio-music-api.apps.playnetwork.com')
+				.put('/v2/playlists/test')
+				.reply(200, mockPlaylist);
+
+			music.updatePlaylist(mockPlaylist, function (err, result) {
 				should.not.exist(err);
 				should.exist(result);
 				should.exist(requestInfo);

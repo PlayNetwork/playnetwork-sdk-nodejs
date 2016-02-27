@@ -12,8 +12,8 @@ npm install playnetwork-sdk
 
 ### Getting Started
 
-* [constructor](#constructor)
-* [options](#options)
+* [constructor](constructor)
+* [options](options)
 
 ### Music API Module
 
@@ -69,7 +69,9 @@ playnetwork.configure(
   '<CLIENT_SECRET>');
 ```
 
-#### #Options
+[back to usage](#usage)
+
+#### Options
 
 The PlayNetwork SDK allows for a set of additional configuration parameters to be specified as an optional argument to the `#configure` method:
 
@@ -93,6 +95,8 @@ playnetwork.configure(
 // echo configured settings
 console.log(playnetwork.settings());
 ```
+
+[back to usage](#usage)
 
 ### Music Module
 
@@ -130,6 +134,8 @@ client
   });
 ```
 
+[back to usage](#usage)
+
 #### #allBroadcasts
 
 This method can be used to retrieve all accessible broadcasts from the API.
@@ -155,6 +161,8 @@ client
     console.error(err);
   });
 ```
+
+[back to usage](#usage)
 
 #### #allCollections
 
@@ -185,7 +193,11 @@ client
   });
 ```
 
+[back to usage](#usage)
+
 #### #allCollectionTracks
+
+[back to usage](#usage)
 
 #### #allPlaylists
 
@@ -216,21 +228,76 @@ client
   });
 ```
 
+[back to usage](#usage)
+
 #### #allPlaylistTracks
+
+[back to usage](#usage)
+
 #### #allStations
+
+[back to usage](#usage)
+
 #### #allStationTracks
+
+[back to usage](#usage)
+
 #### #allTracks
+
+[back to usage](#usage)
+
 #### #checkPlaylistTrack
+
+[back to usage](#usage)
+
 #### #createBroadcast
+
+[back to usage](#usage)
+
 #### #createPlaylist
+
+[back to usage](#usage)
+
 #### #deleteBroadcast
+
+[back to usage](#usage)
+
 #### #deletePlaylist
+
+[back to usage](#usage)
+
 #### #deletePlaylistTrack
+
+[back to usage](#usage)
+
 #### #getBroadcast
+
+[back to usage](#usage)
+
 #### #getCollection
+
+[back to usage](#usage)
+
 #### #getPlaylist
+
+[back to usage](#usage)
+
 #### #getStation
+
+[back to usage](#usage)
+
 #### #getTracks
+
+[back to usage](#usage)
+
 #### #getTrack
+
+[back to usage](#usage)
+
 #### #mixCollection
+
+[back to usage](#usage)
+
 #### #updatePlaylist
+
+[back to usage](#usage)

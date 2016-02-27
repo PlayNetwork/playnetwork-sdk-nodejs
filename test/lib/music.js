@@ -118,7 +118,6 @@ describe('music', () => {
 				'test',
 				mockTracks.concat([{ test : true }]),
 				function (err, result) {
-					console.log(err);
 					should.not.exist(result);
 					should.exist(err);
 					should.exist(err.message);
@@ -525,6 +524,97 @@ describe('music', () => {
 
 				return done();
 			});
+		});
+	});
+
+	describe('#checkPlaylistTrack', () => {
+		it('should require playlistId', (done) => {
+			music.checkPlaylistTrack()
+				.then(() => {
+					return done(new Error('should require playlistId'));
+				})
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('playlistId is required');
+
+					return done();
+				})
+		});
+
+		it('should require track', (done) => {
+			music.checkPlaylistTrack('test', function (err, result) {
+				should.not.exist(result);
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('track is required');
+
+				return done();
+			});
+		});
+
+		it('should require track to have identifier', (done) => {
+			music.checkPlaylistTrack(
+				'test',
+				{ test : true },
+				function (err, result) {
+					should.not.exist(result);
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('track is missing identifier');
+
+					return done();
+				});
+		});
+
+		it('should properly check playlist track (promise)', (done) => {
+			// intercept outbound request
+			nock('https://curio-music-api.apps.playnetwork.com')
+				.head('/v2/playlists/test/tracks/test')
+				.reply(200);
+
+			music.checkPlaylistTrack('test', 'test')
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch((err) => (done(err)));
+		});
+
+		it('should properly create playlist (callback)', (done) => {
+			// intercept outbound request
+			nock('https://curio-music-api.apps.playnetwork.com')
+				.head('/v2/playlists/test/tracks/test')
+				.reply(200);
+
+			music.checkPlaylistTrack(
+				'test',
+				{ assetId : 'test' },
+				function (err, result) {
+					should.not.exist(err);
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				});
+		});
+
+		it('should properly check playlist track by legacy trackToken', (done) => {
+			// intercept outbound request
+			nock('https://curio-music-api.apps.playnetwork.com')
+				.head('/v2/playlists/test/tracks/tracktoken:12345')
+				.reply(200);
+
+			music.checkPlaylistTrack('test', { legacy : { trackToken : 12345 }})
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch((err) => (done(err)));
 		});
 	});
 

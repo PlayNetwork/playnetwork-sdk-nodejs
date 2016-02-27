@@ -56,21 +56,21 @@ The music module is designed to simplify interaction with the [PlayNetwork CURIO
 * allPlaylistTracks
 * allStations
 * allStationTracks
-* checkPlaylistTrack - todo
+* checkPlaylistTrack
 * createBroadcast
 * createPlaylist
 * deleteBroadcast
 * deletePlaylist
-* deletePlaylistTrack - todo
+* deletePlaylistTrack - `TODO`
 * getBroadcast
 * getCollection
 * getPlaylist
 * getStation
-* getTracks - todo
-* getTrack - todo
+* getTracks - `TODO`
+* getTrack - `TODO`
 * mixCollection
 * settings
-* updatePlaylist - todo
+* updatePlaylist - `TODO`
 
 ```javascript
 var playnetwork = require('playnetwork-sdk');

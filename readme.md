@@ -67,7 +67,7 @@ The music module is designed to simplify interaction with the [PlayNetwork CURIO
 * getCollection
 * getPlaylist
 * getStation
-* getTracks - `TODO`
+* getTracks
 * getTrack
 * mixCollection
 * settings

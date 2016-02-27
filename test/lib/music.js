@@ -99,7 +99,7 @@ describe('music', () => {
 					err.message.should.contain('playlistId is required');
 
 					return done();
-				})
+				});
 		});
 
 		it('should require tracks', (done) => {
@@ -1219,6 +1219,71 @@ describe('music', () => {
 				.reply(200, { total : 0 });
 
 			music.getTrack('test', function (err, result) {
+				should.not.exist(err);
+				should.exist(result);
+				should.exist(requestInfo);
+
+				return done();
+			});
+		});
+	});
+
+	describe('#getTracks', () => {
+		let mockTracks = [{
+			legacy : {
+				trackToken : 12345
+			}
+		}, {
+			assetId : 'test'
+		}];
+
+		it('should require tracks', (done) => {
+			music.getTracks(function (err, result) {
+				should.not.exist(result);
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('tracks are required');
+
+				return done();
+			});
+		});
+
+		it('should require all tracks have identifier', (done) => {
+			music.getTracks(
+				[{ test : true }, { test : true }],
+				function (err, result) {
+					should.not.exist(result);
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('tracks are required');
+
+					return done();
+				});
+		});
+
+		it('should properly get multiple tracks (promise)', (done) => {
+			// intercept outbound request
+			nock('https://curio-music-api.apps.playnetwork.com')
+				.post('/v2/tracks/trackIds')
+				.reply(201, mockTracks);
+
+			music.getTracks(mockTracks)
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch((err) => (done(err)));
+		});
+
+		it('should properly get multiple tracks (callback)', (done) => {
+			// intercept outbound request
+			nock('https://curio-music-api.apps.playnetwork.com')
+				.post('/v2/tracks/trackIds')
+				.reply(201, mockTracks);
+
+			music.getTracks(mockTracks, function (err, result) {
 				should.not.exist(err);
 				should.exist(result);
 				should.exist(requestInfo);

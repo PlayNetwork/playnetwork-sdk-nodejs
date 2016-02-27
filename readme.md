@@ -48,38 +48,76 @@ playnetwork.configure(
 
 The music module is designed to simplify interaction with the [PlayNetwork CURIOMusic API](https://curio-music-api.apps.playnetwork.com/v2/docs). This module supports the following methods:
 
-* addPlaylistTracks
-* allBroadcasts
-* allCollections
-* allCollectionTracks
-* allPlaylists
-* allPlaylistTracks
-* allStations
-* allStationTracks
-* allTracks
-* checkPlaylistTrack
-* createBroadcast
-* createPlaylist
-* deleteBroadcast
-* deletePlaylist
-* deletePlaylistTrack
-* getBroadcast
-* getCollection
-* getPlaylist
-* getStation
-* getTracks
-* getTrack
-* mixCollection
-* settings
-* updatePlaylist
+#### #addPlaylistTracks
+
+This method can be used to add tracks to an existing custom playlist.
+
+##### Usage: `client.music.addPlaylistTracks(playlistId, tracks, callback)`
+
+* playlistId - _(required)_ - defines the station for which broadcasts should be retrieved
+* tracks - _(required)_ - an array of track objects to add to the playlist
+  * _NOTE:_ assetId or legacy.trackToken must be supplied
+* callback - _(optional)_ - a function callback that accepts two arguments
+  * err - populated with details in the event of an error
+  * result - result set details
 
 ```javascript
-var playnetwork = require('playnetwork-sdk');
+client
+  .music
+  .addPlaylistTracks(
+    '<PLAYLIST_ID>',
+    [{
+      assetId : '<ASSET_ID>'
+    }, {
+      legacy : {
+        trackToken : 12345
+      }
+    }]
+  ).then((result) => {
+    console.log('successfully added tracks to playlist');
+  }).catch((err) => {
+    console.error(err);
+  });
+```
 
-// configure the client
-playnetwork.configure('<CLIENT_ID>', '<CLIENT_SECRET>');
+#### #allBroadcasts
 
-// get all collections
+This method can be used to retrieve all accessible broadcasts from the API.
+
+##### Usage: `client.music.allBroadcasts(stationId, options, callback)`
+
+* stationId - _(required)_ - defines the station for which broadcasts should be retrieved
+* options - _(optional)_ - can be used to supply additional filters and sorting instructions
+* callback - _(optional)_ - a function callback that accepts two arguments
+  * err - populated with details in the event of an error
+  * result - result set details
+
+```javascript
+client
+  .music
+  .allBroadcasts({
+    sort : {
+      desc : 'created'
+    }
+  }).then((result) => {
+    console.log('found %d broadcasts', result.total);
+  }).catch((err) => {
+    console.error(err);
+  });
+```
+
+#### #allCollections
+
+This method can be used to retrieve all accessible collections from the API.
+
+##### Usage: `client.music.allCollections(options, callback)`
+
+* options - _(optional)_ - can be used to supply additional filters and sorting instructions
+* callback - _(optional)_ - a function callback that accepts two arguments
+  * err - populated with details in the event of an error
+  * result - result set details
+
+```javascript
 client
   .music
   .allCollections({
@@ -90,11 +128,60 @@ client
         }
       }
     }
-  })
-  .then((result) => {
+  }).then((result) => {
     console.log('found %d collections', result.total);
-  })
-  .catch((err) => {
+  }).catch((err) => {
     console.error(err);
   });
 ```
+
+#### #allCollectionTracks
+
+#### #allPlaylists
+
+This method can be used to retrieve all custom playlists from the API created by the clientId specified in the `#configure` method.
+
+##### Usage: `client.music.allPlaylists(options, callback)`
+
+* options - _(optional)_ - can be used to supply additional filters and sorting instructions
+* callback - _(optional)_ - a function callback that accepts two arguments
+  * err - populated with details in the event of an error
+  * result - result set details
+
+```javascript
+client
+  .music
+  .allPlaylists({
+    filters : {
+      mandatory : {
+        exact : {
+          'legacy.playlistToken' : 4550361
+        }
+      }
+    }
+  }).then((result) => {
+    console.log('found %d playlists', result.total);
+  }).catch((err) => {
+    console.error(err);
+  });
+```
+
+#### #allPlaylistTracks
+#### #allStations
+#### #allStationTracks
+#### #allTracks
+#### #checkPlaylistTrack
+#### #createBroadcast
+#### #createPlaylist
+#### #deleteBroadcast
+#### #deletePlaylist
+#### #deletePlaylistTrack
+#### #getBroadcast
+#### #getCollection
+#### #getPlaylist
+#### #getStation
+#### #getTracks
+#### #getTrack
+#### #mixCollection
+#### #settings
+#### #updatePlaylist

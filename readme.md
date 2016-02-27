@@ -10,6 +10,33 @@ npm install playnetwork-sdk
 
 ## Usage
 
+### Music API Module
+
+* [addPlaylistTracks](#addPlaylistTracks)
+* [allBroadcasts](#allBroadcasts)
+* [allCollections](#allCollections)
+* [allCollectionTracks](#allCollectionTracks)
+* [allPlaylists](#allPlaylists)
+* [allPlaylistTracks](#allPlaylistTracks)
+* [allStations](#allStations)
+* [allStationTracks](#allStationTracks)
+* [allTracks](#allTracks)
+* [checkPlaylistTrack](#checkPlaylistTrack)
+* [createBroadcast](#createBroadcast)
+* [createPlaylist](#createPlaylist)
+* [deleteBroadcast](#deleteBroadcast)
+* [deletePlaylist](#deletePlaylist)
+* [deletePlaylistTrack](#deletePlaylistTrack)
+* [getBroadcast](#getBroadcast)
+* [getCollection](#getCollection)
+* [getPlaylist](#getPlaylist)
+* [getStation](#getStation)
+* [getTrack](#getTrack)
+* [getTracks](#getTracks)
+* [mixCollection](#mixCollection)
+* [settings](#settings)
+* [updatePlaylist](#updatePlaylist)
+
 ### Configuration
 
 The PlayNetwork SDK must be configured with a valid and active `clientId` and `secret` prior to use. If `#configure` is not called, no functionality within the SDK is enabled and all SDK sub-modules (i.e. `music`, `settings`, `content`, etc.) will be `undefined`.

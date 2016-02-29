@@ -17,6 +17,8 @@ npm install playnetwork-sdk
 
 ### Music API Module
 
+This module can be used to interact with the CURIOMusic API to retrieve content programming and track meta-data.
+
 #### Custom Playlists
 
 * [addPlaylistTracks](#addplaylisttracks)
@@ -73,24 +75,48 @@ playnetwork.configure(
 
 #### Options
 
-The PlayNetwork SDK allows for a set of additional configuration parameters to be specified as an optional argument to the `#configure` method:
+The PlayNetwork SDK allows for a set of additional configuration parameters to be specified as an optional argument to the `#configure` method. This parameter is fully optional and, by default, all communication occurs with the PlayNetwork production environment.
+
+The supported options are as follows:
+
+* content
+  * host
+  * secure
+* key
+  * host
+  * secure
+  * cacheTokens
+* music
+  * host
+  * secure
+* playback
+  * host
+  * secure
+
+See the following example that configures the SDK for interaction with a sandbox PlayNetwork environment (**_note:** this is an example only).
 
 ```javascript
 var
   playnetwork = require('playnetwork-sdk'),
-  settings = {
+  options = {
+    content : {
+      host : 'sandbox-content-api.apps.playnetwork.com'
+    },
     key : {
-      host : 'develop-key-api.apps.playnetwork.com'
+      host : 'sandbox-key-api.apps.playnetwork.com'
     },
     music : {
-      host : 'develop-curio-music-api.apps.playnetwork.com'
+      host : 'sandbox-curio-music-api.apps.playnetwork.com'
+    },
+    playback : {
+      host : 'sandbox-playback-api.apps.playnetwork.com'
     }
   };
 
 playnetwork.configure(
   '<CLIENT_ID>',
   '<CLIENT_SECRET>',
-  settings);
+  options);
 
 // echo configured settings
 console.log(playnetwork.settings());

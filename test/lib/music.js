@@ -634,6 +634,7 @@ describe('music', () => {
 				.then((result) => {
 					should.exist(result);
 					should.exist(requestInfo);
+					result.should.be.true;
 
 					return done();
 				})
@@ -644,7 +645,7 @@ describe('music', () => {
 			// intercept outbound request
 			nock('https://curio-music-api.apps.playnetwork.com')
 				.head('/v2/playlists/test/tracks/test')
-				.reply(200);
+				.reply(404);
 
 			music.checkPlaylistTrack(
 				'test',
@@ -653,6 +654,7 @@ describe('music', () => {
 					should.not.exist(err);
 					should.exist(result);
 					should.exist(requestInfo);
+					result.should.be.false;
 
 					return done();
 				});

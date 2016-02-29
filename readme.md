@@ -162,12 +162,12 @@ var
 client
   .music
   .addPlaylistTracks(playlistId, tracks)
-    .then((result) => {
-      console.log('successfully added tracks to playlist %s', playlistId);
-    })
-    .catch((err) => {
-      console.error(err);
-    });
+  .then((result) => {
+    console.log('successfully added tracks to playlist %s', playlistId);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
 ```
 
 [back to top](#usage)
@@ -504,21 +504,157 @@ client
 
 #### #createBroadcast
 
+This method can be used to create a new broadcast for an existing station.
+
+**Usage:** `client.music.createBroadcast(stationId, options, callback)`
+
+* `stationId` - _(required)_ - defines the station for which the broadcast should be created
+* `options` - _(optional)_ - defines additional parameters for the broadcast
+  * `beginDate` - _(optional)_ - the date and time at which the broadcast schedule should begin (defaults to the current date and time if not supplied)
+  * `duration` - _(optional)_ - the length, in minutes, for the playlist (defaults to 1440 which is 24 hours)
+* `callback` - _(optional)_ - a function callback that accepts two arguments
+  * `err` - populated with details in the event of an error
+  * `result` - the response from the API
+
+```javascript
+var stationId = '<STATION_ID>';
+
+client
+  .music
+  .createBroadcast(stationId)
+  .then((broadcast) => {
+    console.log(
+      'successfully created broadcast with id %s',
+      broadcast.broadcastId);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
+
 [back to top](#usage)
 
 #### #createPlaylist
+
+This method can be used to create a new custom playlist.
+
+**Usage:** `client.music.createPlaylist(playlist, callback)`
+
+* `playlist` - _(required)_ - defines the details of the playlist
+  * `title` - _(required)_ - the name of the custom playlist
+  * `tracks` - _(optional)_ - the tracks that should be added to the playlist at the time it is created
+* `callback` - _(optional)_ - a function callback that accepts two arguments
+  * `err` - populated with details in the event of an error
+  * `result` - the response from the API
+
+```javascript
+var info = {
+  title : 'Vorster\'s Favorite Hits'
+};
+
+client
+  .music
+  .createPlaylist(info)
+  .then((playlist) => {
+    console.log(
+      'successfully created playlist with id %s',
+      playlist.playlistId);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
 
 [back to top](#usage)
 
 #### #deleteBroadcast
 
+This method can be used to delete an existing broadcast schedule from within a station.
+
+**Usage:** `client.music.deleteBroadcast(stationId, broadcastId, callback)`
+
+* `stationId` - _(required)_ - defines the station within which the broadcast exists
+* `broadcastId` - _(required)_ - defines the broadcast to delete
+* `callback` - _(optional)_ - a function callback that accepts a single argument
+  * `err` - populated with details in the event of an error
+
+```javascript
+var
+  stationId = '<STATION_ID>',
+  broadcastId = '<BROADCAST_ID>';
+
+client
+  .music
+  .deleteBroadcast(stationId, broadcastId)
+  .then((playlist) => {
+    console.log(
+      'successfully deleted broadcast with id %s',
+      broadcastId);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
+
 [back to top](#usage)
 
 #### #deletePlaylist
 
+This method can be used to delete an existing custom playlist.
+
+**Usage:** `client.music.deletePlaylist(playlistId, callback)`
+
+* `playlistId` - _(required)_ - defines the playlist to delete
+* `callback` - _(optional)_ - a function callback that accepts a single argument
+  * `err` - populated with details in the event of an error
+
+```javascript
+var playlistId = '<PLAYLIST_ID>';
+
+client
+  .music
+  .deletePlaylist(playlistId)
+  .then((playlist) => {
+    console.log(
+      'successfully deleted playlist with id %s',
+      playlistId);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
+
 [back to top](#usage)
 
 #### #deletePlaylistTrack
+
+This method can be used to remove an existing track from a custom playlist.
+
+**Usage:** `client.music.deletePlaylistTrack(stationId, broadcast, callback)`
+
+* `playlistId` - _(required)_ - defines the playlist from which the track should be removed
+* `trackAlias` - _(required)_ - defines the track to remove
+* `callback` - _(optional)_ - a function callback that accepts a single argument
+  * `err` - populated with details in the event of an error
+
+```javascript
+var
+  playlistId = '<PLAYLIST_ID>',
+  trackAlias = 'tracktoken:1234';
+
+client
+  .music
+  .deletePlaylistTrack(playlistId, trackAlias)
+  .then((playlist) => {
+    console.log(
+      'successfully deleted track %s from playlist with id %s',
+      trackAlias,
+      playlistId);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
 
 [back to top](#usage)
 
@@ -629,12 +765,12 @@ var play = {
 client
   .playback
   .recordPlay(play)
-    .then((result) => {
-      console.log('successfully recorded play with id %s', result.playId);
-    })
-    .catch((err) => {
-      console.error(err);
-    });
+  .then((result) => {
+    console.log('successfully recorded play with id %s', result.playId);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
 ```
 
 [back to top](#usage)

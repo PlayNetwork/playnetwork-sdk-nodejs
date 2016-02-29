@@ -1,6 +1,12 @@
+# v1.0.3 - 2016/03/01
+
+* Replaced usages of `throw` with `Promise.reject`
+* Added `playback` sub-module
+* Added `content` sub-module
+
 # v1.0.2 - 2016/02/29
 
-* Fleshed out documentation for `music` sub-module
+* Fleshed out more documentation for `music` sub-module
 * Added `createBroadcast` and `deleteBroadcast` to `music` sub-module with tests
 * Added `allPlaylists`, `createPlaylist` and `deletePlaylist` to `music` sub-module with tests
 * Added `addPlaylistTrack`, `checkPlaylistTrack`, `deletePlaylistTrack` and `updatePlaylist` to `music` sub-module with tests

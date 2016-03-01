@@ -630,7 +630,7 @@ client
 
 This method can be used to remove an existing track from a custom playlist.
 
-**Usage:** `client.music.deletePlaylistTrack(stationId, broadcast, callback)`
+**Usage:** `client.music.deletePlaylistTrack(playlistId, trackAlias, callback)`
 
 * `playlistId` - _(required)_ - defines the playlist from which the track should be removed
 * `trackAlias` - _(required)_ - defines the track to remove
@@ -659,6 +659,33 @@ client
 [back to top](#usage)
 
 #### #getBroadcast
+
+To retrieve a specific broadcast for a station, by broadcast identifier, use this method.
+
+**Usage:** `client.music.getBroadcast(stationId, broadcastId, callback)`
+
+* `stationId` - _(required)_ - defines the station from which the broadcast should be retrieved
+* `broadcastId` - _(required)_ - defines the broadcast to retrieve
+* `callback` - _(optional)_ - a function callback that accepts a single argument
+  * `err` - populated with details in the event of an error
+
+```javascript
+var
+  stationId = '<STATION_ID>',
+  broadcastId = '<BROADCAST_ID>';
+
+client
+  .music
+  .getBroadcast(stationId, broadcastId)
+  .then((broadcast) => {
+    console.log(
+      'successfully retrieved broadcast %s',
+      broadcast.broadcastId);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
 
 [back to top](#usage)
 

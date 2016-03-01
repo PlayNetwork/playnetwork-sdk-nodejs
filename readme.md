@@ -99,6 +99,9 @@ The supported options are as follows:
 * `playback`
   * `host` - the hostname of the playback API
   * `secure` - defaults to `true`, defines when the API uses TLS
+* `settings`
+  * `host` - the hostname
+  * `secure` -
 
 See the following example that configures the SDK for interaction with a sandbox PlayNetwork environment (**_note:** this is an example only).
 
@@ -117,6 +120,9 @@ var
     },
     playback : {
       host : 'sandbox-playback-api.apps.playnetwork.com'
+    },
+    settings : {
+      host : 'sandbox-settings-api.apps.playnetwork.com'
     }
   };
 

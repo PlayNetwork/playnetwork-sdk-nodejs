@@ -12,8 +12,8 @@ npm install playnetwork-sdk
 
 ### Getting Started
 
-* [constructor](constructor)
-* [options](options)
+* [constructor](#constructor)
+* [options](#options)
 
 ### Music
 

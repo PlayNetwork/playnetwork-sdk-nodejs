@@ -64,6 +64,13 @@ This module can be used to interact with the [Playback API](https://playback-api
 * [allPlays](#allplays)
 * [recordPlay](#recordplay)
 
+### Settings
+
+This module provides support for retrieving location / device specific environment settings, including network details, proxy configuration, throttling and more.
+
+* [allSettings](#allsettings)
+* [getSettings](#getsettings)
+
 ### Getting Started
 
 #### Constructor
@@ -697,13 +704,85 @@ client
 
 #### #getCollection
 
+To retrieve a specific collection by collection identifier, use this method.
+
+**Usage:** `client.music.getCollection(collectionId, callback)`
+
+* `collectionId` - _(required)_ - defines the collection that should be retrieved
+* `callback` - _(optional)_ - a function callback that accepts a single argument
+  * `err` - populated with details in the event of an error
+
+```javascript
+var collectionId = '<COLLECTION_ID>';
+
+client
+  .music
+  .getCollection(collectionId)
+  .then((collection) => {
+    console.log(
+      'successfully retrieved collection %s',
+      collection.collectionId);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
+
 [back to top](#usage)
 
 #### #getPlaylist
 
+To retrieve a specific custom playlist by identifier, use this method.
+
+**Usage:** `client.music.getPlaylist(playlistId, callback)`
+
+* `playlistId` - _(required)_ - defines the custom playlist that should be retrieved
+* `callback` - _(optional)_ - a function callback that accepts a single argument
+  * `err` - populated with details in the event of an error
+
+```javascript
+var playlistId = '<PLAYLIST_ID>';
+
+client
+  .music
+  .getPlaylist(playlistId)
+  .then((customPlaylist) => {
+    console.log(
+      'successfully retrieved custom playlist %s',
+      customPlaylist.collectionId);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
+
 [back to top](#usage)
 
 #### #getStation
+
+This method provides the ability to retrieve a station by identifier.
+
+**Usage:** `client.music.getStation(stationId, callback)`
+
+* `stationId` - _(required)_ - defines the station that should be retrieved
+* `callback` - _(optional)_ - a function callback that accepts a single argument
+  * `err` - populated with details in the event of an error
+
+```javascript
+var stationId = '<STATION_ID>';
+
+client
+  .music
+  .getStation(stationId)
+  .then((station) => {
+    console.log(
+      'successfully retrieved station %s',
+      station.stationId);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
 
 [back to top](#usage)
 
@@ -802,6 +881,65 @@ client
     console.log('successfully recorded play with id %s', result.playId);
   })
   .catch((err) => {
+    console.error(err);
+  });
+```
+
+[back to top](#usage)
+
+### Settings Module
+
+The settings module is designed to simplify interaction with the [PlayNetwork Settings API](https://curio-settings-api.apps.playnetwork.com/v0/docs). This module supports the following methods:
+
+#### #allSettings
+
+This method differs slightly from all other methods with a similar name. Specifically, this method will return the settings that are assigned directly to the `clientId` used to instantiate this SDK.
+
+**Usage:** `client.settings.allSettings(options, callback)`
+
+* `options` - _(optional)_ - can be used to supply additional filters and sorting instructions
+* `callback` - _(optional)_ - a function callback that accepts two arguments
+  * `err` - populated with details in the event of an error
+  * `settings` - the settings
+
+```javascript
+client
+  .settings
+  .allSettings()
+  .then((settings) => {
+    console.log(
+      'found settings with settingsId %s',
+      settings.settingsId);
+  }).catch((err) => {
+    console.error(err);
+  });
+```
+
+[back to top](#usage)
+
+#### #getSettings
+
+In order to retrieve settings for a specific device or location, this method can be used.
+
+**Usage:** `client.settings.allSettings(options, callback)`
+
+* `alias` - _(required)_ - defines the specific settings to retrieve
+  * can be the `settingsId` that defines a specific result
+  * can be defined as `deviceToken:12345` where `12345` is the `legacy.deviceToken` of the target settings
+* `options` - _(optional)_ - can be used to supply additional filters and sorting instructions
+* `callback` - _(optional)_ - a function callback that accepts two arguments
+  * `err` - populated with details in the event of an error
+  * `settings` - the settings
+
+```javascript
+client
+  .settings
+  .getSettings('deviceToken:12345')
+  .then((settings) => {
+    console.log(
+      'found settings for device 12345 and the settingsId is %s',
+      settings.settingsId);
+  }).catch((err) => {
     console.error(err);
   });
 ```

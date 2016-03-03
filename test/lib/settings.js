@@ -66,8 +66,10 @@ describe('settings', () => {
 				proxy = new SettingsProxy(options);
 
 			should.exist(proxy.allSettings);
-			should.exist(proxy.getSetting);
+			should.exist(proxy.createSettings);
+			should.exist(proxy.getSettings);
 			should.exist(proxy.settings);
+			should.exist(proxy.upsertSettings);
 			proxy.settings().should.not.be.empty;
 			proxy.settings().host.should.equal(options.host);
 			proxy.settings().secure.should.equal(options.secure);
@@ -75,7 +77,6 @@ describe('settings', () => {
 	});
 
 	describe('#allSettings', () => {
-
 		it('should properly retrieve all settings (promise)', (done) => {
 			// intercept outbound request
 			nock('https://curio-settings-api.apps.playnetwork.com')
@@ -108,7 +109,7 @@ describe('settings', () => {
 
 	});
 
-	describe('#createSetting', () => {
+	describe('#createSettings', () => {
 		let mockSetting = {
 			legacy : {
 				deviceToken : 123123,
@@ -117,7 +118,7 @@ describe('settings', () => {
 		};
 
 		it('should require setting details', (done) => {
-			settings.createSetting()
+			settings.createSettings()
 				.then(() => {
 					return done(new Error('should require setting'));
 				})
@@ -131,45 +132,38 @@ describe('settings', () => {
 		});
 
 		it('should require legacy', (done) => {
-			settings.createSetting({ other : true }, function (err, result) {
-				should.not.exist(result);
-				should.exist(err);
-				should.exist(err.message);
-				err.message.should.contain('setting legacy is required');
+			settings.createSettings(
+				{ other : true },
+				function (err, result) {
+					should.not.exist(result);
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('setting legacy is required');
 
-				return done();
-			});
-		});
-
-		it('should require legacy deviceToken', (done) => {
-			settings.createSetting({ legacy : { other : true, conceptName: 'test concept' } }, function (err, result) {
-				should.not.exist(result);
-				should.exist(err);
-				should.exist(err.message);
-				err.message.should.contain('setting legacy deviceToken is required');
-
-				return done();
-			});
+					return done();
+				});
 		});
 
 		it('should require legacy conceptName', (done) => {
-			settings.createSetting({ legacy : { other : true, deviceToken: 123123 } }, function (err, result) {
-				should.not.exist(result);
-				should.exist(err);
-				should.exist(err.message);
-				err.message.should.contain('setting legacy conceptName is required');
+			settings.createSettings(
+				{ legacy : { other : true, deviceToken: 123123 } },
+				function (err, result) {
+					should.not.exist(result);
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('setting legacy conceptName is required');
 
-				return done();
-			});
+					return done();
+				});
 		});
 
-		it('should properly create setting (promise)', (done) => {
+		it('should properly create settings (promise)', (done) => {
 			// intercept outbound request
 			nock('https://curio-settings-api.apps.playnetwork.com')
 				.post('/v0/settings')
 				.reply(200, mockSetting);
 
-			settings.createSetting(mockSetting)
+			settings.createSettings(mockSetting)
 				.then((result) => {
 					should.exist(result);
 					should.exist(requestInfo);
@@ -179,13 +173,13 @@ describe('settings', () => {
 				.catch((err) => (done(err)));
 		});
 
-		it('should properly create setting (callback)', (done) => {
+		it('should properly create settings (callback)', (done) => {
 			// intercept outbound request
 			nock('https://curio-settings-api.apps.playnetwork.com')
 				.post('/v0/settings')
 				.reply(200, mockSetting);
 
-			settings.createSetting(mockSetting, function (err, result) {
+			settings.createSettings(mockSetting, function (err, result) {
 				should.not.exist(err);
 				should.exist(result);
 				should.exist(requestInfo);
@@ -195,28 +189,33 @@ describe('settings', () => {
 		});
 	});
 
-	describe('#getSetting', () => {
-		it('should require settingId', (done) => {
-			settings.getSetting()
+	describe('#getSettings', () => {
+		// intercept outbound request
+		nock('https://curio-settings-api.apps.playnetwork.com')
+			.get('/v0/settings')
+			.reply(200, { });
+
+		it('should require setting identifer', (done) => {
+			settings.getSettings()
 				.then(() => {
-					return done(new Error('should require settingId'));
+					return done(new Error('should require settings identifier'));
 				})
 				.catch((err) => {
 					should.exist(err);
 					should.exist(err.message);
-					err.message.should.contain('settingId is required');
+					err.message.should.contain('settings identifier is required');
 
 					return done();
-				})
+				});
 		});
 
 		it('should properly retrieve setting (promise)', (done) => {
 			// intercept outbound request
 			nock('https://curio-settings-api.apps.playnetwork.com')
 				.get('/v0/settings/test')
-				.reply(200, { total : 0 });
+				.reply(200, { });
 
-			settings.getSetting('test')
+			settings.getSettings('test')
 				.then((result) => {
 					should.exist(result);
 					should.exist(requestInfo);
@@ -230,9 +229,9 @@ describe('settings', () => {
 			// intercept outbound request
 			nock('https://curio-settings-api.apps.playnetwork.com')
 				.get('/v0/settings/test')
-				.reply(200, { total : 0 });
+				.reply(200, { });
 
-			settings.getSetting('test', function (err, result) {
+			settings.getSettings('test', function (err, result) {
 				should.not.exist(err);
 				should.exist(result);
 				should.exist(requestInfo);
@@ -242,7 +241,7 @@ describe('settings', () => {
 		});
 	});
 
-	describe('#updateSetting', () => {
+	describe('#upsertSettings', () => {
 		let mockSetting = {
 			legacy : {
 				deviceToken : 123123,
@@ -251,7 +250,7 @@ describe('settings', () => {
 		};
 
 		it('should require setting details', (done) => {
-			settings.updateSetting()
+			settings.upsertSettings()
 				.then(() => {
 					return done(new Error('should require playlist'));
 				})
@@ -264,13 +263,13 @@ describe('settings', () => {
 				})
 		});
 
-		it('should properly update playlist (promise)', (done) => {
+		it('should properly upsert playlist (promise)', (done) => {
 			// intercept outbound request
 			nock('https://curio-settings-api.apps.playnetwork.com')
 				.put('/v0/settings')
 				.reply(200, mockSetting);
 
-			settings.updateSetting(mockSetting)
+			settings.upsertSettings(mockSetting)
 				.then((result) => {
 					should.exist(result);
 					should.exist(requestInfo);
@@ -280,13 +279,13 @@ describe('settings', () => {
 				.catch((err) => (done(err)));
 		});
 
-		it('should properly update playlist (callback)', (done) => {
+		it('should properly upsert playlist (callback)', (done) => {
 			// intercept outbound request
 			nock('https://curio-settings-api.apps.playnetwork.com')
 				.put('/v0/settings')
 				.reply(200, mockSetting);
 
-			settings.updateSetting(mockSetting, function (err, result) {
+			settings.upsertSettings(mockSetting, function (err, result) {
 				should.not.exist(err);
 				should.exist(result);
 				should.exist(requestInfo);
@@ -295,5 +294,4 @@ describe('settings', () => {
 			});
 		});
 	});
-
 });

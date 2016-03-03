@@ -3,6 +3,7 @@
 * Replaced usages of `throw` with `Promise.reject`
 * Added `playback` sub-module
 * Added `content` sub-module
+* Added `settings` sub-module
 
 # v1.0.2 - 2016/02/29
 

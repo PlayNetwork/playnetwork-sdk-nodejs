@@ -71,6 +71,8 @@ This module provides support for retrieving location / device specific environme
 * [allSettings](#allsettings)
 * [getSettings](#getsettings)
 
+- - -
+
 ### Getting Started
 
 #### Constructor
@@ -143,6 +145,8 @@ console.log(playnetwork.settings());
 ```
 
 [back to top](#usage)
+
+- - -
 
 ### Music Module
 
@@ -929,6 +933,8 @@ client
 
 [back to top](#usage)
 
+- - -
+
 ### Playback Module
 
 The playback module is designed to simplify interaction with the [PlayNetwork Playback API](https://playback-api.apps.playnetwork.com/v1/docs). This module supports the following methods:
@@ -1013,6 +1019,8 @@ client
 ```
 
 [back to top](#usage)
+
+- - -
 
 ### Settings Module
 

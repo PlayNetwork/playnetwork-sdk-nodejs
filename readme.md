@@ -681,6 +681,7 @@ To retrieve a specific broadcast for a station, by broadcast identifier, use thi
 * `broadcastId` - _(required)_ - defines the broadcast to retrieve
 * `callback` - _(optional)_ - a function callback that accepts a single argument
   * `err` - populated with details in the event of an error
+  * `broadcast` - the broadcast
 
 ```javascript
 var
@@ -711,6 +712,7 @@ To retrieve a specific collection by collection identifier, use this method.
 * `collectionId` - _(required)_ - defines the collection that should be retrieved
 * `callback` - _(optional)_ - a function callback that accepts a single argument
   * `err` - populated with details in the event of an error
+  * `collection` - the collection
 
 ```javascript
 var collectionId = '<COLLECTION_ID>';
@@ -739,6 +741,7 @@ To retrieve a specific custom playlist by identifier, use this method.
 * `playlistId` - _(required)_ - defines the custom playlist that should be retrieved
 * `callback` - _(optional)_ - a function callback that accepts a single argument
   * `err` - populated with details in the event of an error
+  * `playlist` - the playlist
 
 ```javascript
 var playlistId = '<PLAYLIST_ID>';
@@ -767,6 +770,7 @@ This method provides the ability to retrieve a station by identifier.
 * `stationId` - _(required)_ - defines the station that should be retrieved
 * `callback` - _(optional)_ - a function callback that accepts a single argument
   * `err` - populated with details in the event of an error
+  * `station` - the station
 
 ```javascript
 var stationId = '<STATION_ID>';
@@ -786,19 +790,142 @@ client
 
 [back to top](#usage)
 
-#### #getTracks
+#### #getTrack
+
+This method provides the ability to retrieve a single track by identifier.
+
+**Usage:** `client.music.getTrack(alias, callback)`
+
+* `alias` - _(required)_ - defines the track that should be retrieved
+  * can be the `assetId` for the track
+  * can be `trackToken:12345` where the `12345` refers to a `legacy.trackToken` value for a track
+  * can be the spotify URI (i.e. `spotify:track:1Ynbmv088`)
+* `callback` - _(optional)_ - a function callback that accepts a single argument
+  * `err` - populated with details in the event of an error
+  * `track` - the track
+
+```javascript
+var trackAlias = '<ALIAS>';
+
+client
+  .music
+  .getTrack(trackAlias)
+  .then((track) => {
+    console.log(
+      'successfully retrieved track %s',
+      track.assetId);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
 
 [back to top](#usage)
 
-#### #getTrack
+#### #getTracks
+
+This method allows for the lookup of multiple tracks by a specific alias. This specific functionality comes in handy when attempting to perform a bulk lookup against the CURIOMusic API.
+
+**Usage:** `client.music.getTracks(aliasList, callback)`
+
+* `aliasList` - _(required)_ - defines an array of tracks that should be retrieved
+  * can be the `assetId` for the track
+  * can be `trackToken:12345` where the `12345` refers to a `legacy.trackToken` value for a track
+  * can be the spotify URI (i.e. `spotify:track:1Ynbmv088`)
+* `callback` - _(optional)_ - a function callback that accepts a single argument
+  * `err` - populated with details in the event of an error
+  * `tracks` - an array of tracks found
+
+```javascript
+var trackAliasList = [
+  '<ALIAS_1>',
+  '<ALIAS_2>'
+];
+
+client
+  .music
+  .getTracks(trackAliasList)
+  .then((tracks) => {
+    console.log(
+      'successfully retrieved %d tracks',
+      tracks.length);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
 
 [back to top](#usage)
 
 #### #mixCollection
 
+This method allows for the lookup of multiple tracks by a specific alias. This specific functionality comes in handy when attempting to perform a bulk lookup against the CURIOMusic API.
+
+**Usage:** `client.music.getTracks(aliasList, callback)`
+
+* `collection` - _(required)_ - defines the collection from which the mix should be created
+* `options` - _(optional)_ - defines the characteristics of the mix
+  * `artistSeparation` - _(optional)_ - the number of songs to play before repeating an artist (defaults to 5)
+  * `beginDate` - _(optional)_ - the date and time of when to start the mix (defaults to the current date and time)
+  * `duration` - _(optional)_ - the length, in minutes, that the mix should be generated for (defaults to 1440 which is 24 hours)
+  * `randomMix` - _(optional)_ - can be `true` or `false` - when true, tracks are pulled randomly from within the collection (defaults to true)
+  * `titleSeparation` - _(optional)_ - the number of songs to play before repeating a title (defaults to 5)
+* `callback` - _(optional)_ - a function callback that accepts a single argument
+  * `err` - populated with details in the event of an error
+  * `mix` - the mixed queue of tracks from the collection
+    * `options` - details regarding how the mix was created
+    * `queue` - the mixed list of tracks from the collection
+
+```javascript
+var collectionId = '<COLLECTION_ID>';
+
+client
+  .music
+  .mixCollection(collectionId)
+  .then((mix) => {
+    console.log(
+      'successfully created mix with %d tracks',
+      mix.queue.length);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
+
 [back to top](#usage)
 
 #### #updatePlaylist
+
+This method can be used to update an existing custom playlist.
+
+**Usage:** `client.music.updatePlaylist(playlist, callback)`
+
+* `playlist` - _(required)_ - defines the details of the playlist
+  * `playlistId` - _(required)_ - the identifier of the playlist
+  * `title` - _(optional)_ - the name of the custom playlist
+  * `tracks` - _(optional)_ - the tracks that should be added to the playlist at the time it is created
+* `callback` - _(optional)_ - a function callback that accepts two arguments
+  * `err` - populated with details in the event of an error
+  * `playlist` - the response from the API
+
+```javascript
+var playlist = {
+  playlistId : '<PLAYLIST_ID',
+  title : 'Vorster\'s Favorite Hits (redux)'
+};
+
+client
+  .music
+  .updatePlaylist(playlist)
+  .then((playlist) => {
+    console.log(
+      'successfully updated playlist with id %s',
+      playlist.playlistId);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
 
 [back to top](#usage)
 

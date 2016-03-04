@@ -12,10 +12,12 @@ npm install playnetwork-sdk
 
 ### Getting Started
 
-* [constructor](constructor)
-* [options](options)
+* [constructor](#constructor)
+* [options](#options)
 
-### Music API Module
+### Music
+
+This module can be used to interact with the [CURIOMusic API](https://curio-music-api.apps.playnetwork.com/v2/docs) to retrieve content programming and track meta-data.
 
 #### Custom Playlists
 
@@ -55,6 +57,22 @@ npm install playnetwork-sdk
 * [getTrack](#gettrack)
 * [getTracks](#gettracks)
 
+### Playback
+
+This module can be used to interact with the [Playback API](https://playback-api.apps.playnetwork.com/v1/docs) to get NowPlaying information, play history and record playback.
+
+* [allPlays](#allplays)
+* [recordPlay](#recordplay)
+
+### Settings
+
+This module provides support for retrieving location / device specific environment settings, including network details, proxy configuration, throttling and more.
+
+* [allSettings](#allsettings)
+* [getSettings](#getsettings)
+
+- - -
+
 ### Getting Started
 
 #### Constructor
@@ -73,30 +91,62 @@ playnetwork.configure(
 
 #### Options
 
-The PlayNetwork SDK allows for a set of additional configuration parameters to be specified as an optional argument to the `#configure` method:
+The PlayNetwork SDK allows for a set of additional configuration parameters to be specified as an optional argument to the `#configure` method. This parameter is fully optional and, by default, all communication occurs with the PlayNetwork production environment.
+
+The supported options are as follows:
+
+* `content`
+  * `host` - the hostname of the content API
+  * `secure` - defaults to `true`, defines when the API uses TLS
+* `key`
+  * `host` - the hostname of the key API
+  * `secure` - defaults to `true`, defines when the API uses TLS
+  * `cacheTokens`
+* `music`
+  * `host` - the hostname of the music API
+  * `secure` - defaults to `true`, defines when the API uses TLS
+* `playback`
+  * `host` - the hostname of the playback API
+  * `secure` - defaults to `true`, defines when the API uses TLS
+* `settings`
+  * `host` - the hostname
+  * `secure` -
+
+See the following example that configures the SDK for interaction with a sandbox PlayNetwork environment (**_note:** this is an example only).
 
 ```javascript
 var
   playnetwork = require('playnetwork-sdk'),
-  settings = {
+  options = {
+    content : {
+      host : 'sandbox-content-api.apps.playnetwork.com'
+    },
     key : {
-      host : 'develop-key-api.apps.playnetwork.com'
+      host : 'sandbox-key-api.apps.playnetwork.com'
     },
     music : {
-      host : 'develop-curio-music-api.apps.playnetwork.com'
+      host : 'sandbox-curio-music-api.apps.playnetwork.com'
+    },
+    playback : {
+      host : 'sandbox-playback-api.apps.playnetwork.com'
+    },
+    settings : {
+      host : 'sandbox-settings-api.apps.playnetwork.com'
     }
   };
 
 playnetwork.configure(
   '<CLIENT_ID>',
   '<CLIENT_SECRET>',
-  settings);
+  options);
 
 // echo configured settings
 console.log(playnetwork.settings());
 ```
 
 [back to top](#usage)
+
+- - -
 
 ### Music Module
 
@@ -108,12 +158,12 @@ This method can be used to add tracks to an existing custom playlist.
 
 **Usage:** `client.music.addPlaylistTracks(playlistId, tracks, callback)`
 
-* playlistId - _(required)_ - defines the playlist to which tracks should be added
-* tracks - _(required)_ - an array of track objects to add to the playlist
+* `playlistId` - _(required)_ - defines the playlist to which tracks should be added
+* `tracks` - _(required)_ - an array of track objects to add to the playlist
   * _NOTE:_ assetId or legacy.trackToken must be supplied
-* callback - _(optional)_ - a function callback that accepts two arguments
-  * err - populated with details in the event of an error
-  * result - result set details
+* `callback` - _(optional)_ - a function callback that accepts two arguments
+  * `err` - populated with details in the event of an error
+  * `result` - result set details
 
 ```javascript
 var
@@ -129,12 +179,12 @@ var
 client
   .music
   .addPlaylistTracks(playlistId, tracks)
-    .then((result) => {
-      console.log('successfully added tracks to playlist %s', playlistId);
-    })
-    .catch((err) => {
-      console.error(err);
-    });
+  .then((result) => {
+    console.log('successfully added tracks to playlist %s', playlistId);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
 ```
 
 [back to top](#usage)
@@ -145,15 +195,15 @@ This method can be used to retrieve a paginated result set of broadcasts created
 
 **Usage:** `client.music.allBroadcasts(stationId, options, callback)`
 
-* stationId - _(required)_ - defines the station for which broadcasts should be retrieved
-* options - _(optional)_ - can be used to supply additional filters and sorting instructions
-  * start - the index at which to start selection of items
-  * count - the total number of items to retrieve (maximum value is `100`)
-  * filters - additional field projections along with mandatory and optional filters (see [API documentation](https://curio-music-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
-  * sort - additional sorting parameters for result (see [API documentation](https://curio-music-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
-* callback - _(optional)_ - a function callback that accepts two arguments
-  * err - populated with details in the event of an error
-  * result - result set details
+* `stationId` - _(required)_ - defines the station for which broadcasts should be retrieved
+* `options` - _(optional)_ - can be used to supply additional filters and sorting instructions
+  * `start` - the index at which to start selection of items
+  * `count` - the total number of items to retrieve (maximum value is `100`)
+  * `filters` - additional field projections along with mandatory and optional filters (see [API documentation](https://curio-music-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
+  * `sort` - additional sorting parameters for result (see [API documentation](https://curio-music-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
+* `callback` - _(optional)_ - a function callback that accepts two arguments
+  * `err` - populated with details in the event of an error
+  * `result` - result set details
 
 ```javascript
 var stationId = '<STATION_ID>';
@@ -184,14 +234,14 @@ This method can be used to retrieve a paginated list of collections from the API
 
 **Usage:** `client.music.allCollections(options, callback)`
 
-* options - _(optional)_ - can be used to supply additional filters and sorting instructions
-  * start - the index at which to start selection of items
-  * count - the total number of items to retrieve (maximum value is `100`)
-  * filters - additional field projections along with mandatory and optional filters (see [API documentation](https://curio-music-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
-  * sort - additional sorting parameters for result (see [API documentation](https://curio-music-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
-* callback - _(optional)_ - a function callback that accepts two arguments
-  * err - populated with details in the event of an error
-  * result - result set details
+* `options` - _(optional)_ - can be used to supply additional filters and sorting instructions
+  * `start` - the index at which to start selection of items
+  * `count` - the total number of items to retrieve (maximum value is `100`)
+  * `filters` - additional field projections along with mandatory and optional filters (see [API documentation](https://curio-music-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
+  * `sort` - additional sorting parameters for result (see [API documentation](https://curio-music-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
+* `callback` - _(optional)_ - a function callback that accepts two arguments
+  * `err` - populated with details in the event of an error
+  * `result` - result set details
 
 ```javascript
 client
@@ -221,15 +271,15 @@ This method can be used to retrieve a paginated set of tracks from a collection 
 
 **Usage:** `client.music.allCollectionTracks(collectionId, options, callback)`
 
-* collectionId - _(required)_ - defines the collection for which tracks should be retrieved
-* options - _(optional)_ - can be used to supply additional filters and sorting instructions
-  * start - the index at which to start selection of items
-  * count - the total number of items to retrieve (maximum value is `100`)
-  * filters - additional field projections along with mandatory and optional filters (see [API documentation](https://curio-music-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
-  * sort - additional sorting parameters for result (see [API documentation](https://curio-music-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
-* callback - _(optional)_ - a function callback that accepts two arguments
-  * err - populated with details in the event of an error
-  * result - result set details
+* `collectionId` - _(required)_ - defines the collection for which tracks should be retrieved
+* `options` - _(optional)_ - can be used to supply additional filters and sorting instructions
+  * `start` - the index at which to start selection of items
+  * `count` - the total number of items to retrieve (maximum value is `100`)
+  * `filters` - additional field projections along with mandatory and optional filters (see [API documentation](https://curio-music-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
+  * `sort` - additional sorting parameters for result (see [API documentation](https://curio-music-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
+* `callback` - _(optional)_ - a function callback that accepts two arguments
+  * `err` - populated with details in the event of an error
+  * `result` - result set details
 
 ```javascript
 var collectionId = '<COLLECTION_ID>';
@@ -257,14 +307,14 @@ This method can be used to retrieve a paginated result set of custom playlists f
 
 **Usage:** `client.music.allPlaylists(options, callback)`
 
-* options - _(optional)_ - can be used to supply additional filters and sorting instructions
-  * start - the index at which to start selection of items
-  * count - the total number of items to retrieve (maximum value is `100`)
-  * filters - additional field projections along with mandatory and optional filters (see [API documentation](https://curio-music-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
-  * sort - additional sorting parameters for result (see [API documentation](https://curio-music-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
-* callback - _(optional)_ - a function callback that accepts two arguments
-  * err - populated with details in the event of an error
-  * result - result set details
+* `options` - _(optional)_ - can be used to supply additional filters and sorting instructions
+  * `start` - the index at which to start selection of items
+  * `count` - the total number of items to retrieve (maximum value is `100`)
+  * `filters` - additional field projections along with mandatory and optional filters (see [API documentation](https://curio-music-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
+  * `sort` - additional sorting parameters for result (see [API documentation](https://curio-music-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
+* `callback` - _(optional)_ - a function callback that accepts two arguments
+  * `err` - populated with details in the event of an error
+  * `result` - result set details
 
 ```javascript
 client
@@ -294,15 +344,15 @@ This method can be used to retrieve a paginated set of tracks from a custom play
 
 **Usage:** `client.music.allPlaylistTracks(playlistId, options, callback)`
 
-* playlistId - _(required)_ - defines the playlist for which tracks should be retrieved
-* options - _(optional)_ - can be used to supply additional filters and sorting instructions
-  * start - the index at which to start selection of items
-  * count - the total number of items to retrieve (maximum value is `100`)
-  * filters - additional field projections along with mandatory and optional filters (see [API documentation](https://curio-music-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
-  * sort - additional sorting parameters for result (see [API documentation](https://curio-music-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
-* callback - _(optional)_ - a function callback that accepts two arguments
-  * err - populated with details in the event of an error
-  * result - result set details
+* `playlistId` - _(required)_ - defines the playlist for which tracks should be retrieved
+* `options` - _(optional)_ - can be used to supply additional filters and sorting instructions
+  * `start` - the index at which to start selection of items
+  * `count` - the total number of items to retrieve (maximum value is `100`)
+  * `filters` - additional field projections along with mandatory and optional filters (see [API documentation](https://curio-music-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
+  * `sort` - additional sorting parameters for result (see [API documentation](https://curio-music-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
+* `callback` - _(optional)_ - a function callback that accepts two arguments
+  * `err` - populated with details in the event of an error
+  * `result` - result set details
 
 ```javascript
 var playlistId = '<PLAYLIST_ID>';
@@ -330,14 +380,14 @@ This method can be used to retrieve a paginated result set of stations from the 
 
 **Usage:** `client.music.allStations(options, callback)`
 
-* options - _(optional)_ - can be used to supply additional filters and sorting instructions
-  * start - the index at which to start selection of items
-  * count - the total number of items to retrieve (maximum value is `100`)
-  * filters - additional field projections along with mandatory and optional filters (see [API documentation](https://curio-music-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
-  * sort - additional sorting parameters for result (see [API documentation](https://curio-music-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
-* callback - _(optional)_ - a function callback that accepts two arguments
-  * err - populated with details in the event of an error
-  * result - result set details
+* `options` - _(optional)_ - can be used to supply additional filters and sorting instructions
+  * `start` - the index at which to start selection of items
+  * `count` - the total number of items to retrieve (maximum value is `100`)
+  * `filters` - additional field projections along with mandatory and optional filters (see [API documentation](https://curio-music-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
+  * `sort` - additional sorting parameters for result (see [API documentation](https://curio-music-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
+* `callback` - _(optional)_ - a function callback that accepts two arguments
+  * `err` - populated with details in the event of an error
+  * `result` - result set details
 
 ```javascript
 client
@@ -369,15 +419,15 @@ This method can be used to retrieve a paginated set of tracks from a station in 
 
 **Usage:** `client.music.allStationTracks(stationId, options, callback)`
 
-* stationId - _(required)_ - defines the station for which tracks should be retrieved
-* options - _(optional)_ - can be used to supply additional filters and sorting instructions
-  * start - the index at which to start selection of items
-  * count - the total number of items to retrieve (maximum value is `100`)
-  * filters - additional field projections along with mandatory and optional filters (see [API documentation](https://curio-music-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
-  * sort - additional sorting parameters for result (see [API documentation](https://curio-music-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
-* callback - _(optional)_ - a function callback that accepts two arguments
-  * err - populated with details in the event of an error
-  * result - result set details
+* `stationId` - _(required)_ - defines the station for which tracks should be retrieved
+* `options` - _(optional)_ - can be used to supply additional filters and sorting instructions
+  * `start` - the index at which to start selection of items
+  * `count` - the total number of items to retrieve (maximum value is `100`)
+  * `filters` - additional field projections along with mandatory and optional filters (see [API documentation](https://curio-music-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
+  * `sort` - additional sorting parameters for result (see [API documentation](https://curio-music-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
+* `callback` - _(optional)_ - a function callback that accepts two arguments
+  * `err` - populated with details in the event of an error
+  * `result` - result set details
 
 ```javascript
 var stationId = '<STATION_ID>';
@@ -407,12 +457,12 @@ _Note:_ Due to the implementation within the API, some filter parameters are not
 
 **Usage:** `client.music.allTracks(options, callback)`
 
-* options - _(optional)_ - can be used to supply additional filters and sorting instructions
-  * start - the index at which to start selection of items
-  * count - the total number of items to retrieve (maximum value is `100`)
-* callback - _(optional)_ - a function callback that accepts two arguments
-  * err - populated with details in the event of an error
-  * result - result set details
+* `options` - _(optional)_ - can be used to supply additional filters and sorting instructions
+  * `start` - the index at which to start selection of items
+  * `count` - the total number of items to retrieve (maximum value is `100`)
+* `callback` - _(optional)_ - a function callback that accepts two arguments
+  * `err` - populated with details in the event of an error
+  * `result` - result set details
 
 ```javascript
 client
@@ -437,10 +487,10 @@ This method can be used to verify if a track exists within a station. Because a 
 
 **Usage:** `client.music.checkPlaylistTrack(playlistId, trackAlias, callback)`
 
-* playlistId - _(required)_ - defines the playlist
-* trackAlias - _(required)_ - defines the track to verify
-* callback - _(optional)_ - a function callback that accepts two arguments
-  * err - populated with details in the event of an error
+* `playlistId` - _(required)_ - defines the playlist
+* `trackAlias` - _(required)_ - defines the track to verify
+* `callback` - _(optional)_ - a function callback that accepts two arguments
+  * `err` - populated with details in the event of an error
   * exists - a boolean (`true` or `false`) representing whether the track exists within the requested playlist
 
 ```javascript
@@ -471,52 +521,562 @@ client
 
 #### #createBroadcast
 
+This method can be used to create a new broadcast for an existing station.
+
+**Usage:** `client.music.createBroadcast(stationId, options, callback)`
+
+* `stationId` - _(required)_ - defines the station for which the broadcast should be created
+* `options` - _(optional)_ - defines additional parameters for the broadcast
+  * `beginDate` - _(optional)_ - the date and time at which the broadcast schedule should begin (defaults to the current date and time if not supplied)
+  * `duration` - _(optional)_ - the length, in minutes, for the playlist (defaults to 1440 which is 24 hours)
+* `callback` - _(optional)_ - a function callback that accepts two arguments
+  * `err` - populated with details in the event of an error
+  * `result` - the response from the API
+
+```javascript
+var stationId = '<STATION_ID>';
+
+client
+  .music
+  .createBroadcast(stationId)
+  .then((broadcast) => {
+    console.log(
+      'successfully created broadcast with id %s',
+      broadcast.broadcastId);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
+
 [back to top](#usage)
 
 #### #createPlaylist
+
+This method can be used to create a new custom playlist.
+
+**Usage:** `client.music.createPlaylist(playlist, callback)`
+
+* `playlist` - _(required)_ - defines the details of the playlist
+  * `title` - _(required)_ - the name of the custom playlist
+  * `tracks` - _(optional)_ - the tracks that should be added to the playlist at the time it is created
+* `callback` - _(optional)_ - a function callback that accepts two arguments
+  * `err` - populated with details in the event of an error
+  * `result` - the response from the API
+
+```javascript
+var info = {
+  title : 'Vorster\'s Favorite Hits'
+};
+
+client
+  .music
+  .createPlaylist(info)
+  .then((playlist) => {
+    console.log(
+      'successfully created playlist with id %s',
+      playlist.playlistId);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
 
 [back to top](#usage)
 
 #### #deleteBroadcast
 
+This method can be used to delete an existing broadcast schedule from within a station.
+
+**Usage:** `client.music.deleteBroadcast(stationId, broadcastId, callback)`
+
+* `stationId` - _(required)_ - defines the station within which the broadcast exists
+* `broadcastId` - _(required)_ - defines the broadcast to delete
+* `callback` - _(optional)_ - a function callback that accepts a single argument
+  * `err` - populated with details in the event of an error
+
+```javascript
+var
+  stationId = '<STATION_ID>',
+  broadcastId = '<BROADCAST_ID>';
+
+client
+  .music
+  .deleteBroadcast(stationId, broadcastId)
+  .then((playlist) => {
+    console.log(
+      'successfully deleted broadcast with id %s',
+      broadcastId);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
+
 [back to top](#usage)
 
 #### #deletePlaylist
+
+This method can be used to delete an existing custom playlist.
+
+**Usage:** `client.music.deletePlaylist(playlistId, callback)`
+
+* `playlistId` - _(required)_ - defines the playlist to delete
+* `callback` - _(optional)_ - a function callback that accepts a single argument
+  * `err` - populated with details in the event of an error
+
+```javascript
+var playlistId = '<PLAYLIST_ID>';
+
+client
+  .music
+  .deletePlaylist(playlistId)
+  .then((playlist) => {
+    console.log(
+      'successfully deleted playlist with id %s',
+      playlistId);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
 
 [back to top](#usage)
 
 #### #deletePlaylistTrack
 
+This method can be used to remove an existing track from a custom playlist.
+
+**Usage:** `client.music.deletePlaylistTrack(playlistId, trackAlias, callback)`
+
+* `playlistId` - _(required)_ - defines the playlist from which the track should be removed
+* `trackAlias` - _(required)_ - defines the track to remove
+* `callback` - _(optional)_ - a function callback that accepts a single argument
+  * `err` - populated with details in the event of an error
+
+```javascript
+var
+  playlistId = '<PLAYLIST_ID>',
+  trackAlias = 'tracktoken:1234';
+
+client
+  .music
+  .deletePlaylistTrack(playlistId, trackAlias)
+  .then((playlist) => {
+    console.log(
+      'successfully deleted track %s from playlist with id %s',
+      trackAlias,
+      playlistId);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
+
 [back to top](#usage)
 
 #### #getBroadcast
+
+To retrieve a specific broadcast for a station, by broadcast identifier, use this method.
+
+**Usage:** `client.music.getBroadcast(stationId, broadcastId, callback)`
+
+* `stationId` - _(required)_ - defines the station from which the broadcast should be retrieved
+* `broadcastId` - _(required)_ - defines the broadcast to retrieve
+* `callback` - _(optional)_ - a function callback that accepts a single argument
+  * `err` - populated with details in the event of an error
+  * `broadcast` - the broadcast
+
+```javascript
+var
+  stationId = '<STATION_ID>',
+  broadcastId = '<BROADCAST_ID>';
+
+client
+  .music
+  .getBroadcast(stationId, broadcastId)
+  .then((broadcast) => {
+    console.log(
+      'successfully retrieved broadcast %s',
+      broadcast.broadcastId);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
 
 [back to top](#usage)
 
 #### #getCollection
 
+To retrieve a specific collection by collection identifier, use this method.
+
+**Usage:** `client.music.getCollection(collectionId, callback)`
+
+* `collectionId` - _(required)_ - defines the collection that should be retrieved
+* `callback` - _(optional)_ - a function callback that accepts a single argument
+  * `err` - populated with details in the event of an error
+  * `collection` - the collection
+
+```javascript
+var collectionId = '<COLLECTION_ID>';
+
+client
+  .music
+  .getCollection(collectionId)
+  .then((collection) => {
+    console.log(
+      'successfully retrieved collection %s',
+      collection.collectionId);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
+
 [back to top](#usage)
 
 #### #getPlaylist
+
+To retrieve a specific custom playlist by identifier, use this method.
+
+**Usage:** `client.music.getPlaylist(playlistId, callback)`
+
+* `playlistId` - _(required)_ - defines the custom playlist that should be retrieved
+* `callback` - _(optional)_ - a function callback that accepts a single argument
+  * `err` - populated with details in the event of an error
+  * `playlist` - the playlist
+
+```javascript
+var playlistId = '<PLAYLIST_ID>';
+
+client
+  .music
+  .getPlaylist(playlistId)
+  .then((customPlaylist) => {
+    console.log(
+      'successfully retrieved custom playlist %s',
+      customPlaylist.collectionId);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
 
 [back to top](#usage)
 
 #### #getStation
 
-[back to top](#usage)
+This method provides the ability to retrieve a station by identifier.
 
-#### #getTracks
+**Usage:** `client.music.getStation(stationId, callback)`
+
+* `stationId` - _(required)_ - defines the station that should be retrieved
+* `callback` - _(optional)_ - a function callback that accepts a single argument
+  * `err` - populated with details in the event of an error
+  * `station` - the station
+
+```javascript
+var stationId = '<STATION_ID>';
+
+client
+  .music
+  .getStation(stationId)
+  .then((station) => {
+    console.log(
+      'successfully retrieved station %s',
+      station.stationId);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
 
 [back to top](#usage)
 
 #### #getTrack
 
+This method provides the ability to retrieve a single track by identifier.
+
+**Usage:** `client.music.getTrack(alias, callback)`
+
+* `alias` - _(required)_ - defines the track that should be retrieved
+  * can be the `assetId` for the track
+  * can be `trackToken:12345` where the `12345` refers to a `legacy.trackToken` value for a track
+  * can be the spotify URI (i.e. `spotify:track:1Ynbmv088`)
+* `callback` - _(optional)_ - a function callback that accepts a single argument
+  * `err` - populated with details in the event of an error
+  * `track` - the track
+
+```javascript
+var trackAlias = '<ALIAS>';
+
+client
+  .music
+  .getTrack(trackAlias)
+  .then((track) => {
+    console.log(
+      'successfully retrieved track %s',
+      track.assetId);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
+
+[back to top](#usage)
+
+#### #getTracks
+
+This method allows for the lookup of multiple tracks by a specific alias. This specific functionality comes in handy when attempting to perform a bulk lookup against the CURIOMusic API.
+
+**Usage:** `client.music.getTracks(aliasList, callback)`
+
+* `aliasList` - _(required)_ - defines an array of tracks that should be retrieved
+  * can be the `assetId` for the track
+  * can be `trackToken:12345` where the `12345` refers to a `legacy.trackToken` value for a track
+  * can be the spotify URI (i.e. `spotify:track:1Ynbmv088`)
+* `callback` - _(optional)_ - a function callback that accepts a single argument
+  * `err` - populated with details in the event of an error
+  * `tracks` - an array of tracks found
+
+```javascript
+var trackAliasList = [
+  '<ALIAS_1>',
+  '<ALIAS_2>'
+];
+
+client
+  .music
+  .getTracks(trackAliasList)
+  .then((tracks) => {
+    console.log(
+      'successfully retrieved %d tracks',
+      tracks.length);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
+
 [back to top](#usage)
 
 #### #mixCollection
 
+This method allows for the lookup of multiple tracks by a specific alias. This specific functionality comes in handy when attempting to perform a bulk lookup against the CURIOMusic API.
+
+**Usage:** `client.music.getTracks(aliasList, callback)`
+
+* `collection` - _(required)_ - defines the collection from which the mix should be created
+* `options` - _(optional)_ - defines the characteristics of the mix
+  * `artistSeparation` - _(optional)_ - the number of songs to play before repeating an artist (defaults to 5)
+  * `beginDate` - _(optional)_ - the date and time of when to start the mix (defaults to the current date and time)
+  * `duration` - _(optional)_ - the length, in minutes, that the mix should be generated for (defaults to 1440 which is 24 hours)
+  * `randomMix` - _(optional)_ - can be `true` or `false` - when true, tracks are pulled randomly from within the collection (defaults to true)
+  * `titleSeparation` - _(optional)_ - the number of songs to play before repeating a title (defaults to 5)
+* `callback` - _(optional)_ - a function callback that accepts a single argument
+  * `err` - populated with details in the event of an error
+  * `mix` - the mixed queue of tracks from the collection
+    * `options` - details regarding how the mix was created
+    * `queue` - the mixed list of tracks from the collection
+
+```javascript
+var collectionId = '<COLLECTION_ID>';
+
+client
+  .music
+  .mixCollection(collectionId)
+  .then((mix) => {
+    console.log(
+      'successfully created mix with %d tracks',
+      mix.queue.length);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
+
 [back to top](#usage)
 
 #### #updatePlaylist
+
+This method can be used to update an existing custom playlist.
+
+**Usage:** `client.music.updatePlaylist(playlist, callback)`
+
+* `playlist` - _(required)_ - defines the details of the playlist
+  * `playlistId` - _(required)_ - the identifier of the playlist
+  * `title` - _(optional)_ - the name of the custom playlist
+  * `tracks` - _(optional)_ - the tracks that should be added to the playlist at the time it is created
+* `callback` - _(optional)_ - a function callback that accepts two arguments
+  * `err` - populated with details in the event of an error
+  * `playlist` - the response from the API
+
+```javascript
+var playlist = {
+  playlistId : '<PLAYLIST_ID',
+  title : 'Vorster\'s Favorite Hits (redux)'
+};
+
+client
+  .music
+  .updatePlaylist(playlist)
+  .then((playlist) => {
+    console.log(
+      'successfully updated playlist with id %s',
+      playlist.playlistId);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
+
+[back to top](#usage)
+
+- - -
+
+### Playback Module
+
+The playback module is designed to simplify interaction with the [PlayNetwork Playback API](https://playback-api.apps.playnetwork.com/v1/docs). This module supports the following methods:
+
+#### #allPlays
+
+This method can be used to retrieve a paginated result set of plays from the API. By default, only one play (the most recent one) is returned, but eh `count` parameter can be supplied via `options` to retrieve more data. Only a limited amount of time is retained for playback history and, as a result, not all plays throughout the history of the device will be available.
+
+**Usage:** `client.playback.allPlays(key, options, callback)`
+
+* `key` - _(required)_ - defines a composite key for retrieving play history for a device (i.e. `deviceId:aabbcc112233`)
+* `options` - _(optional)_ - can be used to supply additional filters and sorting instructions
+  * `start` - the index at which to start selection of plays
+  * `count` - the total number of plays to retrieve (maximum value is `100`)
+* `callback` - _(optional)_ - a function callback that accepts two arguments
+  * `err` - populated with details in the event of an error
+  * `result` - result set details
+
+```javascript
+client
+  .playback
+  .allPlays({
+    start : 0,
+    count : 10
+  }).then((result) => {
+    console.log(
+      'found %d plays',
+      result.total);
+  }).catch((err) => {
+    console.error(err);
+  });
+```
+
+[back to top](#usage)
+
+#### #recordPlay
+
+This method can be used to record playback for a specific device or location.
+
+**Usage:** `client.playback.recordPlay(playbackInfo, callback)`
+
+* `playlistInfo` - _(required)_ - defines the playback info that should be recorded
+  * `client` - _(optional)_ - defines additional information about the device upon which the play occurred
+    * `host` - host details for the playback
+    * `software` - software details for the playback
+  * `content`
+    * `assetId` or `legacy.trackToken` - _(required)_ - the content being played
+  * `created` - _(optional)_ - the time at which the play began - this is defaulted to the current date and time if omitted
+  * `deviceId` or `legacy.deviceToken` - _(required)_ - the device upon which content is being played
+* `callback` - _(optional)_ - a function callback that accepts two arguments
+  * `err` - populated with details in the event of an error
+  * `result` - result set details
+
+```javascript
+var play = {
+  client : {
+    software : {
+      platform : 'Linux',
+      type : 'NodePlayer',
+      version : 'v1.0.0'
+    }
+  },
+  content : {
+    legacy : {
+      trackToken : 12345
+    }
+  },
+  legacy : {
+    deviceToken : 12345
+  }
+};
+
+client
+  .playback
+  .recordPlay(play)
+  .then((result) => {
+    console.log('successfully recorded play with id %s', result.playId);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
+
+[back to top](#usage)
+
+- - -
+
+### Settings Module
+
+The settings module is designed to simplify interaction with the [PlayNetwork Settings API](https://curio-settings-api.apps.playnetwork.com/v0/docs). This module supports the following methods:
+
+#### #allSettings
+
+This method differs slightly from all other methods with a similar name. Specifically, this method will return the settings that are assigned directly to the `clientId` used to instantiate this SDK.
+
+**Usage:** `client.settings.allSettings(options, callback)`
+
+* `options` - _(optional)_ - can be used to supply additional filters and sorting instructions
+* `callback` - _(optional)_ - a function callback that accepts two arguments
+  * `err` - populated with details in the event of an error
+  * `settings` - the settings
+
+```javascript
+client
+  .settings
+  .allSettings()
+  .then((settings) => {
+    console.log(
+      'found settings with settingsId %s',
+      settings.settingsId);
+  }).catch((err) => {
+    console.error(err);
+  });
+```
+
+[back to top](#usage)
+
+#### #getSettings
+
+In order to retrieve settings for a specific device or location, this method can be used.
+
+**Usage:** `client.settings.allSettings(options, callback)`
+
+* `alias` - _(required)_ - defines the specific settings to retrieve
+  * can be the `settingsId` that defines a specific result
+  * can be defined as `deviceToken:12345` where `12345` is the `legacy.deviceToken` of the target settings
+* `options` - _(optional)_ - can be used to supply additional filters and sorting instructions
+* `callback` - _(optional)_ - a function callback that accepts two arguments
+  * `err` - populated with details in the event of an error
+  * `settings` - the settings
+
+```javascript
+client
+  .settings
+  .getSettings('deviceToken:12345')
+  .then((settings) => {
+    console.log(
+      'found settings for device 12345 and the settingsId is %s',
+      settings.settingsId);
+  }).catch((err) => {
+    console.error(err);
+  });
+```
 
 [back to top](#usage)

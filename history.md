@@ -1,9 +1,12 @@
+# v1.0.4 - 2016/03/
+
+* Added more documentation for usage
+* Added `settings` sub-module
+
 # v1.0.3 - 2016/03/01
 
 * Replaced usages of `throw` with `Promise.reject`
 * Added `playback` sub-module
-* Added `content` sub-module
-* Added `settings` sub-module
 
 # v1.0.2 - 2016/02/29
 

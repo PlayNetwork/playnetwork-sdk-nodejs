@@ -1,6 +1,8 @@
 /*eslint no-magic-numbers: 0*/
 /*eslint no-unused-expressions: 0*/
 var
+	stream = require('stream'),
+
 	chai = require('chai'),
 	co = require('co'),
 	nock = require('nock'),
@@ -21,6 +23,14 @@ describe('content', () => {
 			})
 		}),
 		content,
+		getMockStream = function (statusCode) {
+			let contentStream = new stream.Readable();
+			contentStream.headers = {};
+			contentStream.statusCode = statusCode || 200;
+			contentStream._read = () => {};
+
+			return contentStream;
+		},
 		requestInfo,
 		responseInfo;
 
@@ -195,6 +205,148 @@ describe('content', () => {
 
 					return done();
 				});
+		});
+	});
+
+	describe('#getAssetStream', () => {
+		it('should require track', (done) => {
+			content.getAssetStream()
+				.then(() => {
+					return done(new Error('should require track'));
+				})
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('track is required');
+
+					return done();
+				});
+		});
+
+		it('should properly fail when content is not found', (done) => {
+			// intercept outbound request
+			nock('https://content-api.apps.playnetwork.com')
+				.get('/v0/assets/test')
+				.reply(404, { statusCode : 404 });
+
+			content.getAssetStream('test')
+				.then(() => {
+					return done(new Error('should fail when content is not found'));
+				})
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('resource not found');
+
+					return done();
+				});
+		});
+
+		it('should properly redirect to legacy when assetId is not supplied', (done) => {
+			// intercept outbound request
+			nock('https://content-api.apps.playnetwork.com')
+				.get('/v0/legacy/assets/tracktoken:1234')
+				.reply(200, getMockStream(200));
+
+			content.getAssetStream({ legacy : { trackToken : 1234 }})
+				.then((result) => {
+					should.exist(result);
+					return done();
+				})
+				.catch(done);
+		});
+
+		it('should properly return stream when content is found (promise)', (done) => {
+			// intercept outbound request
+			nock('https://content-api.apps.playnetwork.com')
+				.get('/v0/assets/test')
+				.reply(200, getMockStream(200));
+
+			content.getAssetStream('test')
+				.then((result) => {
+					should.exist(result);
+					return done();
+				})
+				.catch(done);
+		});
+
+		it('should properly return stream when content is found (callback)', (done) => {
+			// intercept outbound request
+			nock('https://content-api.apps.playnetwork.com')
+				.get('/v0/assets/test')
+				.reply(200, getMockStream(200));
+
+			content.getAssetStream({ assetId : 'test' }, function (err, result) {
+				should.not.exist(err);
+				should.exist(result);
+
+				return done();
+			});
+		});
+	});
+
+	describe('#getLegacyAssetStream', () => {
+		it('should require track', (done) => {
+			content.getLegacyAssetStream()
+				.then(() => {
+					return done(new Error('should require track'));
+				})
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('track is required');
+
+					return done();
+				});
+		});
+
+		it('should properly fail when content is not found', (done) => {
+			// intercept outbound request
+			nock('https://content-api.apps.playnetwork.com')
+				.get('/v0/legacy/assets/test')
+				.reply(404, { statusCode : 404 });
+
+			content.getLegacyAssetStream('test')
+				.then(() => {
+					return done(new Error('should fail when content is not found'));
+				})
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('resource not found');
+
+					return done();
+				});
+		});
+
+		it('should properly return stream when content is found (promise)', (done) => {
+			// intercept outbound request
+			nock('https://content-api.apps.playnetwork.com')
+				.get('/v0/legacy/assets/test')
+				.reply(200, getMockStream(200));
+
+			content.getLegacyAssetStream('test')
+				.then((result) => {
+					should.exist(result);
+					return done();
+				})
+				.catch(done);
+		});
+
+		it('should properly return stream when content is found (callback)', (done) => {
+			// intercept outbound request
+			nock('https://content-api.apps.playnetwork.com')
+				.get('/v0/legacy/assets/tracktoken:1234')
+				.reply(200, getMockStream(200));
+
+			content.getLegacyAssetStream(
+				{ legacy : { trackToken: 1234 } },
+				function (err, result) {
+					should.not.exist(err);
+					should.exist(result);
+
+					return done();
+			});
 		});
 	});
 });

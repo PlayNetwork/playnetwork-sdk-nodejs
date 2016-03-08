@@ -15,6 +15,8 @@ npm install playnetwork-sdk
 * [constructor](#constructor)
 * [options](#options)
 
+- - -
+
 ### Music
 
 This module can be used to interact with the [CURIOMusic API](https://curio-music-api.apps.playnetwork.com/v2/docs) to retrieve content programming and track meta-data.
@@ -57,12 +59,16 @@ This module can be used to interact with the [CURIOMusic API](https://curio-musi
 * [getTrack](#gettrack)
 * [getTracks](#gettracks)
 
+- - -
+
 ### Playback
 
 This module can be used to interact with the [Playback API](https://playback-api.apps.playnetwork.com/v1/docs) to get NowPlaying information, play history and record playback.
 
 * [allPlays](#allplays)
 * [recordPlay](#recordplay)
+
+- - -
 
 ### Settings
 
@@ -142,6 +148,92 @@ playnetwork.configure(
 
 // echo configured settings
 console.log(playnetwork.settings());
+```
+
+[back to top](#usage)
+
+- - -
+
+### Content Module
+
+#### #checkAsset
+
+This method can be used to determine if a particular asset exists on the server.
+
+**Usage:** `client.content.checkAsset(track, options, callback)`
+
+* `track` - _(required)_ - defines the asset to retrieve
+* `options` - _(optional)_ - additional parameters useful for identifying the characteristics specific to the asset
+  * `bitrate` - _(optional)_ -
+  * `channels` - _(optional)_ -
+  * `format` - _(optional)_ -
+* `callback` - _(optional)_ - a function callback that accepts two arguments
+  * `err` - populated with details in the event of an error
+  * `result` - result set details
+
+```javascript
+var
+  track = {
+    assetId : '<ASSET_ID>'
+  },
+  options = {
+    bitrate : 192000,
+    channels : 2,
+    format : 'ogg'
+  };
+
+client
+  .content
+  .checkAsset(track, options)
+  .then((exists) => {
+    if (exists) {
+      console.log('asset %s exists as requested', track.assetId);
+    } else {
+      console.error('asset %s does not exist!', track.assetId);
+    }
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
+
+[back to top](#usage)
+
+#### #checkAsset
+
+This method can be used to determine if a particular asset exists on the server.
+
+**Usage:** `client.content.checkLegacyAsset(track, options, callback)`
+
+* `track` - _(required)_ - defines the asset to retrieve
+* `options` - _(optional)_ - additional parameters useful for identifying the characteristics specific to the asset
+  * `bitrate` - _(optional)_ -
+  * `channels` - _(optional)_ -
+  * `format` - _(optional)_ -
+* `callback` - _(optional)_ - a function callback that accepts two arguments
+  * `err` - populated with details in the event of an error
+  * `result` - result set details
+
+```javascript
+var track = {
+  legacy : {
+    trackToken : 12345
+  }
+};
+
+client
+  .content
+  .checkLegacyAsset(track)
+  .then((exists) => {
+    if (exists) {
+      console.log('asset %s exists as requested', track.legacy.trackToken);
+    } else {
+      console.error('asset %s does not exist!', track.legacy.trackToken);
+    }
+  })
+  .catch((err) => {
+    console.error(err);
+  });
 ```
 
 [back to top](#usage)

@@ -999,7 +999,7 @@ client
 
 [back to top](#usage)
 
-#### #checkAsset
+#### #checkLegacyAsset
 
 This method can be used to determine if a particular asset exists on the server.
 

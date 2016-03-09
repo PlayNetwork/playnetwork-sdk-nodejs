@@ -1,4 +1,8 @@
-# v1.0.4 - 2016/03/
+# v1.0.5 - 2016/03/07
+
+* Added `content` sub-module
+
+# v1.0.4 - 2016/03/04
 
 * Added more documentation for usage
 * Added `settings` sub-module

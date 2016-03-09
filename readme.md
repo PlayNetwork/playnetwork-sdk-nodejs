@@ -1040,9 +1040,85 @@ client
 
 #### #getAssetStream
 
+This method is useful for retrieving a stream of bytes for a specific asset.
+
+**Usage:** `client.content.getAssetStream(track, options, callback)`
+
+* `track` - _(required)_ - defines the asset to retrieve
+* `options` - _(optional)_ - additional parameters useful for identifying the characteristics specific to the asset
+  * `bitrate` - _(optional)_ -
+  * `channels` - _(optional)_ -
+  * `format` - _(optional)_ -
+* `callback` - _(optional)_ - a function callback that accepts two arguments
+  * `err` - populated with details in the event of an error
+  * `result` - result set details
+
+```javascript
+var track = {
+  assetId : '<ASSET_ID>'
+};
+
+client
+  .content
+  .getAssetStream(track)
+  .then((audio) => {
+    let size = 0;
+
+    audio.on('data', (chunk) => {
+      size += chunk.length;
+    });
+
+    audio.on('end', () => {
+      console.log('completed retrieval of %d bytes', size);
+    });
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
+
 [back to top](#usage)
 
 #### #getLegacyAssetStream
+
+This method is useful for retrieving a legacy asset stream of bytes for a specific asset.
+
+**Usage:** `client.content.getLegacyAssetStream(track, options, callback)`
+
+* `track` - _(required)_ - defines the asset to retrieve
+* `options` - _(optional)_ - additional parameters useful for identifying the characteristics specific to the asset
+  * `bitrate` - _(optional)_ -
+  * `channels` - _(optional)_ -
+  * `format` - _(optional)_ -
+* `callback` - _(optional)_ - a function callback that accepts two arguments
+  * `err` - populated with details in the event of an error
+  * `result` - result set details
+
+```javascript
+var track = {
+  legacy : {
+    trackToken : 12345
+  }
+};
+
+client
+  .content
+  .getLegacyAssetStream(track)
+  .then((audio) => {
+    let size = 0;
+
+    audio.on('data', (chunk) => {
+      size += chunk.length;
+    });
+
+    audio.on('end', () => {
+      console.log('completed retrieval of %d bytes', size);
+    });
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
 
 [back to top](#usage)
 

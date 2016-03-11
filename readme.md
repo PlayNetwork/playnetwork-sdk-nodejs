@@ -1,8 +1,10 @@
 # PlayNetwork Node.js SDK
 
-## Install
+[![Build Status](https://travis-ci.org/PlayNetwork/playnetwork-sdk-nodejs.svg?branch=develop)](https://travis-ci.org/PlayNetwork/playnetwork-sdk-nodejs) [![Coverage Status](https://coveralls.io/repos/github/PlayNetwork/playnetwork-sdk-nodejs/badge.svg?branch=develop)](https://coveralls.io/github/PlayNetwork/playnetwork-sdk-nodejs?branch=develop)
 
-**_COMING SOON_**
+This module is an open source project with the goal of making the task of consuming various PlayNetwork APIs easy and straight-forward.
+
+## Install
 
 ```bash
 npm install playnetwork-sdk
@@ -90,6 +92,25 @@ This module provides support for retrieving location / device specific environme
 
 - - -
 
+### Device
+
+This module enables simple access to device group and individual device status information.
+
+* [allDevices](#alldevices)
+* [allGroups](#allgroups)
+* [createEventMessages](#createventmessages)
+* [createStatusReport](#createstatusreport)
+* [getAnalytics](#getanalytics)
+* [getDevice](#getdevice)
+* [getDevices](#getDevices)
+* [getGroup](#getgroup)
+* [getGroupAnalytics](#getgroupanalytics)
+* [getGroupDevices](#getgroupdevices)
+* [getGroups](#getgroups)
+* [getGroupsAnalytics](#getgroupsanalytics)
+
+- - -
+
 ### Getting Started
 
 #### Constructor
@@ -102,6 +123,9 @@ var playnetwork = require('playnetwork-sdk');
 playnetwork.configure(
   '<CLIENT_ID>',
   '<CLIENT_SECRET>');
+
+// echo configured settings
+console.log(playnetwork.options());
 ```
 
 [back to top](#usage)
@@ -158,7 +182,7 @@ playnetwork.configure(
   options);
 
 // echo configured settings
-console.log(playnetwork.settings());
+console.log(playnetwork.options());
 ```
 
 [back to top](#usage)
@@ -1269,3 +1293,374 @@ client
 ```
 
 [back to top](#usage)
+
+### Device Module
+
+The device module is designed to simplify interaction with the PlayNetwork Device API. This module supports the following methods:
+
+#### #allDevices
+
+This method can be used to retrieve a list of devices from the API.
+
+**Usage:** `client.device.allDevices(options, callback)`
+
+* `options` - _(optional)_ - can be used to supply additional filters and sorting instructions
+  * `start` - the index at which to start selection of items
+  * `count` - the total number of items to retrieve (maximum value is `100`)
+  * `filters` - additional field projections along with mandatory and optional filters (see [API documentation](https://curio-music-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
+  * `sort` - additional sorting parameters for result (see [API documentation](https://curio-music-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
+* `callback` - _(optional)_ - a function callback that accepts two arguments
+  * `err` - populated with details in the event of an error
+  * `result` - result set details
+
+```javascript
+client
+  .device
+  .allDevices({
+    count : 100,
+    start : 0
+  })
+  .then((result) => {
+    console.log('successfully found %d devices', result.total);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
+
+[back to top](#usage)
+
+#### #allGroups
+
+This method can be used to retrieve a list of groups from the API.
+
+**Usage:** `client.device.allGroups(options, callback)`
+
+* `options` - _(optional)_ - can be used to supply additional filters and sorting instructions
+  * `start` - the index at which to start selection of items
+  * `count` - the total number of items to retrieve (maximum value is `100`)
+  * `filters` - additional field projections along with mandatory and optional filters (see [API documentation](https://curio-music-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
+  * `sort` - additional sorting parameters for result (see [API documentation](https://curio-music-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
+* `callback` - _(optional)_ - a function callback that accepts two arguments
+  * `err` - populated with details in the event of an error
+  * `result` - result set details
+
+```javascript
+client
+  .device
+  .allGroups({
+    count : 100,
+    start : 0
+  })
+  .then((result) => {
+    console.log('successfully found %d device groups', result.total);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
+
+[back to top](#usage)
+
+#### #createEventMessages
+
+When needing to notify the API of one or more event message for a device, this method should be used.
+
+**Usage:** `client.device.createEventMessages(deviceId, messages, callback)`
+
+* `deviceId` - _(required)_ - should contain the identifier of the device
+* `messages` - _(required)_ - may be a `string` message, a single message `object` or an array of message strings or objects
+  * `level` - _(optional)_ - defaults to `INFO`, this the level of severity for the message (i.e. `INFO`, `WARN`, `ERROR`, `CRITICAL`)
+  * `message` - _(required)_ - if the value of the message is a string, the value is used in this field
+  * `timestamp` - _(optional)_ - defaults to now, refers to the date of the event
+* `callback` - _(optional)_ - a function callback that accepts two arguments
+  * `err` - populated with details in the event of an error
+  * `result` - result set details
+
+```javascript
+let
+  deviceId = '<DEVICE_ID>',
+  trackToken = 12345;
+
+client
+  .device
+  .createEventMessages([{
+    message : `track with trackToken ${trackToken} downloaded successfully`,
+    timestamp : new Date()
+  }]).then(() => {
+    console.log('event logged');
+  }).catch((err) => {
+    console.error(err);
+  });
+```
+
+[back to top](#usage)
+
+#### #createStatusReport
+
+This method can be used to update the API with specific details regarding the status of the device.
+
+**Usage:** `client.device.createStatusReport(deviceId, status, callback)`
+
+* `deviceId` - _(required)_ - should contain the identifier of the device
+* `status` - _(required)_ - an object with details regarding the status and settings of the device
+  * `TBD` - details regarding this message require
+* `callback` - _(optional)_ - a function callback that accepts two arguments
+  * `err` - populated with details in the event of an error
+  * `result` - result set details
+
+```javascript
+let
+  deviceId = '<DEVICE_ID>',
+  status = {
+    // requires definition
+  };
+
+client
+  .device
+  .createStatusReport(deviceId, status)
+  .then(() => {
+    console.log('status sent!');
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
+
+[back to top](#usage)
+
+#### #getAnalytics
+
+This method can be used to retrieve a set of analytics based on a query for devices.
+
+**Usage:** `client.device.getAnalytics(options, callback)`
+
+* `options` - _(optional)_ - can be used to supply additional filters and sorting instructions
+  * `start` - the index at which to start selection of items
+  * `count` - the total number of items to retrieve (maximum value is `100`)
+  * `filters` - additional field projections along with mandatory and optional filters (see [API documentation](https://curio-music-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
+  * `sort` - additional sorting parameters for result (see [API documentation](https://curio-music-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
+* `callback` - _(optional)_ - a function callback that accepts two arguments
+  * `err` - populated with details in the event of an error
+  * `analytics` - the analytics for the devices found
+
+```javascript
+client
+  .device
+  .getAnalytics({
+    filters : {
+      mandatory : {
+        exact : {
+          'status.software.version' : 'v1.11.1'
+        }
+      }
+    }
+  })
+  .then((analytics) => {
+    console.log(analytics);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
+
+[back to top](#usage)
+
+#### #getDevice
+
+To retrieve details for a particular device, use this method.
+
+**Usage:** `client.device.getDevice(deviceId, options, callback)`
+
+* `deviceId` - _(required)_ - defines the device that should be retrieved
+* `options` - _(optional)_ - additional options
+* `callback` - _(optional)_ - a function callback that accepts a single argument
+  * `err` - populated with details in the event of an error
+  * `device` - the device
+
+```javascript
+var deviceId = '<DEVICE_ID>';
+
+client
+  .device
+  .getDevice(deviceId)
+  .then((device) => {
+    console.log(
+      'successfully retrieved device %s',
+      device.deviceId);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
+
+[back to top](#usage)
+
+#### #getDevices
+
+Works similarly to [getDevice](#getdevice), but allows for multiple devices to be provided as a bulk request.
+
+**Usage:** `client.device.getDevices(deviceIdList, callback)`
+
+* `deviceIdList` - _(required)_ - an array of deviceId values to lookup
+* `callback` - _(optional)_ - a function callback that accepts a single argument
+  * `err` - populated with details in the event of an error
+  * `devices` - the devices
+
+```javascript
+var deviceIdList = ['<DEVICE_ID_1>', '<DEVICE_ID_2>', '<DEVICE_ID_3>'];
+
+client
+  .device
+  .getDevices(deviceIdList)
+  .then((groups) => {
+    console.log(
+      'successfully retrieved %d devices',
+      devices.length);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
+
+[back to top](#usage)
+
+#### #getGroup
+
+To retrieve details for a particular group of devices, use this method.
+
+**Usage:** `client.device.getGroup(groupId, options, callback)`
+
+* `groupId` - _(required)_ - defines the group that should be retrieved
+* `options` - _(optional)_ - additional options
+* `callback` - _(optional)_ - a function callback that accepts a single argument
+  * `err` - populated with details in the event of an error
+  * `group` - the group
+
+```javascript
+var groupId = '<GROUP_ID>';
+
+client
+  .device
+  .getGroup(groupId)
+  .then((group) => {
+    console.log(
+      'successfully retrieved group %s',
+      group.deviceGroupId);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
+
+[back to top](#usage)
+
+#### #getGroupAnalytics
+
+To retrieve summary analytics for a particular group of devices, use this method.
+
+**Usage:** `client.device.getGroupAnalytics(groupId, options, callback)`
+
+* `groupId` - _(required)_ - defines the group that should be retrieved
+* `options` - _(optional)_ - additional options
+* `callback` - _(optional)_ - a function callback that accepts a single argument
+  * `err` - populated with details in the event of an error
+  * `analytics` - the analytics for the group of devices
+
+```javascript
+var groupId = '<GROUP_ID>';
+
+client
+  .device
+  .getGroupAnalytics(groupId)
+  .then((analytics) => {
+    console.log(analytics);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
+
+[back to top](#usage)
+
+#### #getGroupDevices
+
+To retrieve a paginated list of devices for a particular group, use this method.
+
+**Usage:** `client.device.getGroupDevices(groupId, options, callback)`
+
+* `groupId` - _(required)_ - defines the group that should be retrieved
+* `options` - _(optional)_ - additional options
+* `callback` - _(optional)_ - a function callback that accepts a single argument
+  * `err` - populated with details in the event of an error
+  * `result` - the result set of the request
+
+```javascript
+var groupId = '<GROUP_ID>';
+
+client
+  .device
+  .getGroupAnalytics(groupId, { start : 0, count : 100 })
+  .then((result) => {
+    console.log('successfully retrieved 100 of %d devices', result.total);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
+
+[back to top](#usage)
+
+#### #getGroups
+
+Works similarly to [getGroup](#getgroup), but allows for multiple groups to be provided as a bulk request.
+
+**Usage:** `client.device.getGroups(groupIdList, callback)`
+
+* `groupIdList` - _(required)_ - an array of deviceGroupId values to lookup
+* `callback` - _(optional)_ - a function callback that accepts a single argument
+  * `err` - populated with details in the event of an error
+  * `groups` - the groups
+
+```javascript
+var groupIdList = ['<GROUP_ID_1>', '<GROUP_ID_2>', '<GROUP_ID_3>'];
+
+client
+  .device
+  .getGroups(groupIdList)
+  .then((groups) => {
+    console.log(
+      'successfully retrieved %d groups',
+      groups.length);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
+
+[back to top](#usage)
+
+#### #getGroupsAnalytics
+
+Works similarly to [getGroupAnalytics](#getgroupanalytics), but allows for multiple groups to be provided as a bulk request.
+
+**Usage:** `client.device.getGroupsAnalytics(groupIdList, callback)`
+
+* `groupIdList` - _(required)_ - an array of deviceGroupId values to lookup
+* `callback` - _(optional)_ - a function callback that accepts a single argument
+  * `err` - populated with details in the event of an error
+  * `analytics` - the analytics for the group of devices
+
+```javascript
+var groupIdList = ['<GROUP_ID_1>', '<GROUP_ID_2>', '<GROUP_ID_3>'];
+
+client
+  .device
+  .getGroupsAnalytics(groupIdList)
+  .then((analytics) => {
+    console.log(analytics);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```

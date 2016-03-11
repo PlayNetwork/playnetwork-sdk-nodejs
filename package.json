@@ -1,6 +1,6 @@
 {
   "name": "playnetwork-sdk",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "SDK to make accessing PlayNetwork APIs when writing code in Javascript (Node.js) much easier.",
   "main": "lib",
   "scripts": {
@@ -12,13 +12,14 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/PlayNetwork/javascript-sdk/issues"
+    "url": "https://github.com/PlayNetwork/playnetwork-sdk-nodejs/issues"
   },
-  "homepage": "https://github.com/PlayNetwork/javascript-sdk#readme",
+  "homepage": "https://github.com/PlayNetwork/playnetwork-sdk-nodejs#readme",
   "devDependencies": {
     "chai": "^3.5.0",
     "del": "^2.2.0",
     "gulp": "^3.9.1",
+    "gulp-coveralls": "^0.1.4",
     "gulp-eslint": "^2.0.0",
     "gulp-istanbul": "^0.10.3",
     "gulp-mocha": "^2.2.0",

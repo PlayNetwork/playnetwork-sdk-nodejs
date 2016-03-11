@@ -1,4 +1,5 @@
 var
+	coveralls = require('gulp-coveralls'),
 	del = require('del'),
 	eslint = require('gulp-eslint'),
 	gulp = require('gulp'),
@@ -10,6 +11,12 @@ module.exports = (() => {
 	'use strict';
 
 	gulp.task('clean', () => (del('coverage', 'reports')));
+
+	gulp.task('coveralls', function () {
+	return gulp
+		.src('./reports/lcov.info')
+		.pipe(coveralls());
+});
 
 	gulp.task('lint', () => {
 		return gulp

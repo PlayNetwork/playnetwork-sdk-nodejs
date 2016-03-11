@@ -1,8 +1,8 @@
 # PlayNetwork Node.js SDK
 
-## Install
+This module is an open source project with the goal of making the task of consuming various PlayNetwork APIs easy and straight-forward.
 
-**_COMING SOON_**
+## Install
 
 ```bash
 npm install playnetwork-sdk

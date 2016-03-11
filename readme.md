@@ -1,5 +1,7 @@
 # PlayNetwork Node.js SDK
 
+[![Build Status](https://travis-ci.org/PlayNetwork/playnetwork-sdk-nodejs.svg?branch=develop)](https://travis-ci.org/PlayNetwork/playnetwork-sdk-nodejs)
+
 This module is an open source project with the goal of making the task of consuming various PlayNetwork APIs easy and straight-forward.
 
 ## Install

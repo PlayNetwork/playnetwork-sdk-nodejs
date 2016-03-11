@@ -1541,3 +1541,57 @@ client
 ```
 
 [back to top](#usage)
+
+#### #getGroups
+
+Works similarly to [getGroup](#getgroup), but allows for multiple groups to be provided as a bulk request.
+
+**Usage:** `client.device.getGroups(groupIdList, callback)`
+
+* `groupIdList` - _(required)_ - an array of deviceGroupId values to lookup
+* `callback` - _(optional)_ - a function callback that accepts a single argument
+  * `err` - populated with details in the event of an error
+  * `groups` - the groups
+
+```javascript
+var groupIdList = ['<GROUP_ID_1>', '<GROUP_ID_2>', '<GROUP_ID_3>'];
+
+client
+  .device
+  .getGroups(groupIdList)
+  .then((groups) => {
+    console.log(
+      'successfully retrieved %d groups',
+      groups.length);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
+
+[back to top](#usage)
+
+#### #getGroupsAnalytics
+
+Works similarly to [getGroupAnalytics](#getgroupanalytics), but allows for multiple groups to be provided as a bulk request.
+
+**Usage:** `client.device.getGroupsAnalytics(groupIdList, callback)`
+
+* `groupIdList` - _(required)_ - an array of deviceGroupId values to lookup
+* `callback` - _(optional)_ - a function callback that accepts a single argument
+  * `err` - populated with details in the event of an error
+  * `analytics` - the analytics for the group of devices
+
+```javascript
+var groupIdList = ['<GROUP_ID_1>', '<GROUP_ID_2>', '<GROUP_ID_3>'];
+
+client
+  .device
+  .getGroupsAnalytics(groupIdList)
+  .then((analytics) => {
+    console.log(analytics);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```

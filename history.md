@@ -1,3 +1,8 @@
+# v1.0.6 - 2016/03/11
+
+* Added `device` sub-module
+* Added `options` to root `playnetwork` module
+
 # v1.0.5 - 2016/03/07
 
 * Added `content` sub-module

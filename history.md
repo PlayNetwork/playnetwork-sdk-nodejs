@@ -1,5 +1,6 @@
 # v1.0.6 - 2016/03/11
 
+* Added support for [coveralls.io](https://coveralls.io) and [travis-ci](https://travis-ci.org)
 * Added `device` sub-module
 * Added `options` to root `playnetwork` module
 

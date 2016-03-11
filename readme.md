@@ -98,6 +98,7 @@ This module enables simple access to device group and individual device status i
 * [allGroups](#allgroups)
 * [createEventMessages](#createventmessages)
 * [createStatusReport](#createstatusreport)
+* [getAnalytics](#getanalytics)
 * [getDevice](#getdevice)
 * [getDevices](#getDevices)
 * [getGroup](#getgroup)
@@ -1418,6 +1419,43 @@ client
   .createStatusReport(deviceId, status)
   .then(() => {
     console.log('status sent!');
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
+
+[back to top](#usage)
+
+#### #getAnalytics
+
+This method can be used to retrieve a set of analytics based on a query for devices.
+
+**Usage:** `client.device.getAnalytics(options, callback)`
+
+* `options` - _(optional)_ - can be used to supply additional filters and sorting instructions
+  * `start` - the index at which to start selection of items
+  * `count` - the total number of items to retrieve (maximum value is `100`)
+  * `filters` - additional field projections along with mandatory and optional filters (see [API documentation](https://curio-music-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
+  * `sort` - additional sorting parameters for result (see [API documentation](https://curio-music-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
+* `callback` - _(optional)_ - a function callback that accepts two arguments
+  * `err` - populated with details in the event of an error
+  * `analytics` - the analytics for the devices found
+
+```javascript
+client
+  .device
+  .getAnalytics({
+    filters : {
+      mandatory : {
+        exact : {
+          'status.software.version' : 'v1.11.1'
+        }
+      }
+    }
+  })
+  .then((analytics) => {
+    console.log(analytics);
   })
   .catch((err) => {
     console.error(err);

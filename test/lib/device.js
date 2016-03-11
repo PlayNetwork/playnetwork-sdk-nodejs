@@ -386,6 +386,52 @@ describe('device', () => {
 		});
 	});
 
+	describe('#getAnalytics', () => {
+		it('should properly get analytics (promise)', (done) => {
+			// intercept outbound request
+			nock('https://device-api.apps.playnetwork.com')
+				.get('/v0/devices/analytics')
+				.reply(200, { test : true });
+
+			device.getAnalytics()
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch((err) => (done(err)));
+		});
+
+		it('should properly get analytics (callback)', (done) => {
+			// intercept outbound request
+			nock('https://device-api.apps.playnetwork.com')
+				.get('/v0/devices/analytics')
+				.reply(200, { test : true });
+
+			device.getAnalytics(function (err, result) {
+				should.not.exist(err);
+				should.exist(requestInfo);
+
+				return done();
+			});
+		});
+
+		it('should properly support options', (done) => {
+			// intercept outbound request
+			nock('https://device-api.apps.playnetwork.com')
+				.get('/v0/devices/analytics?testing=yes')
+				.reply(200, { test : true });
+
+			device.getAnalytics({ testing : 'yes' }, function (err, result) {
+				should.not.exist(err);
+				should.exist(requestInfo);
+
+				return done();
+			});
+		});
+	});
+
 	describe('#getDevice', () => {
 		it('should require deviceId', (done) => {
 			device.getDevice(function (err, result) {
@@ -501,18 +547,202 @@ describe('device', () => {
 	});
 
 	describe('#getGroupAnalytics', () => {
+		it('should require groupId', (done) => {
+			device.getGroupAnalytics(function (err, result) {
+				should.exist(err);
+				should.not.exist(result);
+				should.exist(err.message);
+				err.message.should.equal('groupId is required');
 
+				return done();
+			});
+		});
+
+		it('should properly get analytics (promise)', (done) => {
+			// intercept outbound request
+			nock('https://device-api.apps.playnetwork.com')
+				.get('/v0/groups/test/analytics')
+				.reply(200, { test : true });
+
+			device.getGroupAnalytics('test')
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch((err) => (done(err)));
+		});
+
+		it('should properly get analytics (callback)', (done) => {
+			// intercept outbound request
+			nock('https://device-api.apps.playnetwork.com')
+				.get('/v0/groups/test/analytics')
+				.reply(200, { test : true });
+
+			device.getGroupAnalytics('test', function (err, result) {
+				should.not.exist(err);
+				should.exist(requestInfo);
+
+				return done();
+			});
+		});
+
+		it('should properly support options', (done) => {
+			// intercept outbound request
+			nock('https://device-api.apps.playnetwork.com')
+				.get('/v0/groups/test/analytics?testing=yes')
+				.reply(200, { test : true });
+
+			device.getGroupAnalytics('test', { testing : 'yes' }, function (err, result) {
+				should.not.exist(err);
+				should.exist(requestInfo);
+
+				return done();
+			});
+		});
 	});
 
 	describe('#getGroupDevices', () => {
+		it('should require groupId', (done) => {
+			device.getGroupDevices(function (err, result) {
+				should.exist(err);
+				should.not.exist(result);
+				should.exist(err.message);
+				err.message.should.equal('groupId is required');
 
+				return done();
+			});
+		});
+
+		it('should properly get analytics (promise)', (done) => {
+			// intercept outbound request
+			nock('https://device-api.apps.playnetwork.com')
+				.get('/v0/groups/test/devices')
+				.reply(200, { test : true });
+
+			device.getGroupDevices('test')
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch((err) => (done(err)));
+		});
+
+		it('should properly get analytics (callback)', (done) => {
+			// intercept outbound request
+			nock('https://device-api.apps.playnetwork.com')
+				.get('/v0/groups/test/devices')
+				.reply(200, { test : true });
+
+			device.getGroupDevices('test', function (err, result) {
+				should.not.exist(err);
+				should.exist(requestInfo);
+
+				return done();
+			});
+		});
+
+		it('should properly support options', (done) => {
+			// intercept outbound request
+			nock('https://device-api.apps.playnetwork.com')
+				.get('/v0/groups/test/devices?testing=yes')
+				.reply(200, { test : true });
+
+			device.getGroupDevices('test', { testing : 'yes' }, function (err, result) {
+				should.not.exist(err);
+				should.exist(requestInfo);
+
+				return done();
+			});
+		});
 	});
 
 	describe('#getGroups', () => {
+		it('should require groupIdList', (done) => {
+			device.getGroups(function (err, result) {
+				should.exist(err);
+				should.not.exist(result);
+				should.exist(err.message);
+				err.message.should.equal('groupIdList is required');
 
+				return done();
+			});
+		});
+
+		it('should properly get groups (promise)', (done) => {
+			// intercept outbound request
+			nock('https://device-api.apps.playnetwork.com')
+				.post('/v0/groups/deviceGroupIds')
+				.reply(200, { test : true });
+
+			device.getGroups(['test'])
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch((err) => (done(err)));
+		});
+
+		it('should properly get groups (callback)', (done) => {
+			// intercept outbound request
+			nock('https://device-api.apps.playnetwork.com')
+				.post('/v0/groups/deviceGroupIds')
+				.reply(200, { test : true });
+
+			device.getGroups(['test'], function (err, result) {
+				should.not.exist(err);
+				should.exist(requestInfo);
+
+				return done();
+			});
+		});
 	});
 
 	describe('#getGroupsAnalytics', () => {
+		it('should require groupIdList', (done) => {
+			device.getGroupsAnalytics(function (err, result) {
+				should.exist(err);
+				should.not.exist(result);
+				should.exist(err.message);
+				err.message.should.equal('groupIdList is required');
 
+				return done();
+			});
+		});
+
+		it('should properly get groups (promise)', (done) => {
+			// intercept outbound request
+			nock('https://device-api.apps.playnetwork.com')
+				.post('/v0/groups/analytics')
+				.reply(200, { test : true });
+
+			device.getGroupsAnalytics(['test'])
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch((err) => (done(err)));
+		});
+
+		it('should properly get groups (callback)', (done) => {
+			// intercept outbound request
+			nock('https://device-api.apps.playnetwork.com')
+				.post('/v0/groups/analytics')
+				.reply(200, { test : true });
+
+			device.getGroupsAnalytics(['test'], function (err, result) {
+				should.not.exist(err);
+				should.exist(requestInfo);
+
+				return done();
+			});
+		});
 	});
 });

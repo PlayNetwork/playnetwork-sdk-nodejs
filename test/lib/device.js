@@ -489,6 +489,49 @@ describe('device', () => {
 		});
 	});
 
+	describe('#getDevices', () => {
+		it('should require deviceIdList', (done) => {
+			device.getDevices(function (err, result) {
+				should.exist(err);
+				should.not.exist(result);
+				should.exist(err.message);
+				err.message.should.equal('deviceIdList is required');
+
+				return done();
+			});
+		});
+
+		it('should properly get devices (promise)', (done) => {
+			// intercept outbound request
+			nock('https://device-api.apps.playnetwork.com')
+				.post('/v0/devices/deviceIds')
+				.reply(200, { test : true });
+
+			device.getDevices(['test'])
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch((err) => (done(err)));
+		});
+
+		it('should properly get devices (callback)', (done) => {
+			// intercept outbound request
+			nock('https://device-api.apps.playnetwork.com')
+				.post('/v0/devices/deviceIds')
+				.reply(200, { test : true });
+
+			device.getDevices(['test'], function (err, result) {
+				should.not.exist(err);
+				should.exist(requestInfo);
+
+				return done();
+			});
+		});
+	});
+
 	describe('#getGroup', () => {
 		it('should require groupId', (done) => {
 			device.getGroup(function (err, result) {

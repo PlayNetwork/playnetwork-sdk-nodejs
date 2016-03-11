@@ -1494,6 +1494,35 @@ client
 
 [back to top](#usage)
 
+#### #getDevices
+
+Works similarly to [getDevice](#getdevice), but allows for multiple devices to be provided as a bulk request.
+
+**Usage:** `client.device.getDevices(deviceIdList, callback)`
+
+* `deviceIdList` - _(required)_ - an array of deviceId values to lookup
+* `callback` - _(optional)_ - a function callback that accepts a single argument
+  * `err` - populated with details in the event of an error
+  * `devices` - the devices
+
+```javascript
+var deviceIdList = ['<DEVICE_ID_1>', '<DEVICE_ID_2>', '<DEVICE_ID_3>'];
+
+client
+  .device
+  .getDevices(deviceIdList)
+  .then((groups) => {
+    console.log(
+      'successfully retrieved %d devices',
+      devices.length);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
+
+[back to top](#usage)
+
 #### #getGroup
 
 To retrieve details for a particular group of devices, use this method.

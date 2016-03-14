@@ -1269,7 +1269,7 @@ client
 
 In order to retrieve settings for a specific device or location, this method can be used.
 
-**Usage:** `client.settings.allSettings(options, callback)`
+**Usage:** `client.settings.getSettings(options, callback)`
 
 * `alias` - _(required)_ - defines the specific settings to retrieve
   * can be the `settingsId` that defines a specific result

@@ -14,12 +14,14 @@ describe('playback', () => {
 	'use strict';
 
 	let
-		ensureAuthHeaders = new Promise((resolve, reject) => {
-			return resolve({
-				'x-client-id': 'test',
-				'x-authentication-token': 'test'
+		ensureAuthHeaders = function () {
+			return new Promise((resolve, reject) => {
+				return resolve({
+					'x-client-id': 'test',
+					'x-authentication-token': 'test'
+				})
 			})
-		}),
+		},
 		playback,
 		requestInfo,
 		responseInfo;

@@ -1,3 +1,7 @@
+# v1.0.7 - 2016/04/01
+
+* Fixed defect where authentication token was not being properly re-generated after expiration
+
 # v1.0.6 - 2016/03/11
 
 * Added support for [coveralls.io](https://coveralls.io) and [travis-ci](https://travis-ci.org)

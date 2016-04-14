@@ -1,3 +1,7 @@
+# v1.0.8 - 2016/04/14
+
+* Added support for reading configuration keys from a shared configuration file
+
 # v1.0.7 - 2016/04/01
 
 * Fixed defect where authentication token was not being properly re-generated after expiration

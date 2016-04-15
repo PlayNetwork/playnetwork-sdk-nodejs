@@ -128,6 +128,39 @@ playnetwork.configure(
 console.log(playnetwork.options());
 ```
 
+##### Shared Credentials File
+
+Alternatively, the PlayNetwork SDK may be configured with a `clientId` and `secret` using a shared credentials file.
+
+By default, the SDK will search for the shared credentials file within `process.env.HOME` (or `process.env.USERPROFILE` when using Windows) at the following path: `.playnetwork/credentials.json` (i.e. `/home/ubuntu/.playnetwork/credentials.json`, etc.). A credentials file path can alternatively be specified via options when calling `#configure`.
+
+When using the shared credentials file, the file must be in the following JSON format:
+
+```json
+{
+  "clientId": "<CLIENT_ID>",
+  "secret": "<SECRET>"
+}
+```
+
+Example `#configure` usage for loading the clientId and secret from the default credentials path:
+
+```javascript
+var playnetwork = require('playnetwork-sdk');
+
+playnetwork.configure();
+```
+
+Example `#configure` usage for loading the clientId and secret from a specified file path:
+
+```javascript
+var playnetwork = require('playnetwork-sdk');
+
+playnetwork.configure({
+  credentialsPath : '/path/to/credentials.json'
+});
+```
+
 [back to top](#usage)
 
 #### Options

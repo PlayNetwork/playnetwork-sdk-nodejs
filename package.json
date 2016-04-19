@@ -10,6 +10,9 @@
     }, {
       "name": "Stanford Chiang",
       "url": "https://github.com/StanfordChiang"
+    }, {
+      "name": "Pat McFaul",
+      "url": "https://github.com/patmcfaul"
     }],
   "description": "SDK to make accessing PlayNetwork APIs when writing code in Javascript (Node.js) much easier.",
   "keywords": ["playnetwork", "sdk"],

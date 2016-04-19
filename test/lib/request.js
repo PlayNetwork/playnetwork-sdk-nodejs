@@ -68,11 +68,13 @@ describe('request', () => {
 						secure : true
 					},
 					req = new request.Request(options),
+					redirectInfo,
 					requestInfo,
 					responseInfo,
 					statusCode = ['delete', 'head'].indexOf(method) >= 0 ? 204 : 200;
 
 				// capture request and response info
+				req.on('redirect', (info) => (redirectInfo = info));
 				req.on('request', (info) => (requestInfo = info));
 				req.on('response', (info) => (responseInfo = info));
 
@@ -119,6 +121,78 @@ describe('request', () => {
 							should.exist(requestInfo.path);
 							requestInfo.path.should.equal('/v0/tests');
 							should.not.exist(requestInfo.query);
+						});
+				});
+
+				it(`should properly error on ${method} for proxy required response`, () => {
+					let proxyRequiredStatusCode = 305;
+
+					// intercept outbound request
+					nock(`https://${options.host}`)[method]('/v0/proxy-required')
+						.reply(proxyRequiredStatusCode);
+
+					return req[method]({ path : '/v0/proxy-required' })
+						.then((result) => {
+							should.not.exist(result);
+						})
+						.catch((err) => {
+							should.exist(err);
+							should.exist(err.message);
+							should.exist(err.options);
+							should.exist(err.response);
+							err.message.should.equal('proxy server configuration required');
+						});
+				});
+
+				it(`should properly redirect on ${method}`, (done) => {
+					Promise
+						.all([301, 302, 307, 308]
+							.map((redirectCode) => {
+								nock(`https://${options.host}`)
+									.defaultReplyHeaders({
+										location : 'https://redirected.com/v0/redirected'
+									})[method]('/v0/redirect').reply(redirectCode);
+
+								nock('https://redirected.com')[method]('/v0/redirected')
+									.reply(statusCode);
+
+								return req[method]({ path : '/v0/redirect' });
+							})
+						)
+						.then((result) => {
+							should.exist(redirectInfo);
+							should.exist(redirectInfo.hostname);
+							redirectInfo.hostname.should.equal('redirected.com');
+
+							return done();
+						})
+						.catch(done);
+				});
+
+				it(`should properly return error on redirect for ${method} when location is not specified`, (done) => {
+					Promise
+						.all([301, 302, 307, 308]
+							.map((redirectCode) => {
+								nock(`https://${options.host}`)[method]('/v0/redirect')
+									.reply(redirectCode);
+
+								return req[method]({ path : '/v0/redirect' });
+							})
+						)
+						.then((results) => {
+							return done(
+								new Error(
+									'should properly return error on redirect when no location is specified'));
+						})
+						.catch((err) => {
+							should.exist(redirectInfo);
+							should.exist(err);
+							should.exist(err.message);
+							should.exist(err.options);
+							should.exist(err.response);
+							err.message.should.equal('redirect requested with no location');
+
+							return done();
 						});
 				});
 

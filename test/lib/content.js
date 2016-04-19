@@ -177,10 +177,27 @@ describe('content', () => {
 		it('should properly check legacy asset (promise)', (done) => {
 			// intercept outbound request
 			nock('https://content-api.apps.playnetwork.com')
-				.head('/v0/legacy/assets/tracktoken:12345')
+				.head('/v0/legacy/assets/trackToken:12345')
 				.reply(200);
 
-			content.checkLegacyAsset('tracktoken:12345')
+			content.checkLegacyAsset('trackToken:12345')
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+					result.should.be.true;
+
+					return done();
+				})
+				.catch((err) => (done(err)));
+		});
+
+		it('should properly check legacy asset when not formatted with trackToken prefix (promise)', (done) => {
+			// intercept outbound request
+			nock('https://content-api.apps.playnetwork.com')
+				.head('/v0/legacy/assets/trackToken:12345')
+				.reply(200);
+
+			content.checkLegacyAsset('12345')
 				.then((result) => {
 					should.exist(result);
 					should.exist(requestInfo);
@@ -194,7 +211,7 @@ describe('content', () => {
 		it('should properly check legacy asset (callback)', (done) => {
 			// intercept outbound request
 			nock('https://content-api.apps.playnetwork.com')
-				.head('/v0/legacy/assets/tracktoken:12345')
+				.head('/v0/legacy/assets/trackToken:12345')
 				.reply(404);
 
 			content.checkLegacyAsset(
@@ -247,7 +264,7 @@ describe('content', () => {
 		it('should properly redirect to legacy when assetId is not supplied', (done) => {
 			// intercept outbound request
 			nock('https://content-api.apps.playnetwork.com')
-				.get('/v0/legacy/assets/tracktoken:1234')
+				.get('/v0/legacy/assets/trackToken:1234')
 				.reply(200, getMockStream(200));
 
 			content.getAssetStream({ legacy : { trackToken : 1234 }})
@@ -338,7 +355,7 @@ describe('content', () => {
 		it('should properly return stream when content is found (callback)', (done) => {
 			// intercept outbound request
 			nock('https://content-api.apps.playnetwork.com')
-				.get('/v0/legacy/assets/tracktoken:1234')
+				.get('/v0/legacy/assets/trackToken:1234')
 				.reply(200, getMockStream(200));
 
 			content.getLegacyAssetStream(

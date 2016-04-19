@@ -1,3 +1,9 @@
+# v1.0.8 - 2016/04/14
+
+* Added support for reading configuration keys from a shared configuration file
+* Fixed issue where the `#checkLegacyAsset` and `#getLegacyAssetStream` methods (in the `content` sub-module) were not requesting the correct API resource
+* Fixed issue where the `#getAssetStream` and `#getLegacyAssetStream` methods (in the `content` sub-module) were not properly following redirects
+
 # v1.0.7 - 2016/04/01
 
 * Fixed defect where authentication token was not being properly re-generated after expiration

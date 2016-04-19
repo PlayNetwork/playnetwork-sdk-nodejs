@@ -1,6 +1,7 @@
 # v1.0.8 - 2016/04/14
 
 * Added support for reading configuration keys from a shared configuration file
+* Fixed issue where `#checkLegacyAsset` within the `content` module was not request the correct API resource
 
 # v1.0.7 - 2016/04/01
 

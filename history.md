@@ -1,3 +1,7 @@
+# v1.0.9 - 2016/04/20
+
+* Fixed issue where `main` was not specified properly in package.json
+
 # v1.0.8 - 2016/04/14
 
 * Added support for reading configuration keys from a shared configuration file

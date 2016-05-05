@@ -88,6 +88,71 @@ describe('content', () => {
 		});
 	});
 
+	describe('#buildTrackAlias', () => {
+		it('should return an empty value if called with an empty value', () => {
+			should.not.exist(content.buildTrackAlias());
+		});
+
+		it('should return an assetId string', () => {
+			let assetId = 'abc123xyz098';
+			content.buildTrackAlias(assetId).should.equal(assetId);
+		});
+
+		it('should properly format a number input as a string', () => {
+			let trackToken = '123456';
+			content
+				.buildTrackAlias(trackToken)
+				.should.equal(['trackToken', trackToken].join(':'));
+		});
+
+		it('should properly format a number input as a number', () => {
+			let trackToken = 123456;
+			content
+				.buildTrackAlias(trackToken)
+				.should.equal(['trackToken', trackToken].join(':'));
+		});
+
+		it('should properly return a pre-formatted trackToken alias', () => {
+			let trackAlias = ['trackToken', 123456].join(':');
+			content.buildTrackAlias(trackAlias).should.equal(trackAlias);
+		});
+
+		it('should properly return a trackToken alias when track is object', () => {
+			let track = {
+				legacy : {
+					trackToken : 123456
+				}
+			};
+
+			content
+				.buildTrackAlias(track)
+				.should.equal(['trackToken', track.legacy.trackToken].join(':'));
+		});
+
+		it('should properly return a trackToken alias when track is object and assetId is also supplied', () => {
+			let track = {
+				assetId : 'abc123xyz098',
+				legacy : {
+					trackToken : 123456
+				}
+			};
+
+			content
+				.buildTrackAlias(track)
+				.should.equal(['trackToken', track.legacy.trackToken].join(':'));
+		});
+
+		it('should properly return assetId when track is object', () => {
+			let track = {
+				assetId : 'abc123xyz098'
+			};
+
+			content
+				.buildTrackAlias(track)
+				.should.equal(track.assetId);
+		});
+	});
+
 	describe('#checkAsset', () => {
 		it('should require track', (done) => {
 			content.checkAsset()

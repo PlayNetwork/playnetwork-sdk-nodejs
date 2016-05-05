@@ -1,22 +1,30 @@
 {
   "name": "playnetwork-sdk",
-  "version": "1.0.9",
-  "contributors": [{
+  "version": "1.0.10",
+  "contributors": [
+    {
       "name": "Joshua Thomas",
       "url": "https://github.com/brozeph"
-    }, {
+    },
+    {
       "name": "Robin Momii",
       "url": "https://github.com/rmomii"
-    }, {
+    },
+    {
       "name": "Stanford Chiang",
       "url": "https://github.com/StanfordChiang"
-    }, {
+    },
+    {
       "name": "Pat McFaul",
       "url": "https://github.com/patmcfaul"
-    }],
+    }
+  ],
   "description": "SDK to make accessing PlayNetwork APIs when writing code in Javascript (Node.js) much easier.",
   "main": "lib",
-  "keywords": ["playnetwork", "sdk"],
+  "keywords": [
+    "playnetwork",
+    "sdk"
+  ],
   "scripts": {
     "test": "gulp test-all"
   },
@@ -24,8 +32,8 @@
     "type": "git",
     "url": "git+ssh://git@github.com/PlayNetwork/javascript-sdk.git"
   },
-  "engines" : {
-    "node" : ">=4.0"
+  "engines": {
+    "node": ">=4.0"
   },
   "license": "MIT",
   "bugs": {
@@ -43,6 +51,7 @@
     "nock": "^7.2.1"
   },
   "dependencies": {
-    "co": "^4.6.0"
+    "co": "^4.6.0",
+    "gulp-util": "^3.0.7"
   }
 }

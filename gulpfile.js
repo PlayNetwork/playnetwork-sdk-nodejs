@@ -1,8 +1,10 @@
+/*eslint no-invalid-this: 0*/
 var
 	coveralls = require('gulp-coveralls'),
 	del = require('del'),
 	eslint = require('gulp-eslint'),
 	gulp = require('gulp'),
+	gulpUtil = require('gulp-util'),
 	istanbul = require('gulp-istanbul'),
 	mocha = require('gulp-mocha');
 
@@ -36,7 +38,14 @@ module.exports = (() => {
 			.on('finish', () => {
 				return gulp
 					.src(['./test/lib/**/*.js'])
-					.pipe(mocha({ reporter : 'spec' }))
+					.pipe(mocha({ reporter : 'spec' })
+						.on('error', function (err) {
+								if (err.showStack) {
+									gulpUtil.log(err);
+								}
+
+								this.emit('end');
+						}))
 					.pipe(istanbul.writeReports('./reports'))
 			});
 	});

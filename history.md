@@ -1,3 +1,8 @@
+# v1.0.10 - 2016/05/05
+
+* Added new function to the `content` sub-module that translates a track to an alias
+* Added dev-dependency to `gulp-util` for properly formatting Errors found in testing process
+
 # v1.0.9 - 2016/04/20
 
 * Fixed issue where `main` was not specified properly in package.json

@@ -63,7 +63,11 @@ describe('key', () => {
 		it('should be constructable with options...', () => {
 			let
 				options = {
+					agent : { proxy : true },
 					host : 'develop-test-api.apps.playnetwork.com',
+					maxRetries : 1,
+					port : 8080,
+					rejectUnauthorized : true,
 					secure : true
 				},
 				proxy = new KeyProxy(options);
@@ -72,7 +76,10 @@ describe('key', () => {
 			should.exist(proxy.getTokenCacheSize);
 			should.exist(proxy.settings);
 			proxy.settings().should.not.be.empty;
+			proxy.settings().agent.should.equal(options.agent);
 			proxy.settings().host.should.equal(options.host);
+			proxy.settings().port.should.equal(options.port);
+			proxy.settings().rejectUnauthorized.should.equal(options.rejectUnauthorized);
 			proxy.settings().secure.should.equal(options.secure);
 		});
 	});

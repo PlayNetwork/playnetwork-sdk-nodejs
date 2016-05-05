@@ -1,3 +1,8 @@
+# v1.0.11 - 2016/05/05
+
+* Added support for a broader range of options for `configure`
+* Enhanced unit test coverage
+
 # v1.0.10 - 2016/05/05
 
 * Added new function to the `content` sub-module that translates a track to an alias

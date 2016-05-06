@@ -43,5 +43,9 @@ describe('validation', () => {
 		it('should properly detect undefined values', () => {
 			validation.isEmpty(undefined).should.be.true;
 		});
+
+		it('should properly detect Date types', () => {
+			validation.isEmpty(new Date()).should.be.false;
+		});
 	});
 });

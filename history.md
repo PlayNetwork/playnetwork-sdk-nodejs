@@ -1,3 +1,7 @@
+# v1.0.12 - 2016/05/06
+
+* Fixed defect where date objects could be viewed as empty
+
 # v1.0.11 - 2016/05/05
 
 * Added support for a broader range of options for `configure`

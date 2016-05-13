@@ -1,3 +1,7 @@
+# v1.0.13 - 2016/05/12
+
+* Added support for additional request option for each sub-module (timeout)
+
 # v1.0.12 - 2016/05/06
 
 * Fixed defect where date objects could be viewed as empty

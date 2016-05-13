@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 const
 	os = require('os'),
+	stream = require('stream'),
 
 	co = require('co'),
 
@@ -61,6 +62,9 @@ module.exports = (function (app) {
 				// continue processing command inputs
 				return false;
 			}
+
+			// continue processing
+			return false;
 		});
 
 		// show generic usage
@@ -177,8 +181,13 @@ module.exports = (function (app) {
 					return Promise.resolve();
 				}
 
-				// log the response from the API call
-				console.log(JSON.stringify(result, JSON_REPLACER, JSON_SPACE));
+				if (result instanceof stream.Stream) {
+					// pipe the result to stdout
+					result.pipe(process.stdout);
+				} else {
+					// log the response from the API call
+					console.log(JSON.stringify(result, JSON_REPLACER, JSON_SPACE));
+				}
 
 				return Promise.resolve();
 			})

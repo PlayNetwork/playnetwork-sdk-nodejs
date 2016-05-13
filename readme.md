@@ -16,6 +16,7 @@ npm install playnetwork-sdk
 
 * [constructor](#constructor)
 * [options](#options)
+* [CLI](#cli)
 
 - - -
 
@@ -216,6 +217,58 @@ playnetwork.configure(
 
 // echo configured settings
 console.log(playnetwork.options());
+```
+
+[back to top](#usage)
+
+#### CLI
+
+In order to use the CLI, a [Shared Credentials File](#shared-credentials-file) must configured first. Additionally, the module should be installed globally:
+
+```bash
+npm install -g playnetwork-sdk
+```
+
+##### Usage
+
+```bash
+usage: playnetwork [-s] [-a | --api] [-c | --command] [-? | -h | --help]
+    -s                   - specify pipe mode for input stream
+    -a <api>             - the API to use
+    -c <command> <args>  - the command and arguments to supply
+    -h                   - help
+    -v                   - verbose
+```
+
+* `-a` (or `--api`): supply any sub-module of the SDK (i.e. `music`, `content`, `playback`, etc.)
+* `-c` (or `--command`): supply any method for the specified sub-module (i.e. `allStations`, etc.)
+* `-s`: required when supplying additional data (in JSON format) via a pipe
+* `-v`: will display the outbound request and inbound response details for the call to the API
+
+##### Examples
+
+*Get all stations:*
+
+```bash
+playnetwork -a music -c allStations
+```
+
+*Get stations with options (notice the use of `-s` in the command below):*
+
+```bash
+echo '{ "count" : 1, "sort" : { "desc" : "modified" } }' | playnetwork -s -a music -c allStations
+```
+
+*Delete a broadcast with verbose output (notice the use of `-v` in the command below):*
+
+```bash
+playnetwork -v -a music -c deleteBroadcast <stationId> <broadcastId>
+```
+
+*Download a legacy asset file:*
+
+```bash
+playnetwork -a content -c getLegacyAssetStream <legacy.trackToken> > ~/Downloads/file.mp2
 ```
 
 [back to top](#usage)

@@ -9,7 +9,9 @@ const
 
 	ARGS_API_RE = /^(\-a|\-\-api)$/,
 	ARGS_COMMAND_RE = /^(\-c|\-\-command)$/,
-	ARGS_HELP_RE = /^(\-h|\-\-help)$/,
+	ARGS_HELP_RE = /^(\-?\?|\-h|\-\-help)$/,
+	ARGS_STREAM_RE = /^(\-s|\-\-stream)$/,
+	ARGS_VERBOSE_RE = /^\-v$/,
 	COMMAND_ARGS_START = 2,
 	JSON_REPLACER = 0,
 	JSON_SPACE = 2;
@@ -23,23 +25,41 @@ module.exports = (function (app) {
 			args = process.argv.slice(COMMAND_ARGS_START),
 			showHelp = false;
 
-		args.forEach((arg, index) => {
+		args.some((arg, index) => {
 			if (ARGS_API_RE.test(arg)) {
 				app.args.api = args[index + 1];
 
-				return;
+				// continue processing command inputs
+				return false;
 			}
 
 			if (ARGS_COMMAND_RE.test(arg)) {
 				app.args.command = args[index + 1];
-				app.args.commandArgs = process.argv.slice(
-					COMMAND_ARGS_START + COMMAND_ARGS_START + index);
-				return;
+				app.args.commandArgs = args.slice(COMMAND_ARGS_START + index);
+
+				// stop processing command inputs
+				return true;
 			}
 
 			if (ARGS_HELP_RE.test(arg)) {
 				showHelp = true;
-				return;
+
+				// stop processing command inputs
+				return true;
+			}
+
+			if (ARGS_STREAM_RE.test(arg)) {
+				app.args.pipedData = true;
+
+				// continue processing command inputs
+				return false;
+			}
+
+			if (ARGS_VERBOSE_RE.test(arg)) {
+				app.args.verbose = true;
+
+				// continue processing command inputs
+				return false;
 			}
 		});
 
@@ -69,8 +89,37 @@ module.exports = (function (app) {
 
 		// show command specific help...
 		if (showHelp) {
-			// TODO: dafuq
+			// TODO: build support for command specific help
 		}
+	}
+
+	function parsePipeData () {
+		return new Promise((resolve, reject) => {
+			let chunks = [];
+
+			// begin reading piped input...
+			process.stdin.setEncoding('utf8');
+			process.stdin.resume();
+
+			// capture the input
+			process.stdin.on('data', (chunk) => chunks.push(chunk));
+
+			// parse and continue...
+			process.stdin.on('end', () => {
+				if (chunks.length) {
+					try {
+						app.args.commandArgs.push(JSON.parse(chunks.join('')));
+					} catch (ex) {
+						return reject(ex);
+					}
+				}
+
+				return resolve();
+			});
+
+			// handle problems
+			process.stdin.on('error', reject);
+		});
 	}
 
 	function usage (message) {
@@ -78,12 +127,12 @@ module.exports = (function (app) {
 
 		console.log([
 			`${app.args.program}: ${message}`,
-			`usage: ${app.args.program} [-a | --api] [-c | --command] [-? | -h | --help]`,
-			'    -a <api>',
-			'    -c <command> <args>',
-			'    -h',
-			'',
-			`command help: ${app.args.program} -a <api> -c <command> [-? | -h | --help]`,
+			`usage: ${app.args.program} [-s] [-a | --api] [-c | --command] [-? | -h | --help]`,
+			'    -s                   - specify pipe mode for input stream',
+			'    -a <api>             - the API to use',
+			'    -c <command> <args>  - the command and arguments to supply',
+			'    -h                   - help',
+			'    -v                   - verbose',
 			''
 		].join(os.EOL));
 
@@ -96,32 +145,58 @@ module.exports = (function (app) {
 		// set the executable name
 		app.args.program = Object.keys(nodePackage.bin)[0];
 
-		// parse arguments
+		// parse program inputs
 		parseArgs();
 
-		// capture response from API call
-		lib[app.args.api].on('response', (data) => app.response = data);
+		if (app.args.pipedData) {
+			yield parsePipeData();
+		}
+
+		// capture request and response for API call for verbosity
+		if (app.args.verbose) {
+			lib[app.args.api].on('request', (data) => {
+				console.log([
+					'request:',
+					JSON.stringify(data, JSON_REPLACER, JSON_SPACE),
+					''].join(os.EOL));
+			});
+
+			lib[app.args.api].on('response', (data) => {
+				console.log([
+					'response:',
+					JSON.stringify(data, JSON_REPLACER, JSON_SPACE),
+					''].join(os.EOL));
+			});
+		}
 
 		// run it...
 		return yield lib[app.args.api][app.args.command]
 			.apply(null, app.args.commandArgs)
 			.then((result) => {
 				if (!result) {
-					console.log(JSON.stringify(app.response, JSON_REPLACER, JSON_SPACE));
-
 					return Promise.resolve();
 				}
 
+				// log the response from the API call
 				console.log(JSON.stringify(result, JSON_REPLACER, JSON_SPACE));
 
 				return Promise.resolve();
 			})
-			.catch((err) => console.error([
-				`error: \`${app.args.program} -a ${app.args.api} -c ${app.args.command} ${app.args.commandArgs.join(' ')}\`:`,
-				`\t${err.message}`
-			].join(os.EOL)));
-	}).catch((err) => {
-		console.error(err);
+			.catch((err) => {
+				console.error([
+					`error: \`${app.args.program} -a ${app.args.api} -c ${app.args.command} ${app.args.commandArgs.join(' ')}\`:`,
+					`\t${err.message}`,
+					''].join(os.EOL));
+
+				return Promise.reject();
+			});
+	})
+	.catch((err) => {
+		if (err) {
+			console.error(err);
+		}
+
+		return process.exit(1)
 	});
 }({
 	args : {}

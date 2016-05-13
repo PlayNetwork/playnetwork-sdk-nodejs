@@ -140,7 +140,7 @@ module.exports = (function (app) {
 			''
 		].join(os.EOL));
 
-		process.exit(0);
+		process.exit(message ? 1 : 0);
 	}
 
 	return co(function *() {

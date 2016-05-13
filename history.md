@@ -1,3 +1,7 @@
+# v1.0.14 - 2016/05/13
+
+* Added initial support for CLI
+
 # v1.0.13 - 2016/05/12
 
 * Added support for additional request option for each sub-module (timeout)

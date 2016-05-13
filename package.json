@@ -21,6 +21,9 @@
   ],
   "description": "SDK to make accessing PlayNetwork APIs when writing code in Javascript (Node.js) much easier.",
   "main": "lib",
+  "bin": {
+    "playnetwork" : "cli/index.js"
+  },
   "keywords": [
     "playnetwork",
     "sdk"

@@ -1,3 +1,7 @@
+# v1.0.16 - 2016/05/16
+
+* Moved `gulp-util` dependency to devDependencies
+
 # v1.0.15 - 2016/05/16
 
 * Fixed issue where date parameters were not properly serialized in ISO format

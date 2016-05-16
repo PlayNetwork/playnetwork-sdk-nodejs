@@ -1,3 +1,7 @@
+# v1.0.15 - 2016/05/16
+
+* Fixed issue where date parameters were not properly serialized in ISO format
+
 # v1.0.14 - 2016/05/13
 
 * Added initial support for CLI

@@ -197,14 +197,17 @@ describe('request', () => {
 				});
 
 				it('should properly convert pathname and query to path', () => {
+					let now = new Date();
+
 					// intercept outbound request
-					nock(`https://${options.host}`)[method]('/v0/tests?array=1%2C2%2C3&testing=true')
+					nock(`https://${options.host}`)[method](/^\/v0\/tests\?[.]*/)
 						.reply(statusCode);
 
 					return req[method]({
 							pathname : '/v0/tests',
 							query : {
 								array : [1, 2, 3],
+								date : now,
 								testing : true
 							}
 						})
@@ -215,6 +218,10 @@ describe('request', () => {
 							should.exist(requestInfo);
 							should.exist(requestInfo.method);
 							requestInfo.method.should.equal(method.toUpperCase());
+
+							should.exist(requestInfo.query);
+							should.exist(requestInfo.query.date);
+							requestInfo.query.date.should.equal(now.toISOString());
 
 							should.exist(requestInfo.path);
 							requestInfo.path.should.contain('/v0/tests');

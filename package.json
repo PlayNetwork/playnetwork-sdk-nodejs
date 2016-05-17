@@ -1,6 +1,6 @@
 {
   "name": "playnetwork-sdk",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "contributors": [
     {
       "name": "Joshua Thomas",
@@ -22,7 +22,7 @@
   "description": "SDK to make accessing PlayNetwork APIs when writing code in Javascript (Node.js) much easier.",
   "main": "lib",
   "bin": {
-    "playnetwork" : "cli/index.js"
+    "playnetwork": "cli/index.js"
   },
   "keywords": [
     "playnetwork",

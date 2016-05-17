@@ -1,3 +1,8 @@
+# v1.0.17 - 2016/05/17
+
+* Adjusted CLI to use ES6 spread operator instead of `apply`
+* Moved the emit of the `response` event to occur immediately when response headers are received from the server
+
 # v1.0.16 - 2016/05/16
 
 * Moved `gulp-util` dependency to devDependencies

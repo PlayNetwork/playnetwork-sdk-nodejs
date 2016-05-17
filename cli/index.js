@@ -174,8 +174,7 @@ module.exports = (function (app) {
 		}
 
 		// run it...
-		return yield lib[app.args.api][app.args.command]
-			.apply(null, app.args.commandArgs)
+		return yield lib[app.args.api][app.args.command](...app.args.commandArgs)
 			.then((result) => {
 				if (!result) {
 					return Promise.resolve();

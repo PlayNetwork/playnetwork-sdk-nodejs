@@ -158,7 +158,9 @@ Example `#configure` usage for loading the clientId and secret from a specified 
 var playnetwork = require('playnetwork-sdk');
 
 playnetwork.configure({
-  credentialsPath : '/path/to/credentials.json'
+  key {
+    credentialsPath : '/path/to/credentials.json'
+  }
 });
 ```
 

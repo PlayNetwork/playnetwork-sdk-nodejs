@@ -1,3 +1,9 @@
+# v1.0.18 - 2016/05/18
+
+* Added support for displaying settings applied, internally, to `key` sub-module
+* Moved `ensureAuthHeaders` function to `key` sub-module for better consistency
+* Added additional unit tests for `key` sub-module
+
 # v1.0.17 - 2016/05/17
 
 * Adjusted CLI to use ES6 spread operator instead of `apply`

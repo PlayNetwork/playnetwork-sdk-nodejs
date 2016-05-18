@@ -1,6 +1,8 @@
 /*eslint no-magic-numbers: 0*/
 /*eslint no-unused-expressions: 0*/
 var
+	path = require('path'),
+
 	chai = require('chai'),
 	co = require('co'),
 	nock = require('nock'),
@@ -17,7 +19,7 @@ describe('key', () => {
 		key,
 		mockToken = {
 			clientId : 'clientId',
-			token : 'token',
+			tokenId : 'token',
 			expires : new Date()
 		},
 		requestInfo,
@@ -45,10 +47,10 @@ describe('key', () => {
 			let
 				proxy1 = new KeyProxy({
 					host : 'one'
-				}),
+				}, 'test', 'test'),
 				proxy2 = new KeyProxy({
 					host : 'two'
-				});
+				}, 'test', 'test');
 
 			proxy1.settings().host.should.not.equal(proxy2.settings().host);
 		});
@@ -72,6 +74,8 @@ describe('key', () => {
 				},
 				proxy = new KeyProxy(options);
 
+			should.exist(proxy.allClients);
+			should.exist(proxy.ensureAuthHeaders);
 			should.exist(proxy.generateToken);
 			should.exist(proxy.getTokenCacheSize);
 			should.exist(proxy.settings);
@@ -81,6 +85,143 @@ describe('key', () => {
 			proxy.settings().port.should.equal(options.port);
 			proxy.settings().rejectUnauthorized.should.equal(options.rejectUnauthorized);
 			proxy.settings().secure.should.equal(options.secure);
+		});
+	});
+
+	describe('#allClients', () => {
+		beforeEach(() => {
+			// override ensureAuthHeaders
+			key.ensureAuthHeaders = function () {
+				return new Promise((resolve, reject) => {
+					return resolve({
+						'x-client-id': 'test',
+						'x-authentication-token': 'test'
+					})
+				})
+			};
+		});
+
+		it('should properly retrieve all clients (promise)', (done) => {
+			// intercept outbound request
+			nock('https://key-api.apps.playnetwork.com')
+				.get('/v0/clients')
+				.reply(200, { total : 0 });
+
+			key.allClients()
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch((err) => (done(err)));
+		});
+
+		it('should properly retrieve all collections (callback)', (done) => {
+			// intercept outbound request
+			nock('https://key-api.apps.playnetwork.com')
+				.get('/v0/clients')
+				.reply(200, { total : 0 });
+
+			key.allClients(function (err, result) {
+				should.not.exist(err);
+				should.exist(requestInfo);
+
+				return done();
+			});
+		});
+
+		it('should properly support query filters', (done) => {
+			// intercept outbound request
+			nock('https://key-api.apps.playnetwork.com')
+				.get(/\/v0\/clients[.]*/)
+				.reply(200, { total : 0 });
+
+			key.allClients({
+				filters : {
+					mandatory : {
+						exact : {
+							'createdBy' : 'testing'
+						}
+					}
+				}
+			}).then((result) => {
+				should.exist(result);
+				should.exist(requestInfo);
+				should.exist(requestInfo.query);
+				should.exist(requestInfo.query['filters[mandatory][exact][createdBy]']);
+				requestInfo.query['filters[mandatory][exact][createdBy]'].should.equal('testing');
+
+				return done();
+			}).catch((err) => (done(err)));
+		});
+	});
+
+	describe('#ensureAuthHeaders', () => {
+		it('should require clientId', (done) => {
+			key = new KeyProxy({
+				credentialsPath : path.resolve(
+					process.cwd(),
+					'test/empty.credentials.json')
+			});
+
+			// make sure credentialsPath was overridden
+			should.exist(key.settings().credentialsPath);
+
+			key.ensureAuthHeaders()
+				.then(() => done('clientId is required'))
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('clientId is required');
+
+					return done();
+				});
+		});
+
+		it('should require secret', (done) => {
+			key = new KeyProxy({
+				credentialsPath : path.resolve(
+					process.cwd(),
+					'test/missing.secret.credentials.json')
+			});
+
+			// make sure credentialsPath was overridden
+			should.exist(key.settings().credentialsPath);
+
+			key.ensureAuthHeaders()
+				.then(() => done('secret is required'))
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('secret is required');
+
+					return done();
+				});
+		});
+
+		it('should use supplied clientId and secret', (done) => {
+			// intercept outbound request
+			nock('https://key-api.apps.playnetwork.com')
+				.post('/v0/tokens')
+				.reply(201, { token : mockToken });
+
+			key = new KeyProxy({}, 'testing', 'testing');
+
+			// make sure credentialsPath is empty
+			should.not.exist(key.settings().credentialsPath);
+
+			key.ensureAuthHeaders()
+				.then((response) => {
+					should.exist(response);
+					should.exist(response['x-client-id']);
+					response['x-client-id'].should.equal('clientId');
+					should.exist(response['x-authentication-token']);
+					response['x-authentication-token'].should.equal('token');
+
+					return done();
+				})
+				.catch(done);
 		});
 	});
 
@@ -118,7 +259,7 @@ describe('key', () => {
 				.then((token) => {
 					should.exist(token);
 					should.exist(token.clientId);
-					should.exist(token.token);
+					should.exist(token);
 
 					return done();
 				})
@@ -135,7 +276,7 @@ describe('key', () => {
 				should.not.exist(err);
 				should.exist(token);
 				should.exist(token.clientId);
-				should.exist(token.token);
+				should.exist(token.tokenId);
 
 				return done();
 			});

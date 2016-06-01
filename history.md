@@ -1,3 +1,10 @@
+# v1.0.19 - 2016/06/01
+
+* Fixed typo in documentation for `playback` sub-module
+* Adjusted CLI to use `apply` for backwards compatibility
+* Adjusted redirect handling in request abstraction to use original host when missing
+* Implemented redirect limit to avoid endless redirect loops
+
 # v1.0.18 - 2016/05/18
 
 * Added support for displaying settings applied, internally, to `key` sub-module

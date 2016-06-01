@@ -1,3 +1,7 @@
+# v1.0.19 - 2016/06/01
+
+* Fixed typo in documentation for `playback` sub-module
+
 # v1.0.18 - 2016/05/18
 
 * Added support for displaying settings applied, internally, to `key` sub-module

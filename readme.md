@@ -1277,7 +1277,7 @@ This method can be used to record playback for a specific device or location.
 
 **Usage:** `client.playback.recordPlay(playbackInfo, callback)`
 
-* `playlistInfo` - _(required)_ - defines the playback info that should be recorded
+* `playbackInfo` - _(required)_ - defines the playback info that should be recorded
   * `client` - _(optional)_ - defines additional information about the device upon which the play occurred
     * `host` - host details for the playback
     * `software` - software details for the playback

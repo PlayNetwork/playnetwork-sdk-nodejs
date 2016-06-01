@@ -196,6 +196,58 @@ describe('request', () => {
 						});
 				});
 
+				it(`should properly use original host on redirect for ${method} when not specified`, (done) => {
+					Promise
+						.all([301, 302, 307, 308]
+							.map((redirectCode) => {
+								nock(`https://${options.host}`)
+									.defaultReplyHeaders({
+										location : '/v0/redirected'
+									})[method]('/v0/redirect').reply(redirectCode);
+
+								nock(`https://${options.host}`)[method]('/v0/redirected')
+									.reply(statusCode);
+
+								return req[method]({ path : '/v0/redirect' });
+							})
+						)
+						.then((result) => {
+							should.exist(redirectInfo);
+							should.exist(redirectInfo.hostname);
+							redirectInfo.hostname.should.equal(options.host);
+
+							return done();
+						})
+						.catch(done);
+				});
+
+				it(`should properly error after 5 redirects for ${method}`, (done) => {
+					Promise
+						.all([301, 302, 307, 308]
+							.map((redirectCode) => {
+								nock(`https://${options.host}`)
+									.defaultReplyHeaders({
+										location : '/v0/redirected'
+									})[method]('/v0/redirect').reply(redirectCode);
+
+								nock(`https://${options.host}`)
+									.defaultReplyHeaders({
+										location : '/v0/redirected'
+									})[method]('/v0/redirected').times(5).reply(redirectCode);
+
+								return req[method]({ path : '/v0/redirect' });
+							})
+						)
+						.then(() => (done(new Error('should properly error after 5 redirects'))))
+						.catch((err) => {
+							should.exist(err);
+							should.exist(err.message);
+							err.message.should.contain('maximum redirect limit exceeded');
+
+							return done();
+						});
+				});
+
 				it('should properly convert pathname and query to path', () => {
 					let now = new Date();
 

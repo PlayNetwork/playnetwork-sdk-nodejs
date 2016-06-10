@@ -1412,4 +1412,37 @@ describe('music', () => {
 			});
 		});
 	});
+
+	describe('#version', () => {
+		it('should properly return version (promise)', (done) => {
+			// intercept outbound request
+			nock('https://curio-music-api.apps.playnetwork.com')
+				.get(/\/v[0-9]{1}\/version/i)
+				.reply(200, { version : 'test' });
+
+			music.version()
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch(done);
+		});
+
+		it('should properly return version (callback)', (done) => {
+			// intercept outbound request
+			nock('https://curio-music-api.apps.playnetwork.com')
+				.get(/\/v[0-9]{1}\/version/i)
+				.reply(200, { version : 'test' });
+
+			music.version(function (err, result) {
+				should.not.exist(err);
+				should.exist(result);
+				should.exist(requestInfo);
+
+				return done();
+			});
+		});
+	});
 });

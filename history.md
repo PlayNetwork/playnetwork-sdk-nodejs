@@ -1,3 +1,7 @@
+# v1.0.20 - 2016/06/10
+
+* Added `#version` method to each sub-module
+
 # v1.0.19 - 2016/06/01
 
 * Fixed typo in documentation for `playback` sub-module

@@ -1,3 +1,7 @@
+# v1.0.21 - 2016/06/22
+
+* Added support for `legacyTrackToken` field when reporting plays via `playback` sub-module
+
 # v1.0.20 - 2016/06/10
 
 * Added `#version` method to each sub-module

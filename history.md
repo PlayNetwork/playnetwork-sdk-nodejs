@@ -1,3 +1,7 @@
+# v1.0.22 - 2016/06/22
+
+* Fixed bug with `playback` sub-module where `legacyTrackToken` was not properly validated
+
 # v1.0.21 - 2016/06/22
 
 * Added support for `legacyTrackToken` field when reporting plays via `playback` sub-module

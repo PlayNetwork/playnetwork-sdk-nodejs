@@ -1,3 +1,7 @@
+# v1.0.23 - 2016/08/09
+
+* Fixed internal issue where a `timeout` value specified at-the-time-of-request would not be applied appropriately to the request
+
 # v1.0.22 - 2016/06/22
 
 * Fixed bug with `playback` sub-module where `legacyTrackToken` was not properly validated

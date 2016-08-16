@@ -342,6 +342,138 @@ describe('key', () => {
 		});
 	});
 
+	describe('#validateToken', () => {
+		it('should detect missing clientId', (done) => {
+			key.validateToken()
+				.then(() => (done('clientId is required')))
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.equal('clientId is required');
+
+					return done();
+				});
+		});
+
+		it('should detect missing token', (done) => {
+			key.validateToken('clientId', undefined, function (err, token) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.equal('token is required');
+				should.not.exist(token);
+
+				return done();
+			});
+		});
+
+		it('should properly validate token without serviceId (promise)', (done) => {
+			// intercept outbound request
+			nock('https://key-api.apps.playnetwork.com')
+				.get('/v0/tokens/testing')
+				.reply(200, mockToken);
+
+			key.validateToken('clientId', 'testing')
+				.then((valid) => {
+					should.exist(valid);
+					valid.should.be.true;
+
+					return done();
+				})
+				.catch(done);
+		});
+
+		it('should properly validate token with serviceId (promise)', (done) => {
+			// intercept outbound request
+			nock('https://key-api.apps.playnetwork.com')
+				.get('/v0/tokens/testing')
+				.reply(200, mockToken);
+
+			key.validateToken('clientId', { tokenId : 'testing' }, 'serviceId')
+				.then((valid) => {
+					should.exist(valid);
+					valid.should.be.true;
+
+					return done();
+				})
+				.catch(done);
+		});
+
+		it('should properly validate token without serviceId (callback)', (done) => {
+			// intercept outbound request
+			nock('https://key-api.apps.playnetwork.com')
+				.get('/v0/tokens/testing')
+				.reply(404, { statusCode : 404, message : 'does not exist' });
+
+			key.validateToken('clientId', 'testing', function (err, valid) {
+				should.not.exist(err);
+				should.exist(valid);
+				valid.should.be.false;
+
+				return done();
+			});
+		});
+
+		it('should properly validate token with serviceId (callback)', (done) => {
+			// intercept outbound request
+			nock('https://key-api.apps.playnetwork.com')
+				.get('/v0/tokens/testing')
+				.reply(404, { statusCode : 404, message : 'does not exist' });
+
+			key.validateToken('clientId', 'testing', 'serviceId', function (err, valid) {
+				should.not.exist(err);
+				should.exist(valid);
+				valid.should.be.false;
+
+				return done();
+			});
+		});
+
+		it('should properly bubble server errors', (done) => {
+			// intercept outbound request
+			nock('https://key-api.apps.playnetwork.com')
+				.get('/v0/tokens/testing')
+				.reply(409, { message : 'testing error' });
+
+			key
+				.validateToken('clientId', 'testing', 'serviceId')
+			 	.then(() => done(new Error('should properly bubble server errors')))
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+
+					return done();
+				});
+		});
+
+		it('should properly add tokens to token cache (when enabled)', (done) => {
+			// intercept outbound request
+			nock('https://key-api.apps.playnetwork.com')
+				.get(/\/v0\/tokens\/*/)
+				.times(2) // intercept two requests (token and token3)
+				.reply(200, mockToken );
+
+			co(function *() {
+				let
+					valid = yield key.validateToken('clientId', 'token', 'serviceId'),
+					valid2,
+					valid3;
+
+				should.exist(valid);
+				key.getTokenCacheSize().should.equal(1);
+
+				valid2 = yield key.validateToken('differentClientId', 'token', 'serviceId');
+				should.exist(valid2);
+				key.getTokenCacheSize().should.equal(2);
+
+				valid3 = yield key.validateToken('differentClientId', 'token', 'serviceId');
+				should.exist(valid3);
+				key.getTokenCacheSize().should.equal(2);
+			})
+			.then(done)
+			.catch(done);
+		});
+	});
+
 	describe('#version', () => {
 		it('should properly return version (promise)', (done) => {
 			// intercept outbound request

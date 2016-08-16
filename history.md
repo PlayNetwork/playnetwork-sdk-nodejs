@@ -1,3 +1,7 @@
+# v1.0.24 - 2016/08/16
+
+* Added `#validateClient` and `#validateToken` methods to `key` sub-module
+
 # v1.0.23 - 2016/08/09
 
 * Fixed internal issue where a `timeout` value specified at-the-time-of-request would not be applied appropriately to the request

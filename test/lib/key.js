@@ -342,6 +342,81 @@ describe('key', () => {
 		});
 	});
 
+	describe('#validateClient', () => {
+		it('should detect missing clientId', (done) => {
+			key.validateClient()
+				.then(() => (done('clientId is required')))
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.equal('clientId is required');
+
+					return done();
+				});
+		});
+
+		it('should detect missing serviceId', (done) => {
+			key.validateClient('clientId', undefined, function (err, token) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.equal('serviceId is required');
+				should.not.exist(token);
+
+				return done();
+			});
+		});
+
+		it('should properly validate client (promise)', (done) => {
+			// intercept outbound request
+			nock('https://key-api.apps.playnetwork.com')
+				.head('/v0/clients/clientId')
+				.reply(200);
+
+			key.validateClient('clientId', 'serviceId')
+				.then((valid) => {
+					should.exist(valid);
+					valid.should.be.true;
+
+					return done();
+				})
+				.catch(done);
+		});
+
+		it('should properly validate client (callback)', (done) => {
+			// intercept outbound request
+			nock('https://key-api.apps.playnetwork.com')
+				.head('/v0/clients/clientId')
+				.reply(200);
+
+			key.validateClient('clientId', 'serviceId', (err, valid) => {
+				if (err) {
+					return done(err);
+				}
+
+				should.exist(valid);
+				valid.should.be.true;
+
+				return done();
+			});
+		});
+
+		it('should properly handle non-existing client (promise)', (done) => {
+			// intercept outbound request
+			nock('https://key-api.apps.playnetwork.com')
+				.head('/v0/clients/clientId')
+				.reply(404);
+
+			key.validateClient('clientId', 'serviceId')
+				.then((valid) => {
+					should.exist(valid);
+					valid.should.be.false;
+
+					return done();
+				})
+				.catch(done);
+		});
+	});
+
 	describe('#validateToken', () => {
 		it('should detect missing clientId', (done) => {
 			key.validateToken()

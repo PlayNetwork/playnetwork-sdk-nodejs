@@ -1,3 +1,7 @@
+# v1.0.25 - 2016/08/19
+
+* Introduced method to purge the token cache
+
 # v1.0.24 - 2016/08/16
 
 * Added `#validateClient` and `#validateToken` methods to `key` sub-module

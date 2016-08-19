@@ -342,6 +342,73 @@ describe('key', () => {
 		});
 	});
 
+	describe('#purgeTokenCache', () => {
+		it('should return false when nothing is purgeable', () => {
+			key.getTokenCacheSize().should.equal(0);
+			let purged = key.purgeTokenCache();
+			key.getTokenCacheSize().should.equal(0);
+			purged.should.be.false;
+		});
+
+		it('should clear all tokens', (done) => {
+			// intercept outbound request
+			nock('https://key-api.apps.playnetwork.com')
+				.post('/v0/tokens')
+				.times(2) // intercept two requests (token and token3)
+				.reply(201, { token : mockToken });
+
+			co(function *() {
+				let
+					token1 = yield key.generateToken('clientId1', 'secret'),
+					token2 = yield key.generateToken('clientId2', 'secret');
+
+				should.exist(token1);
+				should.exist(token2);
+				key.getTokenCacheSize().should.equal(2);
+
+				let purged = key.purgeTokenCache();
+				key.getTokenCacheSize().should.equal(0);
+
+				purged.should.be.true;
+			})
+			.then(done)
+			.catch(done);
+		});
+
+		it('should clear specific tokens', (done) => {
+			// intercept outbound request
+			nock('https://key-api.apps.playnetwork.com')
+				.post('/v0/tokens')
+				.times(2) // intercept two requests (token and token3)
+				.reply(201, { token : mockToken });
+
+			co(function *() {
+				let
+					token1 = yield key.generateToken('clientId1', 'secret'),
+					token2 = yield key.generateToken('clientId2', 'secret');
+
+				should.exist(token1);
+				should.exist(token2);
+				key.getTokenCacheSize().should.equal(2);
+
+				let purged = key.purgeTokenCache('clientId1');
+				key.getTokenCacheSize().should.equal(1);
+				purged.should.be.true;
+
+				// retry should indicate false
+				purged = key.purgeTokenCache('clientId1');
+				key.getTokenCacheSize().should.equal(1);
+				purged.should.be.false;
+
+				purged = key.purgeTokenCache('clientId2');
+				key.getTokenCacheSize().should.equal(0);
+				purged.should.be.true;
+			})
+			.then(done)
+			.catch(done);
+		});
+	});
+
 	describe('#validateClient', () => {
 		it('should detect missing clientId', (done) => {
 			key.validateClient()

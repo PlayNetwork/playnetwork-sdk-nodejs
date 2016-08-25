@@ -157,6 +157,82 @@ describe('key', () => {
 		});
 	});
 
+	describe('#disableClient', () => {
+		it('should detect missing clientId (promise)', (done) => {
+			key.disableClient()
+				.then(() => (done('clientId is required')))
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.equal('clientId is required');
+
+					return done();
+				});
+		});
+
+		it('should detect missing clientId (callback)', (done) => {
+			key.disableClient((err) => {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.equal('clientId is required');
+
+				return done();
+			});
+		});
+
+		it('should properly disable client (promise)', (done) => {
+			// intercept outbound request
+			nock('https://key-api.apps.playnetwork.com')
+				.delete('/v0/clients/test-clientId')
+				.reply(204);
+
+			key.disableClient('test-clientId')
+				.then(() => {
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch(done);
+		});
+
+		it('should properly disable client (callback)', (done) => {
+			// intercept outbound request
+			nock('https://key-api.apps.playnetwork.com')
+				.delete('/v0/clients/test-clientId')
+				.reply(204);
+
+			key.disableClient('test-clientId', (err) => {
+				should.not.exist(err);
+				should.exist(requestInfo);
+
+				return done();
+			});
+		});
+
+		it('should properly remove client from token cache when disabled', (done) => {
+			// intercept outbound request
+			nock('https://key-api.apps.playnetwork.com')
+				.post('/v0/tokens')
+				.reply(201, { token : mockToken });
+
+			nock('https://key-api.apps.playnetwork.com')
+				.delete('/v0/clients/test-clientId')
+				.reply(204);
+
+			co(function *() {
+				let token = yield key.generateToken('test-clientId', 'secret');
+
+				should.exist(token);
+				key.getTokenCacheSize().should.equal(1);
+
+				yield key.disableClient('test-clientId');
+				key.getTokenCacheSize().should.equal(0);
+			})
+			.then(done)
+			.catch(done);
+		});
+	});
+
 	describe('#ensureAuthHeaders', () => {
 		it('should require clientId', (done) => {
 			key = new KeyProxy({

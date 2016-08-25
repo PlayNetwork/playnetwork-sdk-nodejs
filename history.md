@@ -1,3 +1,7 @@
+# v1.0.26 - 2016/08/25
+
+* Introduced backend feature to `key` sub-module
+
 # v1.0.25 - 2016/08/19
 
 * Introduced method to purge the token cache

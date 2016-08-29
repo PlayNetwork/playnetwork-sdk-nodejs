@@ -1,3 +1,7 @@
+# v1.0.27 - 2016/08/29
+
+* Fixed minor issue where a function in `key` sub-module was incorrectly omitting token
+
 # v1.0.26 - 2016/08/25
 
 * Introduced backend feature to `key` sub-module

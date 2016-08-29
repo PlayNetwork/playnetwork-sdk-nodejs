@@ -158,6 +158,18 @@ describe('key', () => {
 	});
 
 	describe('#disableClient', () => {
+		beforeEach(() => {
+			// override ensureAuthHeaders
+			key.ensureAuthHeaders = function () {
+				return new Promise((resolve, reject) => {
+					return resolve({
+						'x-client-id': 'test',
+						'x-authentication-token': 'test'
+					})
+				})
+			};
+		});
+
 		it('should detect missing clientId (promise)', (done) => {
 			key.disableClient()
 				.then(() => (done('clientId is required')))

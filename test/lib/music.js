@@ -97,7 +97,7 @@ describe('music', () => {
 			assetId : 'test'
 		}];
 
-		it('should require playlistId', (done) => {
+		it('should require playlistId (promise)', (done) => {
 			music.addPlaylistTracks()
 				.then(() => {
 					return done(new Error('should require playlistId'));
@@ -109,6 +109,17 @@ describe('music', () => {
 
 					return done();
 				});
+		});
+
+		it('should require playlistId (callback)', (done) => {
+			music.addPlaylistTracks(function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('playlistId is required');
+				should.not.exist(result);
+
+				return done();
+			});
 		});
 
 		it('should require tracks', (done) => {
@@ -134,6 +145,22 @@ describe('music', () => {
 
 					return done();
 				});
+		});
+
+		it('should properly convert track to an array', (done) => {
+			// intercept outbound request
+			nock('https://curio-music-api.apps.playnetwork.com')
+				.post('/v2/playlists/test/tracks')
+				.reply(201, mockTracks);
+
+			music.addPlaylistTracks('test', mockTracks[0])
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch((err) => (done(err)));
 		});
 
 		it('should properly create playlist (promise)', (done) => {
@@ -593,8 +620,138 @@ describe('music', () => {
 		});
 	});
 
+	describe('#call', () => {
+		beforeEach(() => {
+			// override ensureAuthHeaders
+			music.ensureAuthHeaders = function () {
+				return new Promise((resolve, reject) => {
+					return resolve({
+						'x-client-id': 'test',
+						'x-authentication-token': 'test'
+					})
+				})
+			};
+		});
+
+		it('should require options (callback)', (done) => {
+			music.call(function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.equal('options are required');
+				should.not.exist(result);
+
+				return done();
+			});
+		});
+
+		it('should require options (promise)', (done) => {
+			music
+				.call()
+				.then(() => done(new Error('should require options')))
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.equal('options are required');
+
+					return done();
+				});
+		});
+
+		it('should require options.pathname (callback)', (done) => {
+			music.call({ method : 'get' }, function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.equal('options.pathname is required');
+				should.not.exist(result);
+
+				return done();
+			});
+		});
+
+		it('should require options.pathname (promise)', (done) => {
+			music
+				.call({ method : 'get' })
+				.then(() => done(new Error('should require options.pathname')))
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.equal('options.pathname is required');
+
+					return done();
+				});
+		});
+
+		it('should default options.method (callback)', (done) => {
+			// intercept outbound request
+			nock('https://curio-music-api.apps.playnetwork.com')
+				.get('/v0/test')
+				.reply(200, { test : true });
+
+			music.call({ pathname : '/v0/test' }, function (err, result) {
+				should.not.exist(err);
+				should.exist(result);
+				should.exist(requestInfo);
+
+				return done();
+			});
+		});
+
+		it('should default invalid options.method (promise)', (done) => {
+			// intercept outbound request
+			nock('https://curio-music-api.apps.playnetwork.com')
+				.get('/v0/test')
+				.reply(200, { test : true });
+
+			music
+				.call({ pathname : '/v0/test', method : { invalid : true } })
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch(done);
+		});
+
+		it('should lowercase options.method (promise)', (done) => {
+			// intercept outbound request
+			nock('https://curio-music-api.apps.playnetwork.com')
+				.put('/v0/test')
+				.reply(202, { test : true });
+
+			music
+				.call({ pathname : '/v0/test', method : 'PUT' })
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch(done);
+		});
+
+		it('should accept options.data', (done) => {
+			let data = { test : true };
+
+			// intercept outbound request
+			nock('https://curio-music-api.apps.playnetwork.com')
+				.post('/v0/test', data)
+				.reply(201, data);
+
+			music
+				.call({ pathname : '/v0/test', method : 'POST', data : data })
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch(done);
+		});
+	});
+
 	describe('#checkPlaylistTrack', () => {
-		it('should require playlistId', (done) => {
+		it('should require playlistId (promise)', (done) => {
 			music.checkPlaylistTrack()
 				.then(() => {
 					return done(new Error('should require playlistId'));
@@ -606,6 +763,17 @@ describe('music', () => {
 
 					return done();
 				})
+		});
+
+		it('should require playlistId (callback)', (done) => {
+			music.checkPlaylistTrack(function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('playlistId is required');
+				should.not.exist(result);
+
+				return done();
+			});
 		});
 
 		it('should require track', (done) => {
@@ -687,7 +855,7 @@ describe('music', () => {
 	});
 
 	describe('#createBroadcast', () => {
-		it('should require stationId', (done) => {
+		it('should require stationId (promise)', (done) => {
 			music.createBroadcast()
 				.then(() => {
 					return done(new Error('should require stationId'));
@@ -699,6 +867,17 @@ describe('music', () => {
 
 					return done();
 				})
+		});
+
+		it('should require stationId (callback)', (done) => {
+			music.createBroadcast(function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('stationId is required');
+				should.not.exist(result);
+
+				return done();
+			});
 		});
 
 		it('should properly create broadcast (promise)', (done) => {
@@ -738,7 +917,7 @@ describe('music', () => {
 			title : 'test playlist'
 		};
 
-		it('should require playlist details', (done) => {
+		it('should require playlist details (promise)', (done) => {
 			music.createPlaylist()
 				.then(() => {
 					return done(new Error('should require playlist'));
@@ -750,6 +929,17 @@ describe('music', () => {
 
 					return done();
 				})
+		});
+
+		it('should require playlist details (callback)', (done) => {
+			music.createPlaylist(function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('playlist is required');
+				should.not.exist(result);
+
+				return done();
+			});
 		});
 
 		it('should require title', (done) => {
@@ -796,7 +986,7 @@ describe('music', () => {
 	});
 
 	describe('#deleteBroadcast', () => {
-		it('should require stationId', (done) => {
+		it('should require stationId (promise)', (done) => {
 			music.deleteBroadcast()
 				.then(() => {
 					return done(new Error('should require stationId'));
@@ -810,7 +1000,18 @@ describe('music', () => {
 				})
 		});
 
-		it('should require broadcastId', (done) => {
+		it('should require stationId (callback)', (done) => {
+			music.deleteBroadcast(function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('stationId is required');
+				should.not.exist(result);
+
+				return done();
+			});
+		});
+
+		it('should require broadcastId (promise)', (done) => {
 			music.deleteBroadcast('test')
 				.then(() => {
 					return done(new Error('should require broadcastId'));
@@ -822,6 +1023,17 @@ describe('music', () => {
 
 					return done();
 				})
+		});
+
+		it('should require broadcastId (callback)', (done) => {
+			music.deleteBroadcast('test', function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('broadcastId is required');
+				should.not.exist(result);
+
+				return done();
+			});
 		});
 
 		it('should properly delete broadcast (promise)', (done) => {
@@ -855,7 +1067,7 @@ describe('music', () => {
 	});
 
 	describe('#deletePlaylist', () => {
-		it('should require playlistId', (done) => {
+		it('should require playlistId (promise)', (done) => {
 			music.deletePlaylist()
 				.then(() => {
 					return done(new Error('should require playlistId'));
@@ -867,6 +1079,17 @@ describe('music', () => {
 
 					return done();
 				})
+		});
+
+		it('should require playlistId (callback)', (done) => {
+			music.deletePlaylist(function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('playlistId is required');
+				should.not.exist(result);
+
+				return done();
+			});
 		});
 
 		it('should properly delete playlist (promise)', (done) => {
@@ -900,7 +1123,7 @@ describe('music', () => {
 	});
 
 	describe('#deletePlaylistTrack', () => {
-		it('should require playlistId', (done) => {
+		it('should require playlistId (promise)', (done) => {
 			music.deletePlaylistTrack()
 				.then(() => {
 					return done(new Error('should require playlistId'));
@@ -912,6 +1135,17 @@ describe('music', () => {
 
 					return done();
 				})
+		});
+
+		it('should require playlistId (callback)', (done) => {
+			music.deletePlaylistTrack(function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('playlistId is required');
+				should.not.exist(result);
+
+				return done();
+			});
 		});
 
 		it('should require track', (done) => {
@@ -991,7 +1225,7 @@ describe('music', () => {
 	});
 
 	describe('#getBroadcast', () => {
-		it('should require stationId', (done) => {
+		it('should require stationId (promise)', (done) => {
 			music.getBroadcast()
 				.then(() => {
 					return done(new Error('should require stationId'));
@@ -1005,7 +1239,18 @@ describe('music', () => {
 				})
 		});
 
-		it('should require broadcastId', (done) => {
+		it('should require stationId (callback)', (done) => {
+			music.getBroadcast(function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('stationId is required');
+				should.not.exist(result);
+
+				return done();
+			});
+		});
+
+		it('should require broadcastId (promise)', (done) => {
 			music.getBroadcast('test')
 				.then(() => {
 					return done(new Error('should require broadcastId'));
@@ -1017,6 +1262,17 @@ describe('music', () => {
 
 					return done();
 				})
+		});
+
+		it('should require broadcastId (callback)', (done) => {
+			music.getBroadcast('test', function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('broadcastId is required');
+				should.not.exist(result);
+
+				return done();
+			});
 		});
 
 		it('should properly retrieve broadcast (promise)', (done) => {
@@ -1052,7 +1308,7 @@ describe('music', () => {
 	});
 
 	describe('#getCollection', () => {
-		it('should require collectionId', (done) => {
+		it('should require collectionId (promise)', (done) => {
 			music.getCollection()
 				.then(() => {
 					return done(new Error('should require collectionId'));
@@ -1064,6 +1320,17 @@ describe('music', () => {
 
 					return done();
 				})
+		});
+
+		it('should require collectionId (callback)', (done) => {
+			music.getCollection(function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('collectionId is required');
+				should.not.exist(result);
+
+				return done();
+			});
 		});
 
 		it('should properly retrieve collection (promise)', (done) => {
@@ -1099,7 +1366,7 @@ describe('music', () => {
 	});
 
 	describe('#getPlaylist', () => {
-		it('should require playlistId', (done) => {
+		it('should require playlistId (promise)', (done) => {
 			music.getPlaylist()
 				.then(() => {
 					return done(new Error('should require playlistId'));
@@ -1111,6 +1378,17 @@ describe('music', () => {
 
 					return done();
 				})
+		});
+
+		it('should require playlistId (callback)', (done) => {
+			music.getPlaylist(function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('playlistId is required');
+				should.not.exist(result);
+
+				return done();
+			});
 		});
 
 		it('should properly retrieve collection (promise)', (done) => {
@@ -1146,7 +1424,7 @@ describe('music', () => {
 	});
 
 	describe('#getStation', () => {
-		it('should require stationId', (done) => {
+		it('should require stationId (promise)', (done) => {
 			music.getStation()
 				.then(() => {
 					return done(new Error('should require stationId'));
@@ -1158,6 +1436,17 @@ describe('music', () => {
 
 					return done();
 				})
+		});
+
+		it('should require stationId (callback)', (done) => {
+			music.getStation(function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('stationId is required');
+				should.not.exist(result);
+
+				return done();
+			});
 		});
 
 		it('should properly retrieve station (promise)', (done) => {
@@ -1193,7 +1482,7 @@ describe('music', () => {
 	});
 
 	describe('#getTrack', () => {
-		it('should require trackAlias', (done) => {
+		it('should require trackAlias (promise)', (done) => {
 			music.getTrack()
 				.then(() => {
 					return done(new Error('should require trackAlias'));
@@ -1205,6 +1494,17 @@ describe('music', () => {
 
 					return done();
 				})
+		});
+
+		it('should require trackAlias (callback)', (done) => {
+			music.getTrack(function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('trackAlias is required');
+				should.not.exist(result);
+
+				return done();
+			});
 		});
 
 		it('should properly retrieve track (promise)', (done) => {
@@ -1248,7 +1548,7 @@ describe('music', () => {
 			assetId : 'test'
 		}];
 
-		it('should require tracks', (done) => {
+		it('should require tracks (callback)', (done) => {
 			music.getTracks(function (err, result) {
 				should.not.exist(result);
 				should.exist(err);
@@ -1270,6 +1570,22 @@ describe('music', () => {
 
 					return done();
 				});
+		});
+
+		it('should convert one track to array (promise)', (done) => {
+			// intercept outbound request
+			nock('https://curio-music-api.apps.playnetwork.com')
+				.post('/v2/tracks/trackIds')
+				.reply(201, mockTracks);
+
+			music.getTracks(mockTracks[0])
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch((err) => (done(err)));
 		});
 
 		it('should properly get multiple tracks (promise)', (done) => {
@@ -1305,7 +1621,7 @@ describe('music', () => {
 	});
 
 	describe('#mixStation', () => {
-		it('should require collectionId', (done) => {
+		it('should require collectionId (promise)', (done) => {
 			music.mixCollection()
 				.then(() => {
 					return done(new Error('should require collectionId'));
@@ -1317,6 +1633,17 @@ describe('music', () => {
 
 					return done();
 				})
+		});
+
+		it('should require collectionId (callback)', (done) => {
+			music.mixCollection(function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('collectionId is required');
+				should.not.exist(result);
+
+				return done();
+			});
 		});
 
 		it('should properly retrieve collection (promise)', (done) => {
@@ -1356,7 +1683,7 @@ describe('music', () => {
 			playlistId : 'test'
 		};
 
-		it('should require playlist details', (done) => {
+		it('should require playlist details (promise)', (done) => {
 			music.updatePlaylist()
 				.then(() => {
 					return done(new Error('should require playlist'));
@@ -1368,6 +1695,17 @@ describe('music', () => {
 
 					return done();
 				})
+		});
+
+		it('should require playlist details (callback)', (done) => {
+			music.updatePlaylist(function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('playlist is required');
+				should.not.exist(result);
+
+				return done();
+			});
 		});
 
 		it('should require playlistId', (done) => {

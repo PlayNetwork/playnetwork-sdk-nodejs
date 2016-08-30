@@ -1,3 +1,10 @@
+# v1.0.28 - 2016/08/30
+
+* Introduced method to `music` sub-module allowing for flexible specification of dynamic requests
+* Fixed bug in `music` sub-module where `createPlaylist` did not properly handle when playlist details are omitted during requests where callback is specified
+* Fixed bug in `music` sub-module where `updatePlaylist` did not properly handle when playlist details are omitted during requests where callback is specified
+* Increased unit test coverage for `music` sub-module
+
 # v1.0.27 - 2016/08/29
 
 * Fixed minor issue where a function in `key` sub-module was incorrectly omitting token

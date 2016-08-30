@@ -1,3 +1,8 @@
+# v1.0.29 - 2016/08/30
+
+* Introduced method to `content` sub-module allowing for flexible specification of dynamic requests
+* Increased unit test coverage for `content` sub-module
+
 # v1.0.28 - 2016/08/30
 
 * Introduced method to `music` sub-module allowing for flexible specification of dynamic requests

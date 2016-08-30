@@ -160,8 +160,138 @@ describe('content', () => {
 		});
 	});
 
+	describe('#call', () => {
+		beforeEach(() => {
+			// override ensureAuthHeaders
+			content.ensureAuthHeaders = function () {
+				return new Promise((resolve, reject) => {
+					return resolve({
+						'x-client-id': 'test',
+						'x-authentication-token': 'test'
+					})
+				})
+			};
+		});
+
+		it('should require options (callback)', (done) => {
+			content.call(function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.equal('options are required');
+				should.not.exist(result);
+
+				return done();
+			});
+		});
+
+		it('should require options (promise)', (done) => {
+			content
+				.call()
+				.then(() => done(new Error('should require options')))
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.equal('options are required');
+
+					return done();
+				});
+		});
+
+		it('should require options.pathname (callback)', (done) => {
+			content.call({ method : 'get' }, function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.equal('options.pathname is required');
+				should.not.exist(result);
+
+				return done();
+			});
+		});
+
+		it('should require options.pathname (promise)', (done) => {
+			content
+				.call({ method : 'get' })
+				.then(() => done(new Error('should require options.pathname')))
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.equal('options.pathname is required');
+
+					return done();
+				});
+		});
+
+		it('should default options.method (callback)', (done) => {
+			// intercept outbound request
+			nock('https://content-api.apps.playnetwork.com')
+				.get('/v0/test')
+				.reply(200, { test : true });
+
+			content.call({ pathname : '/v0/test' }, function (err, result) {
+				should.not.exist(err);
+				should.exist(result);
+				should.exist(requestInfo);
+
+				return done();
+			});
+		});
+
+		it('should default invalid options.method (promise)', (done) => {
+			// intercept outbound request
+			nock('https://content-api.apps.playnetwork.com')
+				.get('/v0/test')
+				.reply(200, { test : true });
+
+			content
+				.call({ pathname : '/v0/test', method : { invalid : true } })
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch(done);
+		});
+
+		it('should lowercase options.method (promise)', (done) => {
+			// intercept outbound request
+			nock('https://content-api.apps.playnetwork.com')
+				.put('/v0/test')
+				.reply(202, { test : true });
+
+			content
+				.call({ pathname : '/v0/test', method : 'PUT' })
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch(done);
+		});
+
+		it('should accept options.data', (done) => {
+			let data = { test : true };
+
+			// intercept outbound request
+			nock('https://content-api.apps.playnetwork.com')
+				.post('/v0/test', data)
+				.reply(201, data);
+
+			content
+				.call({ pathname : '/v0/test', method : 'POST', data : data })
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch(done);
+		});
+	});
+
 	describe('#checkAsset', () => {
-		it('should require track', (done) => {
+		it('should require track (promise)', (done) => {
 			content.checkAsset()
 				.then(() => {
 					return done(new Error('should require track'));
@@ -173,6 +303,17 @@ describe('content', () => {
 
 					return done();
 				});
+		});
+
+		it('should require track (callback)', (done) => {
+			content.checkAsset(function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('track is required');
+				should.not.exist(result);
+
+				return done();
+			});
 		});
 
 		it('should redirect to legacy if asset is not specified', (done) => {
@@ -221,7 +362,7 @@ describe('content', () => {
 	});
 
 	describe('#checkLegacyAsset', () => {
-		it('should require track', (done) => {
+		it('should require track (promise)', (done) => {
 			content.checkLegacyAsset()
 				.then(() => {
 					return done(new Error('should require track'));
@@ -233,6 +374,17 @@ describe('content', () => {
 
 					return done();
 				});
+		});
+
+		it('should require track (callback)', (done) => {
+			content.checkLegacyAsset(function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('track is required');
+				should.not.exist(result);
+
+				return done();
+			});
 		});
 
 		it('should require legacy trackToken', (done) => {
@@ -300,7 +452,7 @@ describe('content', () => {
 	});
 
 	describe('#getAssetStream', () => {
-		it('should require track', (done) => {
+		it('should require track (promise)', (done) => {
 			content.getAssetStream()
 				.then(() => {
 					return done(new Error('should require track'));
@@ -312,6 +464,17 @@ describe('content', () => {
 
 					return done();
 				});
+		});
+
+		it('should require track (callback)', (done) => {
+			content.getAssetStream(function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('track is required');
+				should.not.exist(result);
+
+				return done();
+			});
 		});
 
 		it('should require track identifier', (done) => {
@@ -391,7 +554,7 @@ describe('content', () => {
 	});
 
 	describe('#getLegacyAssetStream', () => {
-		it('should require track', (done) => {
+		it('should require track (promise)', (done) => {
 			content.getLegacyAssetStream()
 				.then(() => {
 					return done(new Error('should require track'));
@@ -403,6 +566,17 @@ describe('content', () => {
 
 					return done();
 				});
+		});
+
+		it('should require track (callback)', (done) => {
+			content.getLegacyAssetStream(function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('track is required');
+				should.not.exist(result);
+
+				return done();
+			});
 		});
 
 		it('should require track identifier', (done) => {

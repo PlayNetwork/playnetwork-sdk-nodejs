@@ -1,3 +1,7 @@
+# v1.0.30 - 2016/09/02
+
+* Added two undocumented methods to `content` sub-module for backend asset auditing tool usage
+
 # v1.0.29 - 2016/08/30
 
 * Introduced method to `content` sub-module allowing for flexible specification of dynamic requests

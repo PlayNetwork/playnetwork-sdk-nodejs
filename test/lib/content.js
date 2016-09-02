@@ -451,6 +451,77 @@ describe('content', () => {
 		});
 	});
 
+	describe('#checkOriginalAsset', () => {
+		it('should require track (promise)', (done) => {
+			content.checkOriginalAsset()
+				.then(() => {
+					return done(new Error('should require track'));
+				})
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('track is required');
+
+					return done();
+				});
+		});
+
+		it('should require track (callback)', (done) => {
+			content.checkOriginalAsset(function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('track is required');
+				should.not.exist(result);
+
+				return done();
+			});
+		});
+
+		it('should redirect to legacy if asset is not specified', (done) => {
+			content.checkOriginalAsset({ test : true }, function (err, result) {
+				should.not.exist(result);
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('track is missing identifier');
+
+				return done();
+			});
+		});
+
+		it('should properly check asset (promise)', (done) => {
+			// intercept outbound request
+			nock('https://content-api.apps.playnetwork.com')
+				.head('/v0/originalassets/test')
+				.reply(200);
+
+			content.checkOriginalAsset('test')
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+					result.should.be.true;
+
+					return done();
+				})
+				.catch((err) => (done(err)));
+		});
+
+		it('should properly check asset (callback)', (done) => {
+			// intercept outbound request
+			nock('https://content-api.apps.playnetwork.com')
+				.head('/v0/originalassets/test')
+				.reply(404);
+
+			content.checkOriginalAsset({ assetId : 'test' }, function (err, result) {
+				should.not.exist(err);
+				should.exist(result);
+				should.exist(requestInfo);
+				result.should.be.false;
+
+				return done();
+			});
+		});
+	});
+
 	describe('#getAssetStream', () => {
 		it('should require track (promise)', (done) => {
 			content.getAssetStream()
@@ -639,6 +710,108 @@ describe('content', () => {
 					should.exist(result);
 
 					return done();
+			});
+		});
+	});
+
+	describe('#getOriginalAssetStream', () => {
+		it('should require track (promise)', (done) => {
+			content.getOriginalAssetStream()
+				.then(() => {
+					return done(new Error('should require track'));
+				})
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('track is required');
+
+					return done();
+				});
+		});
+
+		it('should require track (callback)', (done) => {
+			content.getOriginalAssetStream(function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('track is required');
+				should.not.exist(result);
+
+				return done();
+			});
+		});
+
+		it('should require track identifier', (done) => {
+			content.getOriginalAssetStream({ test : true })
+				.then(() => {
+					return done(new Error('should require track identifier'));
+				})
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('track is missing identifier');
+
+					return done();
+				});
+		});
+
+		it('should properly fail when content is not found', (done) => {
+			// intercept outbound request
+			nock('https://content-api.apps.playnetwork.com')
+				.get('/v0/originalassets/test')
+				.reply(404, { statusCode : 404 });
+
+			content.getOriginalAssetStream('test')
+				.then(() => {
+					return done(new Error('should fail when content is not found'));
+				})
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('resource not found');
+
+					return done();
+				});
+		});
+
+		it('should properly redirect to legacy when assetId is not supplied', (done) => {
+			// intercept outbound request
+			nock('https://content-api.apps.playnetwork.com')
+				.get('/v0/legacy/assets/trackToken:1234')
+				.reply(200, getMockStream(200));
+
+			content.getOriginalAssetStream({ legacy : { trackToken : 1234 }})
+				.then((result) => {
+					should.exist(result);
+					return done();
+				})
+				.catch(done);
+		});
+
+		it('should properly return stream when content is found (promise)', (done) => {
+			// intercept outbound request
+			nock('https://content-api.apps.playnetwork.com')
+				.get('/v0/originalassets/test')
+				.reply(200, getMockStream(200));
+
+			content.getOriginalAssetStream('test')
+				.then((result) => {
+					should.exist(result);
+					return done();
+				})
+				.catch(done);
+		});
+
+		it('should properly return stream when content is found (callback)', (done) => {
+			// intercept outbound request
+			nock('https://content-api.apps.playnetwork.com')
+				.get('/v0/originalassets/test')
+				.reply(200, getMockStream(200));
+
+			content.getOriginalAssetStream({ assetId : 'test' }, function (err, result) {
+				should.not.exist(err);
+				should.exist(result);
+
+				return done();
 			});
 		});
 	});

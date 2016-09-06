@@ -1,3 +1,7 @@
+# v1.0.31 - 2016/09/06
+
+* Introduced `locations` sub-module
+
 # v1.0.30 - 2016/09/02
 
 * Added two undocumented methods to `content` sub-module for backend asset auditing tool usage

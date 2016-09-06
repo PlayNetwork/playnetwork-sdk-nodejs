@@ -93,6 +93,18 @@ This module provides support for retrieving location / device specific environme
 
 - - -
 
+### Location
+
+This module allows one to retrieve information for locations as PlayNetwork understands them.
+
+* [allAccountLocations](#allAccountLocations)
+* [allLocations](#allLocations)
+* [allPhysicalLocations](#allPhysicalLocations)
+* [getLocation](#getLocation)
+* [getLocations](#getLocations)
+
+- - -
+
 ### Device
 
 This module enables simple access to device group and individual device status information.
@@ -1382,6 +1394,165 @@ client
 
 [back to top](#usage)
 
+### Location Module
+
+The location module is designed to simplify interaction with the PlayNetwork Location API. This module supports the following methods:
+
+#### #allAccountLocations
+
+This method can be used to retrieve a list of accounts aggregated locations from the API.
+
+**Usage:** `client.location.allAccountLocations(options, callback)`
+
+* `options` - _(optional)_ - can be used to supply additional filters and sorting instructions
+  * `start` - the index at which to start selection of items
+  * `count` - the total number of items to retrieve (maximum value is `100`)
+  * `filters` - additional field projections along with mandatory and optional filters (see [API documentation](https://location-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
+  * `sort` - additional sorting parameters for result (see [API documentation](https://location-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
+* `callback` - _(optional)_ - a function callback that accepts two arguments
+  * `err` - populated with details in the event of an error
+  * `result` - result set details
+
+```javascript
+client
+  .location
+  .allAccountLocations({
+    count : 100,
+    start : 0
+  })
+  .then((result) => {
+    console.log('successfully found %d accounts', result.total);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
+
+[back to top](#usage)
+
+#### #allLocations
+
+This method can be used to retrieve a list of locations from the API.
+
+**Usage:** `client.location.allLocations(options, callback)`
+
+* `options` - _(optional)_ - can be used to supply additional filters and sorting instructions
+  * `start` - the index at which to start selection of items
+  * `count` - the total number of items to retrieve (maximum value is `100`)
+  * `filters` - additional field projections along with mandatory and optional filters (see [API documentation](https://location-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
+  * `sort` - additional sorting parameters for result (see [API documentation](https://location-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
+* `callback` - _(optional)_ - a function callback that accepts two arguments
+  * `err` - populated with details in the event of an error
+  * `result` - result set details
+
+```javascript
+client
+  .location
+  .allLocations({
+    count : 100,
+    start : 0
+  })
+  .then((result) => {
+    console.log('successfully found %d locations', result.total);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
+
+[back to top](#usage)
+
+#### #allPhysicalLocations
+
+This method can be used to retrieve a list of physical locations from the API.
+
+**Usage:** `client.location.allPhysicalLocations(options, callback)`
+
+* `options` - _(optional)_ - can be used to supply additional filters and sorting instructions
+  * `start` - the index at which to start selection of items
+  * `count` - the total number of items to retrieve (maximum value is `100`)
+  * `filters` - additional field projections along with mandatory and optional filters (see [API documentation](https://location-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
+  * `sort` - additional sorting parameters for result (see [API documentation](https://location-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
+* `callback` - _(optional)_ - a function callback that accepts two arguments
+  * `err` - populated with details in the event of an error
+  * `result` - result set details
+
+```javascript
+client
+  .location
+  .allPhysicalLocations({
+    count : 100,
+    start : 0
+  })
+  .then((result) => {
+    console.log('successfully found %d physical locations', result.total);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
+
+[back to top](#usage)
+
+#### #getLocation
+
+To retrieve details for a particular location, use this method.
+
+**Usage:** `client.location.getLocation(locationId, options, callback)`
+
+* `locationId` - _(required)_ - defines the location that should be retrieved
+* `options` - _(optional)_ - additional options
+* `callback` - _(optional)_ - a function callback that accepts a single argument
+  * `err` - populated with details in the event of an error
+  * `location` - the location
+
+```javascript
+var locationId = '<LOCATION_ID>';
+
+client
+  .location
+  .getLocation(locationId)
+  .then((location) => {
+    console.log(
+      'successfully retrieved location %s',
+      location.locationId);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
+
+[back to top](#usage)
+
+#### getLocations
+
+Works similarly to [getLocation](#getlocation), but allows for multiple locations to be provided as a bulk request.
+
+**Usage:** `client.location.getLocations(locationIdList, callback)`
+
+* `locationIdList` - _(required)_ - an array of locationId values to lookup
+* `callback` - _(optional)_ - a function callback that accepts a single argument
+  * `err` - populated with details in the event of an error
+  * `locations` - the locations
+
+```javascript
+var deviceIdList = ['<LOCATION_ID_1>', '<LOCATION_ID_2>', '<LOCATION_ID_3>'];
+
+client
+  .location
+  .getLocations(locationIdList)
+  .then((locations) => {
+    console.log(
+      'successfully retrieved %d locations',
+      locations.length);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
+
+[back to top](#usage)
+
 ### Device Module
 
 The device module is designed to simplify interaction with the PlayNetwork Device API. This module supports the following methods:
@@ -1601,7 +1772,7 @@ var deviceIdList = ['<DEVICE_ID_1>', '<DEVICE_ID_2>', '<DEVICE_ID_3>'];
 client
   .device
   .getDevices(deviceIdList)
-  .then((groups) => {
+  .then((devices) => {
     console.log(
       'successfully retrieved %d devices',
       devices.length);

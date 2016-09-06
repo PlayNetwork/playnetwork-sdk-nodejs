@@ -97,11 +97,11 @@ This module provides support for retrieving location / device specific environme
 
 This module allows one to retrieve information for locations as PlayNetwork understands them.
 
-* [allAccountLocations](#allAccountLocations)
-* [allLocations](#allLocations)
-* [allPhysicalLocations](#allPhysicalLocations)
-* [getLocation](#getLocation)
-* [getLocations](#getLocations)
+* [allAccountLocations](#allaccountlocations)
+* [allLocations](#alllocations)
+* [allPhysicalLocations](#allphysicallocations)
+* [getLocation](#getlocation)
+* [getLocations](#getlocations)
 
 - - -
 

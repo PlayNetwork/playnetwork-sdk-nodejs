@@ -100,7 +100,7 @@ This module allows one to retrieve information for locations as PlayNetwork unde
 * [allAccountLocations](#allaccountlocations)
 * [allLocations](#alllocations)
 * [allPhysicalLocations](#allphysicallocations)
-* [deletePhysicalLocation](#deletePhysicalLocation)
+* [deletePhysicalLocation](#deletephysicallocation)
 * [getLocation](#getlocation)
 * [getLocations](#getlocations)
 

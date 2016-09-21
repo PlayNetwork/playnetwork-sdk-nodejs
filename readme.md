@@ -100,6 +100,7 @@ This module allows one to retrieve information for locations as PlayNetwork unde
 * [allAccountLocations](#allaccountlocations)
 * [allLocations](#alllocations)
 * [allPhysicalLocations](#allphysicallocations)
+* [deletePhysicalLocation](#deletephysicallocation)
 * [getLocation](#getlocation)
 * [getLocations](#getlocations)
 
@@ -1486,6 +1487,35 @@ client
   })
   .then((result) => {
     console.log('successfully found %d physical locations', result.total);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
+
+[back to top](#usage)
+
+#### #deletePhysicalLocation
+
+This method can be used to delete a physicalLocation by physicalLocationId.
+
+**Usage:** `client.location.deletePhysicalLocation(physicalLocationId, callback)`
+
+* `physicalLocationId` - _(required)_ - defined the physicalLocation that should be deleted
+* `callback` - _(optional)_ - a function callback that accepts a single argument
+  * `err` - populated with details in the event of an error
+  * `physicalLocation` - the physicalLocation
+
+```javascript
+var physicalLocationId = '<PHYSICAL_LOCATION_ID>';
+
+client
+  .location
+  .deletePhysicalLocation(physicalLocationId)
+  .then(() => {
+    console.log(
+      'successfully deleted physicalLocationId %s',
+      physicalLocationId);
   })
   .catch((err) => {
     console.error(err);

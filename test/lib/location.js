@@ -75,6 +75,7 @@ describe('location', () => {
 			should.exist(proxy.allLocations);
 			should.exist(proxy.allPhysicalLocations);
 			should.exist(proxy.call);
+			should.exist(proxy.deletePhysicalLocation);
 			should.exist(proxy.getLocation);
 			should.exist(proxy.getPhysicalLocation);
 			should.exist(proxy.settings);
@@ -383,6 +384,62 @@ describe('location', () => {
 					return done();
 				})
 				.catch(done);
+		});
+	});
+
+	describe('#deletePhysicalLocation', () => {
+		it('should require physicalLocationId (promise)', (done) => {
+			location.deletePhysicalLocation()
+				.then(() => {
+					return done(new Error('should require physicalLocationId'));
+				})
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('physicalLocationId is required');
+
+					return done();
+				})
+		});
+
+		it('should require physicalLocationId (callback)', (done) => {
+			location.deletePhysicalLocation(function (err, result) {
+				should.exist(err);
+				should.not.exist(result);
+				should.exist(err.message);
+				err.message.should.equal('physicalLocationId is required');
+
+				return done();
+			});
+		});
+
+		it('should properly delete physicalLocation (promise)', (done) => {
+			// intercept outbound request
+			nock('https://location-api.apps.playnetwork.com')
+				.delete('/v0/locations/physical/test')
+				.reply(204);
+
+			location.deletePhysicalLocation('test')
+				.then(() => {
+					should.exist(requestInfo);
+					
+					return done();
+				})
+				.catch((err) => (done(err)));
+		});
+
+		it('should properly delete physicalLocation (callback)', (done) => {
+			// intercept outbound request
+			nock('https://location-api.apps.playnetwork.com')
+				.delete('/v0/locations/physical/test')
+				.reply(204);
+
+			location.deletePhysicalLocation('test', function (err) {
+				should.not.exist(err);
+				should.exist(requestInfo);
+
+				return done();
+			});
 		});
 	});
 

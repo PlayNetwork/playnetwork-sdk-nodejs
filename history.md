@@ -1,3 +1,7 @@
+# v1.0.32 - 2016/09/21
+
+* Added `#deletePhysicalLocation` to `location` sub-module
+
 # v1.0.31 - 2016/09/06
 
 * Introduced `locations` sub-module

@@ -1512,7 +1512,7 @@ var physicalLocationId = '<PHYSICAL_LOCATION_ID>';
 client
   .location
   .deletePhysicalLocation(physicalLocationId)
-  .then((physicalLocation) => {
+  .then(() => {
     console.log(
       'successfully deleted physicalLocationId %s',
       physicalLocationId);

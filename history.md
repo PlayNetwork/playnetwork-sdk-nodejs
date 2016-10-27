@@ -1,3 +1,7 @@
+# v1.0.33 - 2016/10/27
+
+* Added `#addServicePermissions` to `key` sub-module
+
 # v1.0.32 - 2016/09/21
 
 * Added `#deletePhysicalLocation` to `location` sub-module

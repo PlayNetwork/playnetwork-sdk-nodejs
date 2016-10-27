@@ -430,6 +430,77 @@ describe('key', () => {
 		});
 	});
 
+	describe('#grantClientAccess', () => {
+		beforeEach(() => {
+			// override ensureAuthHeaders
+			key.ensureAuthHeaders = function () {
+				return new Promise((resolve, reject) => {
+					return resolve({
+						'x-client-id': 'test',
+						'x-authentication-token': 'test'
+					})
+				})
+			};
+		});
+
+		it('should detect missing clientId', (done) => {
+			key.grantClientAccess()
+				.then(() => (done('clientId is required')))
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.equal('clientId is required');
+
+					return done();
+				});
+		});
+
+		it('should detect missing serviceId', (done) => {
+			key.grantClientAccess('clientId', undefined, function (err, token) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.equal('serviceId is required');
+				should.not.exist(token);
+
+				return done();
+			});
+		});
+
+		it('should properly validate client (promise)', (done) => {
+			// intercept outbound request
+			nock('https://key-api.apps.playnetwork.com')
+				.post('/v0/clients/clientId/services/serviceId')
+				.reply(201, {});
+
+			key.grantClientAccess('clientId', 'serviceId')
+				.then((client) => {
+					should.exist(client);
+
+					return done();
+				})
+				.catch(done);
+		});
+
+		it('should properly validate client (callback)', (done) => {
+			// intercept outbound request
+			nock('https://key-api.apps.playnetwork.com')
+				.post('/v0/clients/clientId/services/serviceId')
+				.reply(201, {});
+
+			key.grantClientAccess('clientId', 'serviceId',
+				(err, client) => {
+					if (err) {
+						return done(err);
+					}
+
+					should.exist(client);
+
+					return done();
+				}
+			);
+		});
+	});
+
 	describe('#purgeTokenCache', () => {
 		it('should return false when nothing is purgeable', () => {
 			key.getTokenCacheSize().should.equal(0);

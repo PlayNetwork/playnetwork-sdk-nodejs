@@ -88,7 +88,7 @@ describe('key', () => {
 		});
 	});
 
-	describe('#addServicePermissions', () => {
+	describe('#grantClientAccess', () => {
 		beforeEach(() => {
 			// override ensureAuthHeaders
 			key.ensureAuthHeaders = function () {
@@ -102,7 +102,7 @@ describe('key', () => {
 		});
 
 		it('should detect missing clientId', (done) => {
-			key.addServicePermissions()
+			key.grantClientAccess()
 				.then(() => (done('clientId is required')))
 				.catch((err) => {
 					should.exist(err);
@@ -114,7 +114,7 @@ describe('key', () => {
 		});
 
 		it('should detect missing serviceId', (done) => {
-			key.addServicePermissions('clientId', undefined, function (err, token) {
+			key.grantClientAccess('clientId', undefined, function (err, token) {
 				should.exist(err);
 				should.exist(err.message);
 				err.message.should.equal('serviceId is required');
@@ -130,7 +130,7 @@ describe('key', () => {
 				.post('/v0/clients/clientId/services/serviceId')
 				.reply(201, {});
 
-			key.addServicePermissions('clientId', 'serviceId')
+			key.grantClientAccess('clientId', 'serviceId')
 				.then((client) => {
 					should.exist(client);
 
@@ -145,7 +145,7 @@ describe('key', () => {
 				.post('/v0/clients/clientId/services/serviceId')
 				.reply(201, {});
 
-			key.addServicePermissions('clientId', 'serviceId',
+			key.grantClientAccess('clientId', 'serviceId',
 				(err, client) => {
 					if (err) {
 						return done(err);

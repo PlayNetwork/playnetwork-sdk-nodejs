@@ -1,3 +1,8 @@
+# v1.0.34 - 2016/10/28
+
+* Resolved `UnhandledPromiseRejectionWarning` messages
+* Adjusted rejection for underlying request abstraction to always return `Error` objects
+
 # v1.0.33 - 2016/10/27
 
 * Added `#grantClientAccess` to `key` sub-module

@@ -818,7 +818,7 @@ describe('music', () => {
 				.catch((err) => (done(err)));
 		});
 
-		it('should properly create playlist (callback)', (done) => {
+		it('should properly check playlist track (callback)', (done) => {
 			// intercept outbound request
 			nock('https://curio-music-api.apps.playnetwork.com')
 				.head('/v2/playlists/test/tracks/test')

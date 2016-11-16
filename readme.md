@@ -1293,6 +1293,7 @@ This method can be used to record playback for a specific device or location.
 * `playbackInfo` - _(required)_ - defines the playback info that should be recorded
   * `client` - _(optional)_ - defines additional information about the device upon which the play occurred
     * `host` - host details for the playback
+      * `deviceId` - the identifier for the host playing the content
     * `software` - software details for the playback
   * `content`
     * `assetId` or `legacy.trackToken` - _(required)_ - the content being played
@@ -1305,6 +1306,9 @@ This method can be used to record playback for a specific device or location.
 ```javascript
 var play = {
   client : {
+    host : {
+      deviceId : 'aa:bb:cc:11:22:33'
+    },
     software : {
       platform : 'Linux',
       type : 'NodePlayer',
@@ -1315,9 +1319,6 @@ var play = {
     legacy : {
       trackToken : 12345
     }
-  },
-  legacy : {
-    deviceToken : 12345
   }
 };
 

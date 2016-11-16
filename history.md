@@ -1,3 +1,7 @@
+# v1.1.0 - 2016/11/16
+
+* Fixed defect in the `recordPlay` method of `playback` sub-module - this change modified the interface for expected data
+
 # v1.0.34 - 2016/10/28
 
 * Resolved `UnhandledPromiseRejectionWarning` messages

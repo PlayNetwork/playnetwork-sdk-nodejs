@@ -131,7 +131,11 @@ describe('playback', () => {
 			content : {
 				assetId : 'test'
 			},
-			deviceId : 'aabbcc112233'
+			client : {
+				host : {
+					deviceId : 'aabbcc112233'
+				}
+			}
 		};
 
 		it('should require play', (done) => {
@@ -149,7 +153,13 @@ describe('playback', () => {
 		});
 
 		it('should require content information', (done) => {
-			playback.recordPlay({ deviceId : 'test' }, function (err, result) {
+			playback.recordPlay({
+				client : {
+					host : {
+						deviceId : 'test'
+					}
+				}
+			}, function (err, result) {
 				should.not.exist(result);
 				should.exist(err);
 				should.exist(err.message);
@@ -164,7 +174,11 @@ describe('playback', () => {
 				content : {
 					test : true
 				},
-				deviceId : 'test'
+				client : {
+					host : {
+						deviceId : 'test'
+					}
+				}
 			}, function (err, result) {
 				should.not.exist(result);
 				should.exist(err);
@@ -175,10 +189,49 @@ describe('playback', () => {
 			});
 		});
 
+		it('should require client information', (done) => {
+			playback.recordPlay({
+				content : {
+					assetId : 'test'
+				}
+			}, function (err, result) {
+				should.not.exist(result);
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('client information is required');
+
+				return done();
+			});
+		});
+
+
+		it('should require host information', (done) => {
+			playback.recordPlay({
+				content : {
+					assetId : 'test'
+				},
+				client : {
+					test : 'test'
+				}
+			}, function (err, result) {
+				should.not.exist(result);
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('host information is required');
+
+				return done();
+			});
+		});
+
 		it('should require deviceId or legacy.deviceToken', (done) => {
 			playback.recordPlay({
 				content : {
 					assetId : 'test'
+				},
+				client : {
+					host : {
+						test : 'test'
+					}
 				}
 			}, function (err, result) {
 				should.not.exist(result);
@@ -227,10 +280,10 @@ describe('playback', () => {
 		});
 
 		it('should properly record playback (with legacy.deviceToken)', (done) => {
-			mockPlay.legacy = {
+			mockPlay.client.host.legacy = {
 				deviceToken : 1234
 			};
-			delete mockPlay.deviceId;
+			delete mockPlay.client.host.deviceId;
 
 			// intercept outbound request
 			nock('https://playback-api.apps.playnetwork.com')

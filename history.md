@@ -1,3 +1,7 @@
+# v1.1.1 - 2016/12/01
+
+* Added `upsertCollections` and `upsertStations` methods to `music` sub-module
+
 # v1.1.0 - 2016/11/16
 
 * Fixed defect in the `recordPlay` method of `playback` sub-module - this change modified the interface for expected data

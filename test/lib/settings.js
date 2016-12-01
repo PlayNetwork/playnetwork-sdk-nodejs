@@ -199,11 +199,6 @@ describe('settings', () => {
 	});
 
 	describe('#getSettings', () => {
-		// intercept outbound request
-		nock('https://curio-settings-api.apps.playnetwork.com')
-			.get('/v0/settings')
-			.reply(200, { });
-
 		it('should require setting identifer', (done) => {
 			settings.getSettings()
 				.then(() => {
@@ -247,6 +242,69 @@ describe('settings', () => {
 
 				return done();
 			});
+		});
+	});
+
+	describe('#deleteSettings', () => {
+		it('should require setting identifer', (done) => {
+			settings.deleteSettings()
+				.then(() => {
+					return done(new Error('should require settings identifier'));
+				})
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('settings identifier is required');
+
+					return done();
+				});
+		});
+
+		it('should properly delete settings (promise)', (done) => {
+			// intercept outbound request
+			nock('https://curio-settings-api.apps.playnetwork.com')
+				.delete('/v0/settings/test')
+				.reply(204);
+
+			settings.deleteSettings('test')
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch((err) => (done(err)));
+		});
+
+		it('should properly delete settings (callback)', (done) => {
+			// intercept outbound request
+			nock('https://curio-settings-api.apps.playnetwork.com')
+				.delete('/v0/settings/test')
+				.reply(204);
+
+			settings.deleteSettings('test', function (err, result) {
+				should.not.exist(err);
+				should.exist(result);
+				should.exist(requestInfo);
+
+				return done();
+			});
+		});
+
+		it('should properly delete settings with options (promise)', (done) => {
+			// intercept outbound request
+			nock('https://curio-settings-api.apps.playnetwork.com')
+				.delete('/v0/settings/test?deviceToken=1')
+				.reply(204);
+
+			settings.deleteSettings('test', { deviceToken : 1 })
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch((err) => (done(err)));
 		});
 	});
 

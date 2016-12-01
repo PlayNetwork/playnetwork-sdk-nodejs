@@ -1751,6 +1751,186 @@ describe('music', () => {
 		});
 	});
 
+	describe('#upsertCollections', () => {
+		let mockCollection = {
+			collectionId : 'test'
+		};
+
+		it('should require collection details (promise)', (done) => {
+			music.upsertCollections()
+				.then(() => {
+					return done(new Error('should require collections'));
+				})
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('collections are required');
+
+					return done();
+				})
+		});
+
+		it('should require collection details (callback)', (done) => {
+			music.upsertCollections(function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('collections are required');
+				should.not.exist(result);
+
+				return done();
+			});
+		});
+
+		it('should require collectionId or legacy identifiers', (done) => {
+			music.upsertCollections({ other : true }, function (err, result) {
+				should.not.exist(result);
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('collectionId or legacy identifiers are required');
+
+				return done();
+			});
+		});
+
+		it('should validate all collections in an array', (done) => {
+			music.upsertCollections([mockCollection, { other : true }], function (err, result) {
+				should.not.exist(result);
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('collection 1 of 2');
+				err.message.should.contain('collectionId or legacy identifiers are required');
+
+				return done();
+			});
+		});
+
+		it('should properly upsert collection (promise)', (done) => {
+			// intercept outbound request
+			nock('https://curio-music-api.apps.playnetwork.com')
+				.put('/v2/collections')
+				.reply(200, mockCollection);
+
+			music.upsertCollections({
+					legacy : {
+						programToken : 1,
+						version : 'test'
+					}
+				})
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch(done);
+		});
+
+		it('should properly upsert collection (callback)', (done) => {
+			// intercept outbound request
+			nock('https://curio-music-api.apps.playnetwork.com')
+				.put('/v2/collections')
+				.reply(200, mockCollection);
+
+			music.upsertCollections(mockCollection, function (err, result) {
+				should.not.exist(err);
+				should.exist(result);
+				should.exist(requestInfo);
+
+				return done();
+			});
+		});
+	});
+
+	describe('#upsertStations', () => {
+		let mockStation = {
+			stationId : 'test'
+		};
+
+		it('should require station details (promise)', (done) => {
+			music.upsertStations()
+				.then(() => {
+					return done(new Error('should require stations'));
+				})
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('stations are required');
+
+					return done();
+				})
+		});
+
+		it('should require station details (callback)', (done) => {
+			music.upsertStations(function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('stations are required');
+				should.not.exist(result);
+
+				return done();
+			});
+		});
+
+		it('should require stationId or legacy identifiers', (done) => {
+			music.upsertStations({ other : true }, function (err, result) {
+				should.not.exist(result);
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('stationId or legacy identifiers are required');
+
+				return done();
+			});
+		});
+
+		it('should validate all stations in an array', (done) => {
+			music.upsertStations([mockStation, { other : true }], function (err, result) {
+				should.not.exist(result);
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('station 1 of 2');
+				err.message.should.contain('stationId or legacy identifiers are required');
+
+				return done();
+			});
+		});
+
+		it('should properly upsert station (promise)', (done) => {
+			// intercept outbound request
+			nock('https://curio-music-api.apps.playnetwork.com')
+				.put('/v2/stations')
+				.reply(200, mockStation);
+
+			music.upsertStations({
+					legacy : {
+						programToken : 1,
+						version : 'test'
+					}
+				})
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch(done);
+		});
+
+		it('should properly upsert collection (callback)', (done) => {
+			// intercept outbound request
+			nock('https://curio-music-api.apps.playnetwork.com')
+				.put('/v2/stations')
+				.reply(200, mockStation);
+
+			music.upsertStations(mockStation, function (err, result) {
+				should.not.exist(err);
+				should.exist(result);
+				should.exist(requestInfo);
+
+				return done();
+			});
+		});
+	});
+
 	describe('#version', () => {
 		it('should properly return version (promise)', (done) => {
 			// intercept outbound request

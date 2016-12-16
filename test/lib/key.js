@@ -371,6 +371,76 @@ describe('key', () => {
 		});
 	});
 
+	describe('#getClient', () => {
+		beforeEach(() => {
+			// override ensureAuthHeaders
+			key.ensureAuthHeaders = function () {
+				return new Promise((resolve, reject) => {
+					return resolve({
+						'x-client-id': 'test',
+						'x-authentication-token': 'test'
+					})
+				})
+			};
+		});
+
+		it('should require clientId (promise)', (done) => {
+			key.getClient()
+				.then(() => {
+					return done(new Error('should require stationId'));
+				})
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('clientId is required');
+
+					return done();
+				})
+		});
+
+		it('should require clientId (callback)', (done) => {
+			key.getClient(function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('clientId is required');
+				should.not.exist(result);
+
+				return done();
+			});
+		});
+
+		it('should properly retrieve client (promise)', (done) => {
+			// intercept outbound request
+			nock('https://key-api.apps.playnetwork.com')
+				.get('/v0/clients/test')
+				.reply(200, { total : 0 });
+
+			key.getClient('test')
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch((err) => (done(err)));
+		});
+
+		it('should properly retrieve client (callback)', (done) => {
+			// intercept outbound request
+			nock('https://key-api.apps.playnetwork.com')
+				.get('/v0/clients/test')
+				.reply(200, { total : 0 });
+
+			key.getClient('test', function (err, result) {
+				should.not.exist(err);
+				should.exist(result);
+				should.exist(requestInfo);
+
+				return done();
+			});
+		});
+	});
+
 	describe('#getTokenCacheSize', () => {
 		it('should cache tokens when enabled', (done) => {
 			// intercept outbound request

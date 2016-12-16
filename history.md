@@ -1,3 +1,7 @@
+# v1.1.3 - 2016/12/16
+
+* Added `getClient` to `key` sub-module
+
 # v1.1.2 - 2016/12/01
 
 * Added `deleteSettings` to `settings` sub-module

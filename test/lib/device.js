@@ -231,6 +231,38 @@ describe('device', () => {
 				});
 		});
 
+		it('should properly apply deviceId from diagnostics when missing (promise)', (done) => {
+			// intercept outbound request
+			nock('https://device-api.apps.playnetwork.com')
+				.post('/v0/devices/test/diagnostics')
+				.reply(200, { total : 0 });
+
+			device.createDiagnostics({ deviceId : 'test', test : true })
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch((err) => (done(err)));
+		});
+
+		it('should properly apply deviceId from diagnostics when missing (callback)', (done) => {
+			// intercept outbound request
+			nock('https://device-api.apps.playnetwork.com')
+				.post('/v0/devices/test/diagnostics')
+				.reply(200, { total : 0 });
+
+			device.createDiagnostics(
+				{ deviceId : 'test', test : true },
+				function (err, result) {
+					should.not.exist(err);
+					should.exist(requestInfo);
+
+					return done();
+				});
+		});
+
 		it('should properly create diagnostics (promise)', (done) => {
 			// intercept outbound request
 			nock('https://device-api.apps.playnetwork.com')

@@ -1,3 +1,7 @@
+# v1.1.4 - 2016/12/20
+
+* Added `createDiagnostics` to `device` sub-module
+
 # v1.1.3 - 2016/12/16
 
 * Added `getClient` to `key` sub-module

@@ -893,6 +893,92 @@ describe('device', () => {
 		});
 	});
 
+	describe('#upsertDevices', () => {
+		let mockDevice = {
+			deviceId : 'test'
+		};
+
+		it('should require devices (promise)', (done) => {
+			device.upsertDevices()
+				.then(() => {
+					return done(new Error('should require devices'));
+				})
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('devices are required');
+
+					return done();
+				})
+		});
+
+		it('should require devices (callback)', (done) => {
+			device.upsertDevices(function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('devices are required');
+				should.not.exist(result);
+
+				return done();
+			});
+		});
+
+		it('should require deviceId', (done) => {
+			device.upsertDevices({ other : true }, function (err, result) {
+				should.not.exist(result);
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('deviceId is required');
+
+				return done();
+			});
+		});
+
+		it('should validate all devices in an array', (done) => {
+			device.upsertDevices([mockDevice, { other : true }], function (err, result) {
+				should.not.exist(result);
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('device 1 of 2');
+				err.message.should.contain('deviceId is required');
+
+				return done();
+			});
+		});
+
+		it('should properly upsert device (promise)', (done) => {
+			// intercept outbound request
+			nock('https://device-api.apps.playnetwork.com')
+				.put('/v0/devices')
+				.reply(200, mockDevice);
+
+			device
+				.upsertDevices(mockDevice)
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch(done);
+		});
+
+		it('should properly upsert device (callback)', (done) => {
+			// intercept outbound request
+			nock('https://device-api.apps.playnetwork.com')
+				.put('/v0/devices')
+				.reply(200, mockDevice);
+
+			device.upsertDevices(mockDevice, function (err, result) {
+				should.not.exist(err);
+				should.exist(result);
+				should.exist(requestInfo);
+
+				return done();
+			});
+		});
+	});
+
 	describe('#version', () => {
 		it('should properly return version (promise)', (done) => {
 			// intercept outbound request

@@ -112,6 +112,7 @@ This module enables simple access to device group and individual device status i
 
 * [allDevices](#alldevices)
 * [allGroups](#allgroups)
+* [createDiagnostics](#creatediagnostics)
 * [createEventMessages](#createventmessages)
 * [createStatusReport](#createstatusreport)
 * [getAnalytics](#getanalytics)
@@ -1652,6 +1653,39 @@ client
 
 [back to top](#usage)
 
+#### #createDiagnostics
+
+This method can be used to update the API with specific details regarding the status of the device.
+
+**Usage:** `client.device.createDiagnostics(deviceId, diagnostics, callback)`
+
+* `deviceId` - _(required)_ - should contain the identifier of the device
+* `diagnostics` - _(required)_ - an object with details regarding the status and settings of the device
+  * `TBD` - details regarding this message required
+* `callback` - _(optional)_ - a function callback that accepts two arguments
+  * `err` - populated with details in the event of an error
+  * `result` - result set details
+
+```javascript
+let
+  deviceId = '<DEVICE_ID>',
+  diagnostics = {
+    // requires definition
+  };
+
+client
+  .device
+  .createDiagnostics(deviceId, diagnostics)
+  .then(() => {
+    console.log('diagnostics sent!');
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
+
+[back to top](#usage)
+
 #### #createEventMessages
 
 When needing to notify the API of one or more event message for a device, this method should be used.
@@ -1694,7 +1728,7 @@ This method can be used to update the API with specific details regarding the st
 
 * `deviceId` - _(required)_ - should contain the identifier of the device
 * `status` - _(required)_ - an object with details regarding the status and settings of the device
-  * `TBD` - details regarding this message require
+  * `TBD` - details regarding this message required
 * `callback` - _(optional)_ - a function callback that accepts two arguments
   * `err` - populated with details in the event of an error
   * `result` - result set details

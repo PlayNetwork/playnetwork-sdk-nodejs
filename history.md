@@ -1,3 +1,8 @@
+# v1.1.5 - 2016/12/23
+
+* Added `upsertDevices` to `device` sub-module
+* Added documentation for new methods on `device` sub-module
+
 # v1.1.4 - 2016/12/20
 
 * Added `createDiagnostics` to `device` sub-module

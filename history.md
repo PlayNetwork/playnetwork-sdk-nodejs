@@ -1,3 +1,7 @@
+# v1.1.6 - 2016/12/23
+
+* Added `allClaims` to `claim` sub-module
+
 # v1.1.5 - 2016/12/23
 
 * Added `upsertDevices` to `device` sub-module

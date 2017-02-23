@@ -1,3 +1,7 @@
+# v1.1.8 - 2017/02/23
+
+* Fixed defect where when `token` was not supplied to `ensureAuthHeaders`, the method would fail
+
 # v1.1.7 - 2017/02/23
 
 * Added support for options to `ensureAuthHeaders` method within the `key` sub-module

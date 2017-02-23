@@ -386,6 +386,7 @@ describe('request', () => {
 							clientId : 'clientId',
 							count : 100,
 							filters : {
+								analytics : ['monitored'],
 								diagnostics : ['online', 'offline'],
 								field : ['field1', 'field2'],
 								keyword : 'keyword',
@@ -440,6 +441,8 @@ describe('request', () => {
 						requestInfo.query['filters[optional][lte][o.lte]'].should.equal(1);
 						should.exist(requestInfo.query['filters[optional][missing]']);
 						requestInfo.query['filters[optional][missing]'].should.equal('missing');
+						should.exist(requestInfo.query['filters[analytics]']);
+						requestInfo.query['filters[analytics]'].should.contain('monitored');
 						should.exist(requestInfo.query['filters[diagnostics]']);
 						requestInfo.query['filters[diagnostics]'].should.equal('online,offline');
 						should.exist(requestInfo.query['filters[field]']);

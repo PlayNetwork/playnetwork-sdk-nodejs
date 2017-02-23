@@ -311,6 +311,76 @@ describe('key', () => {
 				})
 				.catch(done);
 		});
+
+		it('should allow overridden clientId and secret', (done) => {
+			let credentials = {};
+
+			// intercept outbound request
+			nock('https://key-api.apps.playnetwork.com',
+				{
+					reqheaders : {
+						'x-client-id': (clientId) => (credentials.clientId = clientId),
+						'x-client-secret': (secret) => (credentials.secret = secret)
+					}
+				})
+				.post('/v0/tokens')
+				.reply(201, { token : mockToken });
+
+			key = new KeyProxy({}, 'testing', 'testing');
+
+			// make sure credentialsPath is empty
+			should.not.exist(key.settings().credentialsPath);
+
+			key.ensureAuthHeaders({
+				clientId : 'test-overridden',
+				secret : 'test-overridden'
+			}).then((response) => {
+				should.exist(response);
+				should.exist(credentials);
+				credentials.clientId.should.equal('test-overridden');
+				credentials.secret.should.equal('test-overridden');
+
+				return done();
+			}).catch(done);
+		});
+
+		it('should allow overridden clientId without token', (done) => {
+			key = new KeyProxy({}, 'testing', 'testing');
+
+			// make sure credentialsPath is empty
+			should.not.exist(key.settings().credentialsPath);
+
+			key.ensureAuthHeaders({
+				clientId : 'test-overridden'
+			}).then((response) => {
+				should.exist(response);
+				should.exist(response['x-client-id']);
+				should.not.exist(response['x-authentication-token']);
+				response['x-client-id'].should.equal('test-overridden');
+
+				return done();
+			}).catch(done);
+		});
+
+		it('should allow overridden clientId with token', (done) => {
+			key = new KeyProxy({}, 'testing', 'testing');
+
+			// make sure credentialsPath is empty
+			should.not.exist(key.settings().credentialsPath);
+
+			key.ensureAuthHeaders({
+				clientId : 'test-overridden',
+				token : 'test-overridden'
+			}).then((response) => {
+				should.exist(response);
+				should.exist(response['x-client-id']);
+				should.exist(response['x-authentication-token']);
+				response['x-client-id'].should.equal('test-overridden');
+				response['x-authentication-token'].should.equal('test-overridden');
+
+				return done();
+			}).catch(done);
+		});
 	});
 
 	describe('#generateToken', () => {

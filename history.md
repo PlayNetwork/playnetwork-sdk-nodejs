@@ -1,3 +1,7 @@
+# v1.1.7 - 2017/02/23
+
+* Added support for options to `ensureAuthHeaders` method within the `key` sub-module
+
 # v1.1.6 - 2016/12/23
 
 * Added `allClaims` to `claim` sub-module

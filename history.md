@@ -1,3 +1,8 @@
+# v1.1.10 - 2017/08/22
+
+* Added support for options to `getTracks` method within the `music` sub-module
+* Fixed bug where callback for `deleteSettings` and `getSettings` within `settings` sub-module was being assigned to undeclared variable
+
 # v1.1.9 - 2017/02/23
 
 * Added support for `analytics` filters used in `device-api`

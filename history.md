@@ -1,3 +1,7 @@
+# v1.1.11 - 2017/05/22
+
+* Added support for some functionality for Location Relationship API 
+
 # v1.1.10 - 2017/08/22
 
 * Added support for options to `getTracks` method within the `music` sub-module

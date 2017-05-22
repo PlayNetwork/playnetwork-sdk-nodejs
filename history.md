@@ -1,3 +1,7 @@
+# v1.1.10 - 2017/08/22
+
+* Added support for options to `getTracks` method within the `music` sub-module
+
 # v1.1.9 - 2017/02/23
 
 * Added support for `analytics` filters used in `device-api`

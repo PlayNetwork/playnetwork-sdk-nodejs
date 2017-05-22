@@ -168,6 +168,16 @@ describe('relationship', () => {
 				return done();
 			});
 		});
+
+		it('should error when only a function is passed in (callback)', (done) => {
+			relationship.createRelationship(function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('relationship is required');
+
+				return done();
+			});
+		});
 	});
 
 	describe('#getRelationship', () => {
@@ -279,6 +289,16 @@ describe('relationship', () => {
 				})
 				.catch((err) => (done(err)));
 		});
+
+		it('should error when only a function is passed in', (done) => {
+			relationship.deleteRelationship(function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('relationshipId is required');
+
+				return done();
+			});
+		});
 	});
 
 	describe('#upsertRelationships', () => {
@@ -327,6 +347,21 @@ describe('relationship', () => {
 				should.not.exist(err);
 				should.exist(result);
 				should.exist(requestInfo);
+
+				return done();
+			});
+		});
+
+		it('should error when only a callback is passed in (callback)', (done) => {
+			// intercept outbound request
+			nock('https://location-relationships-api.apps.playnetwork.com')
+				.put('/v0/relationships')
+				.reply(200, mockRelationship);
+
+			relationship.upsertRelationships(function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('relationships are required');
 
 				return done();
 			});

@@ -18,10 +18,40 @@ module.exports = function (opts, self) {
 			}, configOpts.notifySubscriber.error.occursAt);
 		}
 
+		if (configOpts.notifySubscriber.connect_error) {
+			setTimeout(function() {
+				MockSocket.prototype.emit.call(self, 'connect_error', new Error(configOpts.notifySubscriber.connect_error.message));
+			}, configOpts.notifySubscriber.connect_error.occursAt);
+		}
+
 		if (configOpts.notifySubscriber.playerRpc) {
 			setTimeout(function() {
 				MockSocket.prototype.emit.call(self, 'playerRpc', configOpts.notifySubscriber.playerRpc.message);
 			}, configOpts.notifySubscriber.playerRpc.occursAt);
+		}
+
+		if (configOpts.notifySubscriber.reconnect) {
+			setTimeout(function() {
+				MockSocket.prototype.emit.call(self, 'reconnect');
+			}, configOpts.notifySubscriber.reconnect.occursAt);
+		}
+
+		if (configOpts.notifySubscriber.reconnect_attempt) {
+			setTimeout(function() {
+				MockSocket.prototype.emit.call(self, 'reconnect_attempt');
+			}, configOpts.notifySubscriber.reconnect_attempt.occursAt);
+		}
+
+		if (configOpts.notifySubscriber.reconnecting) {
+			setTimeout(function() {
+				MockSocket.prototype.emit.call(self, 'reconnecting', configOpts.notifySubscriber.reconnecting.number);
+			}, configOpts.notifySubscriber.reconnecting.occursAt);
+		}
+
+		if (configOpts.notifySubscriber.reconnect_error) {
+			setTimeout(function() {
+				MockSocket.prototype.emit.call(self, 'reconnect_error', new Error(configOpts.notifySubscriber.reconnect_error.message));
+			}, configOpts.notifySubscriber.reconnect_error.occursAt);
 		}
 	}
 

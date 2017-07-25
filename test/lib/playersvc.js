@@ -115,6 +115,111 @@ describe('playersvc', () => {
 			}
 		});
 
+		it('#notify subscriber connection error for coverage', (done) => {
+			let configOpts = {
+					notifySubscriber : {
+						connect_error : {
+							message : 'test',
+							occursAt : 2000
+						}
+					}
+				};
+
+			playersvc = mockSocketIOClient.rewire('../../lib/playersvc.js', configOpts)(null, ensureAuthHeaders);
+
+			playersvcSubscriber.on('connect_error', (err) => {
+				if (err.message === 'test') {
+					return done();
+				}
+
+				return done(err);
+			});
+
+			playersvc.connect(playersvcSubscriber);
+		}).timeout(5000);
+
+		it('#notify subscriber reconnect', (done) => {
+			let configOpts = {
+					notifySubscriber : {
+						reconnect : {
+							occursAt : 2000
+						}
+					}
+				};
+
+			playersvc = mockSocketIOClient.rewire('../../lib/playersvc.js', configOpts)(null, ensureAuthHeaders);
+
+			playersvcSubscriber.on('reconnect', (err) => {
+				return done();
+			});
+
+			playersvc.connect(playersvcSubscriber);
+		}).timeout(5000);
+
+		it('#notify subscriber reconnecting', (done) => {
+			let configOpts = {
+					notifySubscriber : {
+						reconnecting : {
+							number : 5,
+							occursAt : 2000
+						}
+					}
+				};
+
+			playersvc = mockSocketIOClient.rewire('../../lib/playersvc.js', configOpts)(null, ensureAuthHeaders);
+
+			playersvcSubscriber.on('reconnecting', (number) => {
+				if (number === 5) {
+					return done();
+				}
+
+				return done('Unexpected number arg expecting 5, actual ', number);
+			});
+
+			playersvc.connect(playersvcSubscriber);
+		}).timeout(5000);
+
+		it('#notify subscriber reconnect_attempt', (done) => {
+			let configOpts = {
+					notifySubscriber : {
+						reconnect_attempt : {
+							occursAt : 2000
+						}
+					}
+				};
+
+			playersvc = mockSocketIOClient.rewire('../../lib/playersvc.js', configOpts)(null, ensureAuthHeaders);
+
+			playersvcSubscriber.on('reconnect_attempt', () => {
+				return done();
+			});
+
+			playersvc.connect(playersvcSubscriber);
+		}).timeout(5000);
+
+		it('#notify subscriber reconnect_error', (done) => {
+			let configOpts = {
+					notifySubscriber : {
+						reconnect_error : {
+							message : 'test',
+							occursAt : 2000
+						}
+					}
+				};
+
+			playersvc = mockSocketIOClient.rewire('../../lib/playersvc.js', configOpts)(null, ensureAuthHeaders);
+
+			playersvcSubscriber.on('reconnect_error', (err) => {
+				if (err.message === 'test') {
+					return done();
+				}
+
+				return done(err);
+			});
+
+			playersvc.connect(playersvcSubscriber);
+		}).timeout(5000);
+
 		it('#notify subscriber error for coverage', (done) => {
 			let configOpts = {
 					notifySubscriber : {

@@ -1,5 +1,6 @@
 /*eslint no-magic-numbers: 0*/
 /*eslint no-unused-expressions: 0*/
+/*eslint camelcase: 0*/
 var
 	chai = require('chai'),
 	co = require('co'),

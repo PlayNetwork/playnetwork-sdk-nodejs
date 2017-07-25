@@ -84,6 +84,17 @@ This module can be used to interact with the [Playback API](https://playback-api
 
 - - -
 
+### Playerservice
+
+This module can be used to interact with Playnetwork's socket-io service, https://player-svc.apps.playnetwork.com, to allow realtime communication to/from a device for the purposes of gathering information about that device and controling music playback
+
+* [connect](#connect)
+* [disconnect](#disconnect)
+* [emit](#emit)
+
+
+- - -
+
 ### Settings
 
 This module provides support for retrieving location / device specific environment settings, including network details, proxy configuration, throttling and more.
@@ -199,6 +210,8 @@ The supported options are as follows:
 * `playback`
   * `host` - the hostname of the playback API
   * `secure` - defaults to `true`, defines when the API uses TLS
+* `playback`
+  * `host` - the hostname of the playerservice app
 * `settings`
   * `host` - the hostname
   * `secure` -
@@ -220,6 +233,9 @@ var
     },
     playback : {
       host : 'sandbox-playback-api.apps.playnetwork.com'
+    },
+    playersvc : {
+      host : 'https://player-svc.apps.playnetwork.com'
     },
     settings : {
       host : 'sandbox-settings-api.apps.playnetwork.com'
@@ -1332,6 +1348,98 @@ client
   .catch((err) => {
     console.error(err);
   });
+```
+
+[back to top](#usage)
+
+- - -
+
+### Playerservice Module
+
+This module can be used to interact with Playnetwork's socket-io service, https://player-svc.apps.playnetwork.com, to allow realtime communication to/from a device for the purposes of gathering information about that device and controling music playback. This module supports the following methods:
+
+#### #connect
+
+This method is used to connect to Playnetwork's socket-io service.
+
+**Usage:** `client.playersvc.connect(socketEventSubscriber)`
+
+* `socketEventSubscriber` - _(required)_ - defines an event subsciber. The subscriber should implement the following events:
+
+* Event: 'connect'
+  Params: url (String, the url that the method connected to)
+  Fired when a connection is made to the socket-io service
+
+* Event: 'connect_error'
+  Params: error (Object)
+
+  Fired upon a connection error.
+
+* Event: 'connect_timeout'
+  Fired upon a connection timeout.
+  
+* Event: 'disconnect'
+  Fired when client disconnects from the socket-io service
+  
+* Event: 'playerRpc'
+  Fired when client recieves a json rpc formatted message from Playnetwork's socket-io service
+
+* Event: 'reconnect'
+  Params: number (reconnection attempt number)
+  Fired upon a successful reconnection.
+
+* Event: 'reconnect_attempt'
+  Fired upon an attempt to reconnect.
+
+* Event: 'reconnecting'
+  Params: number (reconnection attempt number)
+  Fired upon a successful reconnection.
+
+* Event: 'reconnect_error'
+  Params: error (error object)
+  Fired upon a reconnection attempt error.
+
+* Event: 'reconnect_failed'
+  Fired when couldn't reconnect within a certain number of attempts.
+
+```javascript
+client
+  .playersvc
+  .connect(socketEventSubscriber);
+```
+
+[back to top](#usage)
+
+#### #disconnect
+
+This method is used to disconnect from Playnetwork's socket-io service. 
+
+**Usage:** `client.playersvc.disconnect`
+
+Fires disconnect event if successful
+If not successful, will fire error event
+
+```javascript
+client
+  .playersvc
+  .disconnect();
+```
+
+[back to top](#usage)
+
+#### #emit
+
+This method is to emit a message to Playnetwork's socket-io service.
+
+**Usage:** `client.playersvc.emit(event, jsonRpcMessage)`
+Params:
+event (an event string defined by Playnetwork's socket-io service)
+jsonRpcMessage (json RPC formatted message)
+
+```javascript
+client
+  .playersvc
+  .emit('playerUp', { mac: 'b8:e8:56:37:4c:6a' });
 ```
 
 [back to top](#usage)

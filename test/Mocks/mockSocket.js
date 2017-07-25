@@ -32,7 +32,7 @@ module.exports = function (opts, self) {
 
 		if (configOpts.notifySubscriber.reconnect) {
 			setTimeout(function() {
-				MockSocket.prototype.emit.call(self, 'reconnect');
+				MockSocket.prototype.emit.call(self, 'reconnect', configOpts.notifySubscriber.reconnect.number );
 			}, configOpts.notifySubscriber.reconnect.occursAt);
 		}
 
@@ -40,6 +40,12 @@ module.exports = function (opts, self) {
 			setTimeout(function() {
 				MockSocket.prototype.emit.call(self, 'reconnect_attempt');
 			}, configOpts.notifySubscriber.reconnect_attempt.occursAt);
+		}
+
+		if (configOpts.notifySubscriber.reconnect_failed) {
+			setTimeout(function() {
+				MockSocket.prototype.emit.call(self, 'reconnect_failed');
+			}, configOpts.notifySubscriber.reconnect_failed.occursAt);
 		}
 
 		if (configOpts.notifySubscriber.reconnecting) {

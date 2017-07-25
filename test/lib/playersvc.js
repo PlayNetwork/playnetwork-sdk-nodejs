@@ -142,6 +142,7 @@ describe('playersvc', () => {
 			let configOpts = {
 					notifySubscriber : {
 						reconnect : {
+							number : 12,
 							occursAt : 2000
 						}
 					}
@@ -149,8 +150,12 @@ describe('playersvc', () => {
 
 			playersvc = mockSocketIOClient.rewire('../../lib/playersvc.js', configOpts)(null, ensureAuthHeaders);
 
-			playersvcSubscriber.on('reconnect', (err) => {
-				return done();
+			playersvcSubscriber.on('reconnect', (number) => {
+				if (number === 12) {
+					return done();
+				}
+
+				return done('reconnect was successful but not the correct number of attempts, expecting 12 got, ', number);
 			});
 
 			playersvc.connect(playersvcSubscriber);
@@ -191,6 +196,24 @@ describe('playersvc', () => {
 			playersvc = mockSocketIOClient.rewire('../../lib/playersvc.js', configOpts)(null, ensureAuthHeaders);
 
 			playersvcSubscriber.on('reconnect_attempt', () => {
+				return done();
+			});
+
+			playersvc.connect(playersvcSubscriber);
+		}).timeout(5000);
+
+		it('#notify subscriber reconnect_failed', (done) => {
+			let configOpts = {
+					notifySubscriber : {
+						reconnect_failed : {
+							occursAt : 2000
+						}
+					}
+				};
+
+			playersvc = mockSocketIOClient.rewire('../../lib/playersvc.js', configOpts)(null, ensureAuthHeaders);
+
+			playersvcSubscriber.on('reconnect_failed', () => {
 				return done();
 			});
 

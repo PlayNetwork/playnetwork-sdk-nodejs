@@ -1,7 +1,5 @@
 const events = require('events');
 
-const CONNECT_DELAY = 1000;
-
 module.exports = function (opts, self) {
 	self = self ? self : {};
 

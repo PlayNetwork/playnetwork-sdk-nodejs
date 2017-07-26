@@ -212,6 +212,7 @@ The supported options are as follows:
   * `secure` - defaults to `true`, defines when the API uses TLS
 * `playback`
   * `host` - the hostname of the playerservice app
+  * `secure` - defaults to `true`, defines when the API uses TLS
 * `settings`
   * `host` - the hostname
   * `secure` -

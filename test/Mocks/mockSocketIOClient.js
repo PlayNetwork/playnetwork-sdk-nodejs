@@ -1,6 +1,6 @@
-const proxyquire = require('proxyquire');
 const events = require('events');
 const mockSocket = require('./mockSocket')
+const proxyquire = require('proxyquire');
 
 const CONNECT_DELAY = 1000;
 
@@ -28,8 +28,8 @@ module.exports = ((self) => {
 			modulePath,
 			{
 				'socket.io-client' :  MockSocketIOClient
-			})
-	}
+			});
+	};
 
 	return self;
 })({});

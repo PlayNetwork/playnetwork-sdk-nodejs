@@ -297,9 +297,9 @@ describe('playersvc', () => {
 				}
 
 				return done(new Error('got a disconnect without connecting first'));
-			})
+			});
 
 			playersvc.connect(playersvcSubscriber);
 		}).timeout(5000);
-	})
+	});
 });

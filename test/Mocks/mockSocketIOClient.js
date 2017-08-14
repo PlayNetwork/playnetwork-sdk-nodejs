@@ -15,7 +15,10 @@ module.exports = ((self) => {
 		let socket = new mockSocket(socketConfigOptions);
 
 		setTimeout(function() {
-			socket.emit('connect', url);
+			socket.emit('connect', {
+				"url" : url,
+				"connectionAttempt" : 0
+			});
 		}, CONNECT_DELAY);
 
 		return socket;

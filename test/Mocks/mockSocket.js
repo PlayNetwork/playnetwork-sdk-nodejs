@@ -34,18 +34,6 @@ module.exports = function (opts, self) {
 			}, configOpts.notifySubscriber.reconnect.occursAt);
 		}
 
-		if (configOpts.notifySubscriber.reconnect_attempt) {
-			setTimeout(function() {
-				MockSocket.prototype.emit.call(self, 'reconnect_attempt');
-			}, configOpts.notifySubscriber.reconnect_attempt.occursAt);
-		}
-
-		if (configOpts.notifySubscriber.reconnect_failed) {
-			setTimeout(function() {
-				MockSocket.prototype.emit.call(self, 'reconnect_failed');
-			}, configOpts.notifySubscriber.reconnect_failed.occursAt);
-		}
-
 		if (configOpts.notifySubscriber.reconnecting) {
 			setTimeout(function() {
 				MockSocket.prototype.emit.call(self, 'reconnecting', configOpts.notifySubscriber.reconnecting.number);

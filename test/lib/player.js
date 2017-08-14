@@ -8,7 +8,7 @@ var
 	should = chai.should(),
 	mockSocketIOClient = require('../Mocks/mockSocketIOClient');
 
-describe('playersvc', () => {
+describe('player', () => {
 	'use strict';
 
 	let
@@ -20,67 +20,67 @@ describe('playersvc', () => {
 				})
 			})
 		},
-		playersvc,
-		playersvcSubscriber;
+		player,
+		playerSubscriber;
 
 	beforeEach(() => {
-		playersvc = mockSocketIOClient.rewire('../../lib/playersvc.js', null)(null, ensureAuthHeaders);
-		playersvcSubscriber = Object.create(events.EventEmitter.prototype);
-		events.EventEmitter.call(playersvcSubscriber);
+		player = mockSocketIOClient.rewire('../../lib/player.js', null)(null, ensureAuthHeaders);
+		playerSubscriber = Object.create(events.EventEmitter.prototype);
+		events.EventEmitter.call(playerSubscriber);
 	});
 
 	afterEach(() => {
-		playersvcSubscriber.removeAllListeners();
+		playerSubscriber.removeAllListeners();
 	});
 
 	describe('#connect/emit', () => {
 		it('should connect', (done) => {
-			playersvcSubscriber.on('connect', (args) => {
+			playerSubscriber.on('connected', (args) => {
 				//now emit something to get test coverage
-				playersvc.emit('hello');
+				player.emit('hello');
 
 				setTimeout(function() {
 					return done();
 				}, 500);
 			});
 
-			playersvc.connect(playersvcSubscriber);
+			player.connect(playerSubscriber);
 		});
 
 		it('should connect/disconnect and connect again', (done) => {
 			let connectionCount = 0;
 
-			playersvcSubscriber.on('connect', (args) => {
+			playerSubscriber.on('connected', (args) => {
 				connectionCount++;
 
 				setTimeout(function() {
-					playersvc.disconnect();
+					player.disconnect();
 				}, 500);
 			});
 
-			playersvcSubscriber.on('disconnect', (args) => {
+			playerSubscriber.on('disconnected', (args) => {
 				// reconnect right away if connection count is less than 2
 				if (connectionCount >= 2) {
 					return done();
 				}
 				setTimeout(function() {
-					playersvc.connect(playersvcSubscriber);
+					player.connect(playerSubscriber);
 				}, 500);
 			});
 
-			playersvc.connect(playersvcSubscriber);
+			player.connect(playerSubscriber);
 		}).timeout(5000);
 
 		it('should connect non-default host', (done) => {
-			playersvc = mockSocketIOClient.rewire('../../lib/playersvc.js', null)({host: 'https://player-svc.apps.playnetwork.com'}, ensureAuthHeaders);
+			player = mockSocketIOClient.rewire('../../lib/player.js', null)({host: 'https://player-svc.apps.playnetwork.com'}, ensureAuthHeaders);
 
-			playersvcSubscriber.on('connect', (args) => {
+			playerSubscriber.on('connected', (args) => {
 				setTimeout(function() {
 					return done();
 				}, 500);
 			});
 
-			playersvc.connect(playersvcSubscriber);
+			player.connect(playerSubscriber);
 		});
 
 		it('#notify subscriber playerRpc for coverage', (done) => {
@@ -93,9 +93,9 @@ describe('playersvc', () => {
 					}
 				};
 
-			playersvc = mockSocketIOClient.rewire('../../lib/playersvc.js', configOpts)(null, ensureAuthHeaders);
+			player = mockSocketIOClient.rewire('../../lib/player.js', configOpts)(null, ensureAuthHeaders);
 
-			playersvcSubscriber.on('playerRpc', (message) => {
+			playerSubscriber.on('playerRpc', (message) => {
 				if (message === 'test') {
 					return done();
 				}
@@ -103,14 +103,14 @@ describe('playersvc', () => {
 				return done(err);
 			});
 
-			playersvc.connect(playersvcSubscriber);
+			player.connect(playerSubscriber);
 		}).timeout(5000);
 	});
 
 	describe('#errors', () => {
 		it('emit should error with no socket connect', () => {
 			try {
-				playersvc.emit('hello there');
+				player.emit('hello there');
 			} catch (err) {
 				err.message.should.equal('Unable to emit, no socket connection');
 			}
@@ -126,9 +126,9 @@ describe('playersvc', () => {
 					}
 				};
 
-			playersvc = mockSocketIOClient.rewire('../../lib/playersvc.js', configOpts)(null, ensureAuthHeaders);
+			player = mockSocketIOClient.rewire('../../lib/player.js', configOpts)(null, ensureAuthHeaders);
 
-			playersvcSubscriber.on('connect_error', (err) => {
+			playerSubscriber.on('error', (err) => {
 				if (err.message === 'test') {
 					return done();
 				}
@@ -136,7 +136,7 @@ describe('playersvc', () => {
 				return done(err);
 			});
 
-			playersvc.connect(playersvcSubscriber);
+			player.connect(playerSubscriber);
 		}).timeout(5000);
 
 		it('#notify subscriber reconnect', (done) => {
@@ -149,17 +149,22 @@ describe('playersvc', () => {
 					}
 				};
 
-			playersvc = mockSocketIOClient.rewire('../../lib/playersvc.js', configOpts)(null, ensureAuthHeaders);
+			player = mockSocketIOClient.rewire('../../lib/player.js', configOpts)(null, ensureAuthHeaders);
 
-			playersvcSubscriber.on('reconnect', (number) => {
-				if (number === 12) {
+			playerSubscriber.on('connected', (connection) => {
+
+				if (!connection.isReconnect) {
+					return;
+				}
+
+				if (connection.connectionAttempt === 12) {
 					return done();
 				}
 
-				return done('reconnect was successful but not the correct number of attempts, expecting 12 got, ', number);
+				return done('reconnect was successful but not the correct number of attempts, expecting 12 got, ', connection.connectionAttempt);
 			});
 
-			playersvc.connect(playersvcSubscriber);
+			player.connect(playerSubscriber);
 		}).timeout(5000);
 
 		it('#notify subscriber reconnecting', (done) => {
@@ -172,53 +177,35 @@ describe('playersvc', () => {
 					}
 				};
 
-			playersvc = mockSocketIOClient.rewire('../../lib/playersvc.js', configOpts)(null, ensureAuthHeaders);
+			player = mockSocketIOClient.rewire('../../lib/player.js', configOpts)(null, ensureAuthHeaders);
 
-			playersvcSubscriber.on('reconnecting', (number) => {
-				if (number === 5) {
+			playerSubscriber.on('reconnecting', (connection) => {
+				if (connection.connectionAttempt === 5) {
 					return done();
 				}
 
 				return done('Unexpected number arg expecting 5, actual ', number);
 			});
 
-			playersvc.connect(playersvcSubscriber);
+			player.connect(playerSubscriber);
 		}).timeout(5000);
 
-		it('#notify subscriber reconnect_attempt', (done) => {
+		it('#notify subscriber reconnecting', (done) => {
 			let configOpts = {
 					notifySubscriber : {
-						reconnect_attempt : {
+						reconnecting : {
 							occursAt : 2000
 						}
 					}
 				};
 
-			playersvc = mockSocketIOClient.rewire('../../lib/playersvc.js', configOpts)(null, ensureAuthHeaders);
+			player = mockSocketIOClient.rewire('../../lib/player.js', configOpts)(null, ensureAuthHeaders);
 
-			playersvcSubscriber.on('reconnect_attempt', () => {
+			playerSubscriber.on('reconnecting', () => {
 				return done();
 			});
 
-			playersvc.connect(playersvcSubscriber);
-		}).timeout(5000);
-
-		it('#notify subscriber reconnect_failed', (done) => {
-			let configOpts = {
-					notifySubscriber : {
-						reconnect_failed : {
-							occursAt : 2000
-						}
-					}
-				};
-
-			playersvc = mockSocketIOClient.rewire('../../lib/playersvc.js', configOpts)(null, ensureAuthHeaders);
-
-			playersvcSubscriber.on('reconnect_failed', () => {
-				return done();
-			});
-
-			playersvc.connect(playersvcSubscriber);
+			player.connect(playerSubscriber);
 		}).timeout(5000);
 
 		it('#notify subscriber reconnect_error', (done) => {
@@ -231,9 +218,9 @@ describe('playersvc', () => {
 					}
 				};
 
-			playersvc = mockSocketIOClient.rewire('../../lib/playersvc.js', configOpts)(null, ensureAuthHeaders);
+			player = mockSocketIOClient.rewire('../../lib/player.js', configOpts)(null, ensureAuthHeaders);
 
-			playersvcSubscriber.on('reconnect_error', (err) => {
+			playerSubscriber.on('error', (err) => {
 				if (err.message === 'test') {
 					return done();
 				}
@@ -241,7 +228,7 @@ describe('playersvc', () => {
 				return done(err);
 			});
 
-			playersvc.connect(playersvcSubscriber);
+			player.connect(playerSubscriber);
 		}).timeout(5000);
 
 		it('#notify subscriber error for coverage', (done) => {
@@ -254,9 +241,9 @@ describe('playersvc', () => {
 					}
 				};
 
-			playersvc = mockSocketIOClient.rewire('../../lib/playersvc.js', configOpts)(null, ensureAuthHeaders);
+			player = mockSocketIOClient.rewire('../../lib/player.js', configOpts)(null, ensureAuthHeaders);
 
-			playersvcSubscriber.on('error', (err) => {
+			playerSubscriber.on('error', (err) => {
 				if (err.message === 'test') {
 					return done();
 				}
@@ -264,13 +251,13 @@ describe('playersvc', () => {
 				return done(err);
 			});
 
-			playersvc.connect(playersvcSubscriber);
+			player.connect(playerSubscriber);
 		}).timeout(5000);
 
 		it('disconnect should error with no connection', () => {
 			// call disconnect without connecting
 			try {
-				playersvc.disconnect();
+				player.disconnect();
 			} catch (err) {
 				err.message.should.equal('Unable to disconnect, no socket connection');
 			}
@@ -283,15 +270,15 @@ describe('playersvc', () => {
 				connected = false,
 				url;
 
-			playersvcSubscriber.on('connect', (args) => {
+			playerSubscriber.on('connected', (args) => {
 				connected = true;
 
 				setTimeout(function() {
-					playersvc.disconnect();
+					player.disconnect();
 				}, 1000)
 			});
 
-			playersvcSubscriber.on('disconnect', () => {
+			playerSubscriber.on('disconnected', () => {
 				if (connected) {
 					return done();
 				}
@@ -299,7 +286,7 @@ describe('playersvc', () => {
 				return done(new Error('got a disconnect without connecting first'));
 			});
 
-			playersvc.connect(playersvcSubscriber);
+			player.connect(playerSubscriber);
 		}).timeout(5000);
 	});
 });

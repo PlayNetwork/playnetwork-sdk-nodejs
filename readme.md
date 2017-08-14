@@ -235,7 +235,7 @@ var
     playback : {
       host : 'sandbox-playback-api.apps.playnetwork.com'
     },
-    playersvc : {
+    player : {
       host : 'https://player-svc.apps.playnetwork.com'
     },
     settings : {
@@ -1363,7 +1363,7 @@ This module can be used to interact with Playnetwork's socket-io service, https:
 
 This method is used to connect to Playnetwork's socket-io service.
 
-**Usage:** `client.playersvc.connect(socketEventSubscriber)`
+**Usage:** `client.player.connect(socketEventSubscriber)`
 
 * `socketEventSubscriber` - _(required)_ - defines an event subsciber. The subscriber should implement the following events:
 
@@ -1405,7 +1405,7 @@ This method is used to connect to Playnetwork's socket-io service.
 
 ```javascript
 client
-  .playersvc
+  .player
   .connect(socketEventSubscriber);
 ```
 
@@ -1415,14 +1415,14 @@ client
 
 This method is used to disconnect from Playnetwork's socket-io service. 
 
-**Usage:** `client.playersvc.disconnect`
+**Usage:** `client.player.disconnect`
 
 Fires disconnect event if successful
 If not successful, will fire error event
 
 ```javascript
 client
-  .playersvc
+  .player
   .disconnect();
 ```
 
@@ -1432,14 +1432,14 @@ client
 
 This method is to emit a message to Playnetwork's socket-io service.
 
-**Usage:** `client.playersvc.emit(event, jsonRpcMessage)`
+**Usage:** `client.player.emit(event, jsonRpcMessage)`
 Params:
 event (an event string defined by Playnetwork's socket-io service)
 jsonRpcMessage (json RPC formatted message)
 
 ```javascript
 client
-  .playersvc
+  .player
   .emit('playerUp', { mac: 'b8:e8:56:37:4c:6a' });
 ```
 

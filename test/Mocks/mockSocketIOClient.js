@@ -16,8 +16,8 @@ module.exports = ((self) => {
 
 		setTimeout(function() {
 			socket.emit('connect', {
-				"url" : url,
-				"connectionAttempt" : 0
+				'url' : url,
+				'connectionAttempt' : 0
 			});
 		}, CONNECT_DELAY);
 

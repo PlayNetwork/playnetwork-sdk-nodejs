@@ -210,7 +210,7 @@ The supported options are as follows:
 * `playback`
   * `host` - the hostname of the playback API
   * `secure` - defaults to `true`, defines when the API uses TLS
-* `playback`
+* `player`
   * `host` - the hostname of the playerservice app
   * `secure` - defaults to `true`, defines when the API uses TLS
 * `settings`
@@ -1365,43 +1365,7 @@ This method is used to connect to Playnetwork's socket-io service.
 
 **Usage:** `client.player.connect(socketEventSubscriber)`
 
-* `socketEventSubscriber` - _(required)_ - defines an event subsciber. The subscriber should implement the following events:
-
-* Event: 'connect'
-  Params: url (String, the url that the method connected to)
-  Fired when a connection is made to the socket-io service
-
-* Event: 'connect_error'
-  Params: error (Object)
-
-  Fired upon a connection error.
-
-* Event: 'connect_timeout'
-  Fired upon a connection timeout.
-  
-* Event: 'disconnect'
-  Fired when client disconnects from the socket-io service
-  
-* Event: 'playerRpc'
-  Fired when client recieves a json rpc formatted message from Playnetwork's socket-io service
-
-* Event: 'reconnect'
-  Params: number (reconnection attempt number)
-  Fired upon a successful reconnection.
-
-* Event: 'reconnect_attempt'
-  Fired upon an attempt to reconnect.
-
-* Event: 'reconnecting'
-  Params: number (reconnection attempt number)
-  Fired upon a successful reconnection.
-
-* Event: 'reconnect_error'
-  Params: error (error object)
-  Fired upon a reconnection attempt error.
-
-* Event: 'reconnect_failed'
-  Fired when couldn't reconnect within a certain number of attempts.
+* `socketEventSubscriber` - _(required)_ - defines an event subsciber. The subscriber should implement the events covered in the Events section discussed below.
 
 ```javascript
 client
@@ -1417,7 +1381,7 @@ This method is used to disconnect from Playnetwork's socket-io service.
 
 **Usage:** `client.player.disconnect`
 
-Fires disconnect event if successful
+Fires disconnected event if successful
 If not successful, will fire error event
 
 ```javascript
@@ -1442,6 +1406,37 @@ client
   .player
   .emit('playerUp', { mac: 'b8:e8:56:37:4c:6a' });
 ```
+
+#### #Events
+
+* Event: 'connected', fired when a successful initial connection or reconnection is made to the socket-io service
+  Params: connection object
+```javascript
+      { 
+        "connectionAttempt" : number indicating the connection attempts (0 for initial, n for reconnect)
+        "isReconnect" : true | false,    (true if this is a reconnection, false otherwise)
+        "url" : url (String, the url that the method connected to)
+      }
+```       
+
+* Event: 'disconnected'
+  Fired when client disconnects from the socket-io service
+  
+* Event: 'error'
+  Fired when an error occurs
+  Params: error object
+  
+* Event: 'playerRpc'
+  Fired when client recieves a json rpc formatted message from Playnetwork's socket-io service
+
+* Event: 'reconnecting', fired when reconnecting to the player-svc
+  Params: connection object
+```javascript  
+    {
+      "connectionAttempt" : attempt,   (attempt number)
+      "url" : url    (url attempting to connect to)
+    };
+``` 
 
 [back to top](#usage)
 

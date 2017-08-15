@@ -1426,7 +1426,7 @@ client
   Fired when an error occurs
   Params: error object
   
-* Event: 'playerRpc'
+* Event: 'message'
   Fired when client recieves a json rpc formatted message from Playnetwork's socket-io service
 
 * Event: 'reconnecting', fired when reconnecting to the player-svc

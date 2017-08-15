@@ -1,6 +1,6 @@
 {
   "name": "playnetwork-sdk",
-  "version": "1.1.12",
+  "version": "1.2.0",
   "contributors": [
     {
       "name": "Joshua Thomas",
@@ -52,9 +52,11 @@
     "gulp-istanbul": "^0.10.3",
     "gulp-mocha": "^2.2.0",
     "gulp-util": "^3.0.7",
-    "nock": "^7.2.1"
+    "nock": "^7.2.1",
+    "proxyquire": "^1.8.0"
   },
   "dependencies": {
-    "co": "^4.6.0"
+    "co": "^4.6.0",
+    "socket.io-client": "^2.0.3"
   }
 }

@@ -83,6 +83,29 @@ describe('player', () => {
 			player.connect(playerSubscriber);
 		});
 
+		it('#notify subscriber playerRpc mapping for coverage', (done) => {
+			let configOpts = {
+					notifySubscriber : {
+						playerRpc : {
+							text : 'test',
+							occursAt : 2000
+						}
+					}
+				};
+
+			player = mockSocketIOClient.rewire('../../lib/player.js', configOpts)(null, ensureAuthHeaders);
+
+			playerSubscriber.on('message', (message) => {
+				if (message === 'test') {
+					return done();
+				}
+
+				return done(err);
+			});
+
+			player.connect(playerSubscriber);
+		}).timeout(5000);
+
 		it('#notify subscriber message for coverage', (done) => {
 			let configOpts = {
 					notifySubscriber : {

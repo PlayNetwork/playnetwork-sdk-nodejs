@@ -24,8 +24,14 @@ module.exports = function (opts, self) {
 
 		if (configOpts.notifySubscriber.message) {
 			setTimeout(function() {
-				MockSocket.prototype.emit.call(self, 'playerRpc', configOpts.notifySubscriber.message.text);
+				MockSocket.prototype.emit.call(self, 'message', configOpts.notifySubscriber.message.text);
 			}, configOpts.notifySubscriber.message.occursAt);
+		}
+
+		if (configOpts.notifySubscriber.playerRpc) {
+			setTimeout(function() {
+				MockSocket.prototype.emit.call(self, 'playerRpc', configOpts.notifySubscriber.playerRpc.text);
+			}, configOpts.notifySubscriber.playerRpc.occursAt);
 		}
 
 		if (configOpts.notifySubscriber.reconnect) {

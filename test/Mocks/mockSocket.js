@@ -22,10 +22,10 @@ module.exports = function (opts, self) {
 			}, configOpts.notifySubscriber.connect_error.occursAt);
 		}
 
-		if (configOpts.notifySubscriber.playerRpc) {
+		if (configOpts.notifySubscriber.message) {
 			setTimeout(function() {
-				MockSocket.prototype.emit.call(self, 'playerRpc', configOpts.notifySubscriber.playerRpc.message);
-			}, configOpts.notifySubscriber.playerRpc.occursAt);
+				MockSocket.prototype.emit.call(self, 'playerRpc', configOpts.notifySubscriber.message.text);
+			}, configOpts.notifySubscriber.message.occursAt);
 		}
 
 		if (configOpts.notifySubscriber.reconnect) {

@@ -83,11 +83,11 @@ describe('player', () => {
 			player.connect(playerSubscriber);
 		});
 
-		it('#notify subscriber playerRpc for coverage', (done) => {
+		it('#notify subscriber message for coverage', (done) => {
 			let configOpts = {
 					notifySubscriber : {
-						playerRpc : {
-							message : 'test',
+						message : {
+							text : 'test',
 							occursAt : 2000
 						}
 					}
@@ -95,7 +95,7 @@ describe('player', () => {
 
 			player = mockSocketIOClient.rewire('../../lib/player.js', configOpts)(null, ensureAuthHeaders);
 
-			playerSubscriber.on('playerRpc', (message) => {
+			playerSubscriber.on('message', (message) => {
 				if (message === 'test') {
 					return done();
 				}

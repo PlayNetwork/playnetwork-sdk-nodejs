@@ -1,3 +1,7 @@
+# v1.2.1 - 2017/08/23
+
+* Fixed bug that was being caused by missing settings method in PlayerProxy.
+
 # v1.1.11 - 2017/05/23
 
 * Fixing bug where Relationship API configuration wasn't being properly supplied.

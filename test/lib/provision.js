@@ -90,7 +90,7 @@ describe('provision', () => {
 		it('should properly retrieve credentials (promise)', (done) => {
 			// intercept outbound request
 			nock('https://provision-api.apps.playnetwork.com')
-				.get('/v2/devices/:5/activation')
+				.post('/v2/devices/:5/activation')
 				.reply(200, {} );
 
 			provision.getClientCreds('5')
@@ -106,7 +106,7 @@ describe('provision', () => {
 		it('should reject with error without device id ', (done) => {
 			// intercept outbound request
 			nock('https://provision-api.apps.playnetwork.com')
-				.get('/v2/devices/:5/activation')
+				.post('/v2/devices/:5/activation')
 				.reply(200, {} );
 
 			provision.getClientCreds()

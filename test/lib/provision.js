@@ -9,7 +9,6 @@ var
 
 	should = chai.should();
 
-
 describe('provision', () => {
 	'use strict';
 
@@ -75,8 +74,8 @@ describe('provision', () => {
 				},
 				proxy = new ProvisionProxy(options);
 
-			should.exist(proxy.getClientCreds);
-			should.exist(proxy.getApplications);
+			should.exist(proxy.getClientCredentialsStream);
+			should.exist(proxy.getApplicationsStream);
 			proxy.settings().should.not.be.empty;
 			proxy.settings().agent.should.equal(options.agent);
 			proxy.settings().host.should.equal(options.host);
@@ -86,14 +85,14 @@ describe('provision', () => {
 		});
 	});
 
-	describe('#getClientCreds', () => {
+	describe('#getClientCredentialsStream', () => {
 		it('should properly retrieve credentials (promise)', (done) => {
 			// intercept outbound request
 			nock('https://provision-api.apps.playnetwork.com')
-				.post('/v2/devices/:5/activation')
+				.get('/v2/devices/5/activation')
 				.reply(200, {} );
 
-			provision.getClientCreds('5')
+			provision.getClientCredentialsStream('5')
 				.then((result) => {
 					should.exist(result);
 					should.exist(requestInfo);
@@ -106,10 +105,10 @@ describe('provision', () => {
 		it('should reject with error without device id ', (done) => {
 			// intercept outbound request
 			nock('https://provision-api.apps.playnetwork.com')
-				.post('/v2/devices/:5/activation')
+				.get('/v2/devices/5/activation')
 				.reply(200, {} );
 
-			provision.getClientCreds()
+			provision.getClientCredentialsStream()
 				.then((result) => {
 					return done(new Error('should have rejected'))
 				})
@@ -118,16 +117,16 @@ describe('provision', () => {
 					return done();
 				})
 		});
-});
+	});
 
-	describe('#getApplications', () => {
+	describe('#getApplicationsStream', () => {
 		it('should return a list of apps', (done) => {
 			// intercept outbound request
 			nock('https://provision-api.apps.playnetwork.com')
 				.get('/v2/devices')
 				.reply(200, ['app1', 'app2', 'app3'] );
 
-			provision.getApplications()
+			provision.getApplicationsStream()
 			  .then((result) => {
 					should.exist(result);
 

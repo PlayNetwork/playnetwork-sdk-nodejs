@@ -97,7 +97,7 @@ This module can be used to interact with Playnetwork's socket-io service, https:
 
 ### Provision
 
-This module can be used to interact with the [Playback API](https://provision-api.apps.playnetwork.com/v1/docs) to get activation information such as clientId/sharedSecret and a list of apps needed for installation or update. 
+This module can be used to interact with the [Provision API](https://provision-api.apps.playnetwork.com/v1/docs) to get activation information such as clientId/sharedSecret and a list of apps needed for installation or update. 
 
 * [getApplicationsStream](#getApplicationsStream)
 * [getClientCredentialsStream](#getClientCredentialsStream)

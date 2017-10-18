@@ -1,3 +1,7 @@
+# v1.3.0 - 2017/10/18
+
+* Added support for some functionality for Provision API
+
 # v1.2.1 - 2017/08/23
 
 * Fixed bug that was being caused by missing settings method in PlayerProxy.

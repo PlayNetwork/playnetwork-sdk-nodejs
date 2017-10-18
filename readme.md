@@ -1461,30 +1461,6 @@ client
 
 The provision module is designed to simplify interaction with the [PlayNetwork Playback API](https://provision-api.apps.playnetwork.com/v1/docs). This module supports the following methods:
 
-#### #getClientCredentialsStream
-
-This method can be used to retrieve a stream that when read will contain a client ID and shared secret that the device can use to interact with Playnetwork APIs. The provision module will use a default credential set initially if there are no actual credentials defined. 
-
-**Usage:** `client.provision.getClientCredentialsStream(deviceId, options)`
-
-* `deviceId` - _(required)_ - defines the device identifier, in most cases, the mac address of the device
-* `options` - _(optional)_ - can be used to supply authorization headers such as clientId/secret i.e. can override defaults
-
-```javascript
-client
-  .provision
-  .getClientCredentialsStream({
-					'x-client-id': 'test',
-					'x-authentication-token': 'test'
-				})
-  .then((credentialsStream) => {
-    // read credentials stream
-  }).catch((err) => {
-    console.error(err);
-  });
-```
-
-[back to top](#usage)
 
 #### #getApplicationsStream
 
@@ -1503,6 +1479,31 @@ client
 				})
   .then((applicaitonsYmlStream) => {
     // read applications stream
+  }).catch((err) => {
+    console.error(err);
+  });
+```
+
+[back to top](#usage)
+
+#### #getClientCredentialsStream
+
+This method can be used to retrieve a stream that when read will contain a client ID and shared secret that the device can use to interact with Playnetwork APIs. The provision module will use a default credential set initially if there are no actual credentials defined. 
+
+**Usage:** `client.provision.getClientCredentialsStream(deviceId, options)`
+
+* `deviceId` - _(required)_ - defines the device identifier, in most cases, the mac address of the device
+* `options` - _(optional)_ - can be used to supply authorization headers such as clientId/secret i.e. can override defaults
+
+```javascript
+client
+  .provision
+  .getClientCredentialsStream({
+					'x-client-id': 'test',
+					'x-authentication-token': 'test'
+				})
+  .then((credentialsStream) => {
+    // read credentials stream
   }).catch((err) => {
     console.error(err);
   });

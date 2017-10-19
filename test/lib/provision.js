@@ -9,7 +9,7 @@ var
 
 describe('provision', () => {
 	'use strict';
-	
+
 	let
 		ensureAuthHeaders = function () {
 			return new Promise((resolve, reject) => {
@@ -278,7 +278,7 @@ describe('provision', () => {
 			});
 		});
 
-		it('should require packingSlipId', () => {
+		it('should require packingSlipId', (done) => {
 			provision.createOrder({ other: true })
 				.then(() => {
 					return done(new Error('should require packingSlipId'));
@@ -292,7 +292,7 @@ describe('provision', () => {
 				});
 		});
 
-		it('should require identityMap', () => {
+		it('should require identityMap', (done) => {
 			provision.createOrder({ packingSlipId: 'abc123' })
 				.then(() => {
 					return done(new Error('should require identityMap'));
@@ -306,7 +306,7 @@ describe('provision', () => {
 				});
 		});
 
-		it('should require dsiToken', () => {
+		it('should require dsiToken', (done) => {
 			provision.createOrder({ packingSlipId: 'abc123', identityMap: { other: true } })
 				.then(() => {
 					return done(new Error('should require dsiToken'));
@@ -320,7 +320,7 @@ describe('provision', () => {
 				});
 		});
 
-		it('should require stations', () => {
+		it('should require stations', (done) => {
 			provision.createOrder({ packingSlipId: 'abc123', identityMap: { dsiToken: '123456' } })
 				.then(() => {
 					return done(new Error('should require stations'));
@@ -363,6 +363,57 @@ describe('provision', () => {
 
 				return done();
 			});
+		});
+	});
+
+	describe('#getClientCredentialsStream', () => {
+		it('should properly retrieve credentials (promise)', (done) => {
+			// intercept outbound request
+			nock('https://provision-api.apps.playnetwork.com')
+				.get('/v2/devices/5/activation')
+				.reply(200, {} );
+
+			provision.getClientCredentialsStream('5')
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch((err) => (done(err)));
+		});
+
+		it('should reject with error without device id ', (done) => {
+			// intercept outbound request
+			nock('https://provision-api.apps.playnetwork.com')
+				.get('/v2/devices/5/activation')
+				.reply(200, {} );
+
+			provision.getClientCredentialsStream()
+				.then((result) => {
+					return done(new Error('should have rejected'))
+				})
+				.catch((err) => {
+					err.message.should.equals('deviceId is required');
+					return done();
+				})
+		});
+	});
+
+	describe('#getApplicationsStream', () => {
+		it('should return a list of apps', (done) => {
+			// intercept outbound request
+			nock('https://provision-api.apps.playnetwork.com')
+				.get('/v2/devices')
+				.reply(200, ['app1', 'app2', 'app3'] );
+
+			provision.getApplicationsStream()
+				.then((result) => {
+					should.exist(result);
+
+					return done();
+				})
+				.catch((err) => (done(err)));
 		});
 	});
 
@@ -487,7 +538,7 @@ describe('provision', () => {
 				.put('/v2/orders/test')
 				.reply(200, mockOrder);
 
-			order.updateOrder(mockOrder, function (err, result) {
+			provision.updateOrder(mockOrder, function (err, result) {
 				should.not.exist(err);
 				should.exist(result);
 				should.exist(requestInfo);

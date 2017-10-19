@@ -95,6 +95,15 @@ This module can be used to interact with Playnetwork's socket-io service, https:
 
 - - -
 
+### Provision
+
+This module can be used to interact with the [Provision API](https://provision-api.apps.playnetwork.com/v1/docs) to get activation information such as clientId/sharedSecret and a list of apps needed for installation or update.
+
+* [getApplicationsStream](#getApplicationsStream)
+* [getClientCredentialsStream](#getClientCredentialsStream)
+
+- - -
+
 ### Settings
 
 This module provides support for retrieving location / device specific environment settings, including network details, proxy configuration, throttling and more.
@@ -212,6 +221,9 @@ The supported options are as follows:
   * `secure` - defaults to `true`, defines when the API uses TLS
 * `player`
   * `host` - the hostname of the playerservice app
+  * `secure` - defaults to `true`, defines when the API uses TLS
+* `provision`
+  * `host` - the hostname of the provision API
   * `secure` - defaults to `true`, defines when the API uses TLS
 * `settings`
   * `host` - the hostname
@@ -1377,7 +1389,7 @@ client
 
 #### #disconnect
 
-This method is used to disconnect from Playnetwork's socket-io service. 
+This method is used to disconnect from Playnetwork's socket-io service.
 
 **Usage:** `client.player.disconnect`
 
@@ -1412,7 +1424,7 @@ client
 * Event: 'connected', fired when a successful initial connection or reconnection is made to the socket-io service
   Params: connection object
 ```javascript
-      { 
+      {
         "connectionAttempt" : number indicating the connection attempts (0 for initial, n for reconnect)
         "isReconnect" : true | false,    (true if this is a reconnection, false otherwise)
         "url" : url (String, the url that the method connected to)
@@ -1421,11 +1433,11 @@ client
 
 * Event: 'disconnected'
   Fired when client disconnects from the socket-io service
-  
+
 * Event: 'error'
   Fired when an error occurs
   Params: error object
-  
+
 * Event: 'message'
   Fired when client recieves a json rpc formatted message from Playnetwork's socket-io service
 
@@ -1436,7 +1448,63 @@ client
       "connectionAttempt" : attempt,   (attempt number)
       "url" : url    (url attempting to connect to)
     };
-``` 
+```
+
+[back to top](#usage)
+
+- - -
+
+### Provision Module
+
+The provision module is designed to simplify interaction with the [PlayNetwork Playback API](https://provision-api.apps.playnetwork.com/v1/docs). This module supports the following methods:
+
+
+#### #getApplicationsStream
+
+This method can be used to retrieve a stream that when read will contain a yml files that can be consumed by docker compose
+
+**Usage:** `client.provision.getApplicationsStream(options)`
+
+* `options` - _(optional)_ - can be used to supply authorization headers such as clientId/secret i.e. can override defaults
+
+```javascript
+client
+  .provision
+  .getApplicationsStream({
+					'x-client-id': 'test',
+					'x-authentication-token': 'test'
+				})
+  .then((applicaitonsYmlStream) => {
+    // read applications stream
+  }).catch((err) => {
+    console.error(err);
+  });
+```
+
+[back to top](#usage)
+
+#### #getClientCredentialsStream
+
+This method can be used to retrieve a stream that when read will contain a client ID and shared secret that the device can use to interact with Playnetwork APIs. The provision module will use a default credential set initially if there are no actual credentials defined.
+
+**Usage:** `client.provision.getClientCredentialsStream(deviceId, options)`
+
+* `deviceId` - _(required)_ - defines the device identifier, in most cases, the mac address of the device
+* `options` - _(optional)_ - can be used to supply authorization headers such as clientId/secret i.e. can override defaults
+
+```javascript
+client
+  .provision
+  .getClientCredentialsStream({
+					'x-client-id': 'test',
+					'x-authentication-token': 'test'
+				})
+  .then((credentialsStream) => {
+    // read credentials stream
+  }).catch((err) => {
+    console.error(err);
+  });
+```
 
 [back to top](#usage)
 

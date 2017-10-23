@@ -366,14 +366,14 @@ describe('provision', () => {
 		});
 	});
 
-	describe('#getClientCredentialsStream', () => {
+	describe('#getClientCredentials', () => {
 		it('should properly retrieve credentials (promise)', (done) => {
 			// intercept outbound request
 			nock('https://provision-api.apps.playnetwork.com')
 				.get('/v2/devices/5/activation')
 				.reply(200, {} );
 
-			provision.getClientCredentialsStream('5')
+			provision.getClientCredentials('5')
 				.then((result) => {
 					should.exist(result);
 					should.exist(requestInfo);
@@ -383,13 +383,32 @@ describe('provision', () => {
 				.catch((err) => (done(err)));
 		});
 
+		it('should properly retrieve credentials (callback)', (done) => {
+			// intercept outbound request
+			nock('https://provision-api.apps.playnetwork.com')
+				.get('/v2/devices/5/activation')
+				.reply(200, {} );
+
+			provision.getClientCredentials('5', function(err, result) {
+				if (err) {
+					console.log(err);
+					return done(err);
+				}
+
+				should.exist(result);
+				should.exist(requestInfo);
+
+				return done();
+			});
+		});
+
 		it('should reject with error without device id ', (done) => {
 			// intercept outbound request
 			nock('https://provision-api.apps.playnetwork.com')
 				.get('/v2/devices/5/activation')
 				.reply(200, {} );
 
-			provision.getClientCredentialsStream()
+			provision.getClientCredentials()
 				.then((result) => {
 					return done(new Error('should have rejected'))
 				})
@@ -397,23 +416,6 @@ describe('provision', () => {
 					err.message.should.equals('deviceId is required');
 					return done();
 				})
-		});
-	});
-
-	describe('#getApplicationsStream', () => {
-		it('should return a list of apps', (done) => {
-			// intercept outbound request
-			nock('https://provision-api.apps.playnetwork.com')
-				.get('/v2/devices')
-				.reply(200, ['app1', 'app2', 'app3'] );
-
-			provision.getApplicationsStream()
-				.then((result) => {
-					should.exist(result);
-
-					return done();
-				})
-				.catch((err) => (done(err)));
 		});
 	});
 

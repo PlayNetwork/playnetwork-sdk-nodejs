@@ -95,15 +95,6 @@ This module can be used to interact with Playnetwork's socket-io service, https:
 
 - - -
 
-### Provision
-
-This module can be used to interact with the [Provision API](https://provision-api.apps.playnetwork.com/v1/docs) to get activation information such as clientId/sharedSecret and a list of apps needed for installation or update.
-
-* [getApplicationsStream](#getApplicationsStream)
-* [getClientCredentialsStream](#getClientCredentialsStream)
-
-- - -
-
 ### Settings
 
 This module provides support for retrieving location / device specific environment settings, including network details, proxy configuration, throttling and more.
@@ -1448,62 +1439,6 @@ client
       "connectionAttempt" : attempt,   (attempt number)
       "url" : url    (url attempting to connect to)
     };
-```
-
-[back to top](#usage)
-
-- - -
-
-### Provision Module
-
-The provision module is designed to simplify interaction with the [PlayNetwork Playback API](https://provision-api.apps.playnetwork.com/v1/docs). This module supports the following methods:
-
-
-#### #getApplicationsStream
-
-This method can be used to retrieve a stream that when read will contain a yml files that can be consumed by docker compose
-
-**Usage:** `client.provision.getApplicationsStream(options)`
-
-* `options` - _(optional)_ - can be used to supply authorization headers such as clientId/secret i.e. can override defaults
-
-```javascript
-client
-  .provision
-  .getApplicationsStream({
-					'x-client-id': 'test',
-					'x-authentication-token': 'test'
-				})
-  .then((applicaitonsYmlStream) => {
-    // read applications stream
-  }).catch((err) => {
-    console.error(err);
-  });
-```
-
-[back to top](#usage)
-
-#### #getClientCredentialsStream
-
-This method can be used to retrieve a stream that when read will contain a client ID and shared secret that the device can use to interact with Playnetwork APIs. The provision module will use a default credential set initially if there are no actual credentials defined.
-
-**Usage:** `client.provision.getClientCredentialsStream(deviceId, options)`
-
-* `deviceId` - _(required)_ - defines the device identifier, in most cases, the mac address of the device
-* `options` - _(optional)_ - can be used to supply authorization headers such as clientId/secret i.e. can override defaults
-
-```javascript
-client
-  .provision
-  .getClientCredentialsStream({
-					'x-client-id': 'test',
-					'x-authentication-token': 'test'
-				})
-  .then((credentialsStream) => {
-    // read credentials stream
-  }).catch((err) => {
-    console.error(err);
-  });
 ```
 
 [back to top](#usage)

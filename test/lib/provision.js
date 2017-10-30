@@ -366,6 +366,109 @@ describe('provision', () => {
 		});
 	});
 
+	describe('#checkUpdate', () => {
+		it('should require clientId', (done) => {
+			provision.checkUpdate()
+				.then(() => {
+					return done(new Error('should require clientId'));
+				})
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('clientId is required');
+
+					return done();
+				});
+		});
+
+		it('should properly check client update (promise)', (done) => {
+			// intercept outbound request
+			nock('https://develop-provision-api.apps.playnetwork.com')
+				.head('/v2/applications/1')
+				.reply(200);
+
+			provision.checkUpdate('1')
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+					
+					return done();
+				})
+				.catch((err) => (done(err)));
+		});
+
+		it('should properly check client update (callback)', (done) => {
+			// intercept outbound request
+			nock('https://develop-provision-api.apps.playnetwork.com')
+				.head('/v2/applications/1')
+				.reply(200);
+
+			provision.checkUpdate('1', (err, result) => {
+				if (err) {
+					console.log(err);
+					return done(err);
+				}
+
+				should.exist(result);
+				should.exist(requestInfo);
+
+				return done();
+			});
+
+		});
+	});
+
+	describe('#getUpdate', () => {
+		it('should require clientId', (done) => {
+			provision.getUpdate()
+				.then(() => {
+					return done(new Error('should require clientId'));
+				})
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('clientId is required');
+
+					return done();
+				});
+		});
+
+		it('should properly retrieve yml update (promise)', (done) => {
+			// intercept outbound request
+			nock('https://develop-provision-api.apps.playnetwork.com')
+				.get('/v2/applications/1')
+				.reply(200, {} );
+
+			provision.getUpdate('1')
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch((err) => (done(err)));
+		});
+
+		it('should properly retrieve yml update (callback)', (done) => {
+			// intercept outbound request
+			nock('https://develop-provision-api.apps.playnetwork.com')
+				.get('/v2/applications/1')
+				.reply(200, {} );
+
+			provision.getUpdate('1', (err, result) => {
+				if(err) {
+					console.log(err);
+					return done(err);
+				}
+
+				should.exist(result);
+				should.exist(requestInfo);
+
+				return done();
+			});
+		});
+	});
+
 	describe('#getClientCredentials', () => {
 		it('should properly retrieve credentials (promise)', (done) => {
 			// intercept outbound request

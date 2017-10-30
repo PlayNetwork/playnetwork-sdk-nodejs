@@ -383,7 +383,7 @@ describe('provision', () => {
 
 		it('should properly check client update (promise)', (done) => {
 			// intercept outbound request
-			nock('https://develop-provision-api.apps.playnetwork.com')
+			nock('https://provision-api.apps.playnetwork.com')
 				.head('/v2/applications/1')
 				.reply(200);
 
@@ -399,7 +399,7 @@ describe('provision', () => {
 
 		it('should properly check client update (callback)', (done) => {
 			// intercept outbound request
-			nock('https://develop-provision-api.apps.playnetwork.com')
+			nock('https://provision-api.apps.playnetwork.com')
 				.head('/v2/applications/1')
 				.reply(200);
 
@@ -435,7 +435,7 @@ describe('provision', () => {
 
 		it('should properly retrieve yml update (promise)', (done) => {
 			// intercept outbound request
-			nock('https://develop-provision-api.apps.playnetwork.com')
+			nock('https://provision-api.apps.playnetwork.com')
 				.get('/v2/applications/1')
 				.reply(200, {} );
 
@@ -451,7 +451,7 @@ describe('provision', () => {
 
 		it('should properly retrieve yml update (callback)', (done) => {
 			// intercept outbound request
-			nock('https://develop-provision-api.apps.playnetwork.com')
+			nock('https://provision-api.apps.playnetwork.com')
 				.get('/v2/applications/1')
 				.reply(200, {} );
 

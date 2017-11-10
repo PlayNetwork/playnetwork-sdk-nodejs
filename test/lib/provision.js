@@ -366,6 +366,81 @@ describe('provision', () => {
 		});
 	});
 
+	describe('#checkUpdate', () => {
+		it('should properly check client update (promise)', (done) => {
+			// intercept outbound request
+			nock('https://provision-api.apps.playnetwork.com')
+				.head('/v2/applications')
+				.reply(200);
+
+			provision.checkUpdate()
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+					
+					return done();
+				})
+				.catch((err) => (done(err)));
+		});
+
+		it('should properly check client update (callback)', (done) => {
+			// intercept outbound request
+			nock('https://provision-api.apps.playnetwork.com')
+				.head('/v2/applications')
+				.reply(200);
+
+			provision.checkUpdate((err, result) => {
+				if (err) {
+					console.log(err);
+					return done(err);
+				}
+
+				should.exist(result);
+				should.exist(requestInfo);
+
+				return done();
+			});
+
+		});
+	});
+
+	describe('#getUpdate', () => {
+		it('should properly retrieve yml update (promise)', (done) => {
+			// intercept outbound request
+			nock('https://provision-api.apps.playnetwork.com')
+				.get('/v2/applications')
+				.reply(200, {} );
+
+			provision.getUpdate()
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch((err) => (done(err)));
+		});
+
+		it('should properly retrieve yml update (callback)', (done) => {
+			// intercept outbound request
+			nock('https://provision-api.apps.playnetwork.com')
+				.get('/v2/applications')
+				.reply(200, {} );
+
+			provision.getUpdate((err, result) => {
+				if(err) {
+					console.log(err);
+					return done(err);
+				}
+
+				should.exist(result);
+				should.exist(requestInfo);
+
+				return done();
+			});
+		});
+	});
+
 	describe('#getClientCredentials', () => {
 		it('should properly retrieve credentials (promise)', (done) => {
 			// intercept outbound request

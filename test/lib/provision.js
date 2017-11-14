@@ -404,14 +404,14 @@ describe('provision', () => {
 		});
 	});
 
-	describe('#getUpdate', () => {
+	describe('#allApplications', () => {
 		it('should properly retrieve yml update (promise)', (done) => {
 			// intercept outbound request
 			nock('https://provision-api.apps.playnetwork.com')
 				.get('/v2/applications')
 				.reply(200, {} );
 
-			provision.getUpdate()
+			provision.allApplications()
 				.then((result) => {
 					should.exist(result);
 					should.exist(requestInfo);
@@ -427,7 +427,7 @@ describe('provision', () => {
 				.get('/v2/applications')
 				.reply(200, {} );
 
-			provision.getUpdate((err, result) => {
+			provision.allApplications((err, result) => {
 				if(err) {
 					console.log(err);
 					return done(err);

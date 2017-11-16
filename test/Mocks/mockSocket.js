@@ -3,9 +3,10 @@ const events = require('events');
 module.exports = function (opts, self) {
 	self = self ? self : {};
 
-	let configOpts = opts ? opts : {
-		notifySubscriber : {}
-	};
+	let
+		configOpts = opts ? opts : {
+			notifySubscriber : {}
+		};
 
 	function MockSocket() {
 		Object.create(this);
@@ -42,7 +43,12 @@ module.exports = function (opts, self) {
 
 		if (configOpts.notifySubscriber.reconnecting) {
 			setTimeout(function() {
-				MockSocket.prototype.emit.call(self, 'reconnecting', configOpts.notifySubscriber.reconnecting.number);
+				if (configOpts.notifySubscriber.reconnecting.headerReset) {
+					MockSocket.prototype.emit.call(self, 'reconnect_attempt', configOpts.notifySubscriber.reconnecting.number);
+				} else {
+					MockSocket.prototype.emit.call(self, 'reconnecting', configOpts.notifySubscriber.reconnecting.number);
+				}
+
 			}, configOpts.notifySubscriber.reconnecting.occursAt);
 		}
 
@@ -60,5 +66,8 @@ module.exports = function (opts, self) {
 	};
 
 	self = new MockSocket(opts);
+
+	self.io = { 'opts': { 'query' : {} } };
+
 	return self;
 };

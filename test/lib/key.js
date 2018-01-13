@@ -913,6 +913,38 @@ describe('key', () => {
 			.then(done)
 			.catch(done);
 		});
+
+		it('should verify current token is equal to cached one (when token cache was enabled)', (done) => {
+			nock('https://key-api.apps.playnetwork.com')
+				.get('/v0/tokens/goodtoken')
+				.reply(200, mockToken);
+
+			nock('https://key-api.apps.playnetwork.com')
+				.get('/v0/tokens/badtoken')
+				.reply(404, { statusCode : 404, message : 'does not exist' });
+
+			key.validateToken('clientId', 'goodtoken', function (err, valid) {
+				should.not.exist(err);
+				should.exist(valid);
+
+				valid.should.be.true;
+
+				// clientId's goodtoken should be cached
+				// try to validate the same clientId using a badtoken
+				key.validateToken('clientId', 'badtoken', function (err, valid2) {
+					should.not.exist(err);
+					should.exist(valid2);
+
+					// tokenCacheSize should be still 1 because we use the same client
+					key.getTokenCacheSize().should.equal(1);
+
+					// badtoken should not be valid
+					valid2.should.be.false;
+
+					return done();
+				});
+			});
+		});
 	});
 
 	describe('#version', () => {

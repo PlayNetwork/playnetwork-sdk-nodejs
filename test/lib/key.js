@@ -945,6 +945,51 @@ describe('key', () => {
 				});
 			});
 		});
+
+		it('should clear the cached token if it has expired', (done) => {
+			let oldToken = {
+				clientId : 'clientId',
+				tokenId : 'oldToken',
+				expires : new Date(
+					mockToken.expires.setUTCDate(
+						mockToken.expires.getUTCDate() - 2))
+			};
+
+			nock('https://key-api.apps.playnetwork.com')
+				.get('/v0/tokens/oldToken')
+				.reply(200, oldToken);
+			nock('https://key-api.apps.playnetwork.com')
+				.get('/v0/tokens/token')
+				.reply(200, mockToken);
+
+			key.validateToken('clientId', 'oldToken', function (err, valid) {
+				// round 1: let key-api cache the old token
+				should.not.exist(err);
+				should.exist(valid);
+				key.getTokenCacheSize().should.equal(1);
+				valid.should.be.true;
+
+				// round 2: cached token has expired; validate with a new token
+				key.validateToken('clientId', 'token', function (err, valid) {
+					should.not.exist(err);
+					should.exist(valid);
+					key.getTokenCacheSize().should.equal(1);
+					valid.should.be.true;
+
+					return done();
+				});
+
+				// round 3: cached token should be used
+				key.validateToken('clientId', 'token', function (err, valid) {
+					should.not.exist(err);
+					should.exist(valid);
+					key.getTokenCacheSize().should.equal(1);
+					valid.should.be.true;
+
+					return done();
+				});
+			});
+		});
 	});
 
 	describe('#version', () => {

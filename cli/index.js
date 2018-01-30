@@ -2,8 +2,10 @@
 const
 	os = require('os'),
 	stream = require('stream'),
+	fs = require('fs'),
 
 	co = require('co'),
+	markdown = require('markdown').markdown,
 
 	lib = require('../lib'),
 	nodePackage = require('../package.json'),
@@ -17,6 +19,8 @@ const
 	JSON_REPLACER = 0,
 	JSON_SPACE = 2;
 
+	// eslint-disable-next-line no-sync
+	md = markdown.parse(fs.readFileSync('./readme.md', 'utf8'));
 
 module.exports = (function (app) {
 	'use strict';
@@ -39,7 +43,7 @@ module.exports = (function (app) {
 				app.args.commandArgs = args.slice(COMMAND_ARGS_START + index);
 
 				// stop processing command inputs
-				return true;
+				return false;
 			}
 
 			if (ARGS_HELP_RE.test(arg)) {
@@ -93,8 +97,22 @@ module.exports = (function (app) {
 
 		// show command specific help...
 		if (showHelp) {
-			// TODO: build support for command specific help
+			let index = md.findIndex(getCommandIndex);
+			let description = md[index+1][1];
+			let params = md[index+3];
+			console.log(params);
+			console.log([
+				`#${app.args.command}: ${description}`,
+				`Usage: ${params}`
+			].join(os.EOL));
+
+			process.exit();
 		}
+	}
+
+	function getCommandIndex(element) {
+		// eslint-disable-next-line no-magic-numbers
+		return (element[0] === 'header' && element[1].level === 4 && element[2] === `#${app.args.command}`);
 	}
 
 	function parsePipeData () {

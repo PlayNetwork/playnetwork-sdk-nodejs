@@ -913,6 +913,83 @@ describe('key', () => {
 			.then(done)
 			.catch(done);
 		});
+
+		it('should verify current token is equal to cached one (when token cache was enabled)', (done) => {
+			nock('https://key-api.apps.playnetwork.com')
+				.get('/v0/tokens/goodtoken')
+				.reply(200, mockToken);
+
+			nock('https://key-api.apps.playnetwork.com')
+				.get('/v0/tokens/badtoken')
+				.reply(404, { statusCode : 404, message : 'does not exist' });
+
+			key.validateToken('clientId', 'goodtoken', function (err, valid) {
+				should.not.exist(err);
+				should.exist(valid);
+
+				valid.should.be.true;
+
+				// clientId's goodtoken should be cached
+				// try to validate the same clientId using a badtoken
+				key.validateToken('clientId', 'badtoken', function (err, valid2) {
+					should.not.exist(err);
+					should.exist(valid2);
+
+					// tokenCacheSize should be still 1 because we use the same client
+					key.getTokenCacheSize().should.equal(1);
+
+					// badtoken should not be valid
+					valid2.should.be.false;
+
+					return done();
+				});
+			});
+		});
+
+		it('should clear the cached token if it has expired', (done) => {
+			let oldToken = {
+				clientId : 'clientId',
+				tokenId : 'oldToken',
+				expires : new Date(
+					mockToken.expires.setUTCDate(
+						mockToken.expires.getUTCDate() - 2))
+			};
+
+			nock('https://key-api.apps.playnetwork.com')
+				.get('/v0/tokens/oldToken')
+				.reply(200, oldToken);
+			nock('https://key-api.apps.playnetwork.com')
+				.get('/v0/tokens/token')
+				.reply(200, mockToken);
+
+			key.validateToken('clientId', 'oldToken', function (err, valid) {
+				// round 1: let key-api cache the old token
+				should.not.exist(err);
+				should.exist(valid);
+				key.getTokenCacheSize().should.equal(1);
+				valid.should.be.true;
+
+				// round 2: cached token has expired; validate with a new token
+				key.validateToken('clientId', 'token', function (err, valid) {
+					should.not.exist(err);
+					should.exist(valid);
+					key.getTokenCacheSize().should.equal(1);
+					valid.should.be.true;
+
+					return done();
+				});
+
+				// round 3: cached token should be used
+				key.validateToken('clientId', 'token', function (err, valid) {
+					should.not.exist(err);
+					should.exist(valid);
+					key.getTokenCacheSize().should.equal(1);
+					valid.should.be.true;
+
+					return done();
+				});
+			});
+		});
 	});
 
 	describe('#version', () => {

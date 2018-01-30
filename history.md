@@ -1,3 +1,16 @@
+# v1.3.4
+
+* Bug Fix - addressed an issue once a client's valid authentication token was cached, subsequent tokens from the same client were not validate properly
+
+# v1.3.3
+* Handled expired authentication token on re-connect
+
+# v1.3.2
+* Added support for Provision/Updater route
+
+# v1.3.1
+* Added support for Provision/Activation route
+
 # v1.3.0 - 2017/10/18
 
 * Added support for some functionality for Provision API

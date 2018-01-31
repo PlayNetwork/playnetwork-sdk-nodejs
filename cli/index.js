@@ -97,22 +97,29 @@ module.exports = (function (app) {
 
 		// show command specific help...
 		if (showHelp) {
-			let index = md.findIndex(getCommandIndex);
-			let description = md[index+1][1];
-			let params = md[index+3];
-			console.log(params);
+			const commandIndex = md.findIndex(findCommand, app.args.command);
+			const description = md[commandIndex+1][1];
+			const usageIndex = md.findIndex(findUsage, [app.args.api, app.args.command]);
+			const parameters = md[usageIndex][3][1].match(/\((.*?)\)/)[1].split(', ');
 			console.log([
-				`#${app.args.command}: ${description}`,
-				`Usage: ${params}`
+				`#${app.args.command}: '${description}'`,
+				'Usage:',
+				`	${app.args.program} -a ${app.args.api} -c ${app.args.command} <${parameters}>`,
+				''
 			].join(os.EOL));
 
 			process.exit();
 		}
 	}
 
-	function getCommandIndex(element) {
-		// eslint-disable-next-line no-magic-numbers
-		return (element[0] === 'header' && element[1].level === 4 && element[2] === `#${app.args.command}`);
+	function findCommand (element) {
+		// eslint-disable-next-line no-magic-numbers, no-invalid-this
+		return (element[0] === 'header' && element[1].level === 4 && element[2] === `#${this}`);
+	}
+
+	function findUsage (element) {
+		// eslint-disable-next-line no-magic-numbers, no-invalid-this
+		return (element[0] === 'para' && element[1][1] === 'Usage:' && element[3][0] === 'inlinecode' && element[3][1].startsWith(`client.${this[0]}.${this[1]}`));
 	}
 
 	function parsePipeData () {

@@ -19,6 +19,7 @@ const
 	JSON_REPLACER = 0,
 	JSON_SPACE = 2;
 
+	// There has to be a better way to do this...
 	// eslint-disable-next-line no-sync
 	md = markdown.parse(fs.readFileSync('./readme.md', 'utf8'));
 
@@ -97,10 +98,12 @@ module.exports = (function (app) {
 
 		// show command specific help...
 		if (showHelp) {
+			// find the documentation index of the command and its parameters
 			const commandIndex = md.findIndex(findCommand, app.args.command);
-			const description = md[commandIndex+1][1];
 			const usageIndex = md.findIndex(findUsage, [app.args.api, app.args.command]);
+			const description = md[commandIndex+1][1];
 			const parameters = md[usageIndex][3][1].match(/\((.*?)\)/)[1].split(', ');
+
 			console.log([
 				`#${app.args.command}: '${description}'`,
 				'Usage:',
@@ -112,11 +115,13 @@ module.exports = (function (app) {
 		}
 	}
 
+	// lookup command in docs w/ JSONML structure
 	function findCommand (element) {
 		// eslint-disable-next-line no-magic-numbers, no-invalid-this
 		return (element[0] === 'header' && element[1].level === 4 && element[2] === `#${this}`);
 	}
 
+	// lookup usage in docs w/ JSONML structure
 	function findUsage (element) {
 		// eslint-disable-next-line no-magic-numbers, no-invalid-this
 		return (element[0] === 'para' && element[1][1] === 'Usage:' && element[3][0] === 'inlinecode' && element[3][1].startsWith(`client.${this[0]}.${this[1]}`));

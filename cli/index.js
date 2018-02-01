@@ -19,10 +19,6 @@ const
 	JSON_REPLACER = 0,
 	JSON_SPACE = 2;
 
-	// There has to be a better way to do this...
-	// eslint-disable-next-line no-sync
-	md = markdown.parse(fs.readFileSync('./readme.md', 'utf8'));
-
 module.exports = (function (app) {
 	'use strict';
 
@@ -98,6 +94,11 @@ module.exports = (function (app) {
 
 		// show command specific help...
 		if (showHelp) {
+			// There has to be a better way to do this...
+			// Convert documentation to JSONML
+			// eslint-disable-next-line no-sync
+			const md = markdown.parse(fs.readFileSync('./readme.md', 'utf8'));
+
 			// find the documentation index of the command and its parameters
 			const commandIndex = md.findIndex(findCommand, app.args.command);
 			const usageIndex = md.findIndex(findUsage, [app.args.api, app.args.command]);

@@ -1,3 +1,7 @@
+# v1.3.6 - 2018/03/26
+
+* Added support for Asset API
+
 # v1.3.5
 
 * Added support for key activation

@@ -212,7 +212,7 @@ describe('asset', function () {
 		});
 	});
 
-	describe('#checkAsset', function () {
+	describe('#checkOriginal', function () {
 		it('should require originalId (promise)', function (done) {
 			asset.checkOriginal()
 				.then(() => {

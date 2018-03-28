@@ -212,6 +212,29 @@ describe('asset', function () {
 		});
 	});
 
+	describe('#checkAsset', function () {
+		it('should require originalId (promise)', function (done) {
+			asset.checkOriginal()
+				.then(() => {
+					return done(new Error('should require originalId'));
+				})
+				.catch((err) => {
+					should.exist(err);
+					return done();
+				});
+		});
+
+		it('should require originalId (callback)', function (done) {
+			asset.checkOriginal(function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('originalId is required');
+				should.not.exist(result);
+				return done();
+			});
+		});
+	});
+
 	describe('#createOriginal', function () {
 		it('should require original (promise)', function (done) {
 			asset.createOriginal()

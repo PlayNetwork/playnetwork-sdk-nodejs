@@ -1,3 +1,7 @@
+# v1.3.7 - 2018/03/28
+
+* Added command to check if original asset exists in the Asset API
+
 # v1.3.6 - 2018/03/26
 
 * Added support for Asset API

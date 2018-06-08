@@ -2,8 +2,10 @@
 const
 	os = require('os'),
 	stream = require('stream'),
+	fs = require('fs'),
 
 	co = require('co'),
+	markdown = require('markdown').markdown,
 
 	lib = require('../lib'),
 	nodePackage = require('../package.json'),
@@ -16,7 +18,6 @@ const
 	COMMAND_ARGS_START = 2,
 	JSON_REPLACER = 0,
 	JSON_SPACE = 2;
-
 
 module.exports = (function (app) {
 	'use strict';
@@ -39,7 +40,7 @@ module.exports = (function (app) {
 				app.args.commandArgs = args.slice(COMMAND_ARGS_START + index);
 
 				// stop processing command inputs
-				return true;
+				return false;
 			}
 
 			if (ARGS_HELP_RE.test(arg)) {
@@ -93,8 +94,38 @@ module.exports = (function (app) {
 
 		// show command specific help...
 		if (showHelp) {
-			// TODO: build support for command specific help
+			// There has to be a better way to do this...
+			// Convert documentation to JSONML
+			// eslint-disable-next-line no-sync
+			const md = markdown.parse(fs.readFileSync('./readme.md', 'utf8'));
+
+			// find the documentation index of the command and its parameters
+			const commandIndex = md.findIndex(findCommand, app.args.command);
+			const usageIndex = md.findIndex(findUsage, [app.args.api, app.args.command]);
+			const description = md[commandIndex+1][1];
+			const parameters = md[usageIndex][3][1].match(/\((.*?)\)/)[1].split(', ');
+
+			console.log([
+				`#${app.args.command}: '${description}'`,
+				'Usage:',
+				`	${app.args.program} -a ${app.args.api} -c ${app.args.command} <${parameters}>`,
+				''
+			].join(os.EOL));
+
+			process.exit();
 		}
+	}
+
+	// lookup command in docs w/ JSONML structure
+	function findCommand (element) {
+		// eslint-disable-next-line no-magic-numbers, no-invalid-this
+		return (element[0] === 'header' && element[1].level === 4 && element[2] === `#${this}`);
+	}
+
+	// lookup usage in docs w/ JSONML structure
+	function findUsage (element) {
+		// eslint-disable-next-line no-magic-numbers, no-invalid-this
+		return (element[0] === 'para' && element[1][1] === 'Usage:' && element[3][0] === 'inlinecode' && element[3][1].startsWith(`client.${this[0]}.${this[1]}`));
 	}
 
 	function parsePipeData () {

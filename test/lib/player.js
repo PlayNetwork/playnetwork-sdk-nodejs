@@ -213,30 +213,6 @@ describe('player', () => {
 			player.connect(playerSubscriber);
 		}).timeout(5000);
 
-		it('#notify subscriber reconnecting headerReset', (done) => {
-			let configOpts = {
-					notifySubscriber : {
-						reconnecting : {
-							headerReset : true,
-							number : 1,
-							occursAt : 2000
-						}
-					}
-				};
-
-			player = mockSocketIOClient.rewire('../../lib/player.js', configOpts)(null, ensureAuthHeaders);
-
-			playerSubscriber.on('reconnecting', (connection) => {
-				if (connection.headerReset) {
-					return done();
-				}
-
-				return done('Expected headerReset to be true, actual ', connection.headerReset);
-			});
-
-			player.connect(playerSubscriber);
-		}).timeout(5000);
-
 		it('#notify subscriber reconnect_error', (done) => {
 			let configOpts = {
 					notifySubscriber : {

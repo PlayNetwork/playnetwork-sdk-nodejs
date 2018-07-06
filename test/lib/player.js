@@ -213,30 +213,6 @@ describe('player', () => {
 			player.connect(playerSubscriber);
 		}).timeout(5000);
 
-		it('#notify subscriber reconnecting headerReset', (done) => {
-			let configOpts = {
-					notifySubscriber : {
-						reconnecting : {
-							headerReset : true,
-							number : 1,
-							occursAt : 2000
-						}
-					}
-				};
-
-			player = mockSocketIOClient.rewire('../../lib/player.js', configOpts)(null, ensureAuthHeaders);
-
-			playerSubscriber.on('reconnecting', (connection) => {
-				if (connection.headerReset) {
-					return done();
-				}
-
-				return done('Expected headerReset to be true, actual ', connection.headerReset);
-			});
-
-			player.connect(playerSubscriber);
-		}).timeout(5000);
-
 		it('#notify subscriber reconnect_error', (done) => {
 			let configOpts = {
 					notifySubscriber : {
@@ -263,17 +239,14 @@ describe('player', () => {
 		it('#notify subscriber error for coverage', (done) => {
 			let configOpts = {
 					notifySubscriber : {
-						error : {
-							message : 'test',
-							occursAt : 2000
-						}
+						error : '{"code":401, "msg":"Unauthorized error"}'
 					}
 				};
 
 			player = mockSocketIOClient.rewire('../../lib/player.js', configOpts)(null, ensureAuthHeaders);
 
 			playerSubscriber.on('error', (err) => {
-				if (err.message === 'test') {
+				if (err.code === 401) {
 					return done();
 				}
 

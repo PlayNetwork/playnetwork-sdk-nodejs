@@ -239,17 +239,14 @@ describe('player', () => {
 		it('#notify subscriber error for coverage', (done) => {
 			let configOpts = {
 					notifySubscriber : {
-						error : {
-							message : 'test',
-							occursAt : 2000
-						}
+						error : '{"code":401, "msg":"Unauthorized error"}'
 					}
 				};
 
 			player = mockSocketIOClient.rewire('../../lib/player.js', configOpts)(null, ensureAuthHeaders);
 
 			playerSubscriber.on('error', (err) => {
-				if (err.message === 'test') {
+				if (err.code === 401) {
 					return done();
 				}
 

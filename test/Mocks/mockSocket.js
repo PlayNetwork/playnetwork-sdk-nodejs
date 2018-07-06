@@ -13,7 +13,7 @@ module.exports = function (opts, self) {
 
 		if (configOpts.notifySubscriber.error) {
 			setTimeout(function() {
-				MockSocket.prototype.emit.call(self, 'error', new Error(configOpts.notifySubscriber.error.message));
+				MockSocket.prototype.emit.call(self, 'error', configOpts.notifySubscriber.error);
 			}, configOpts.notifySubscriber.error.occursAt);
 		}
 

@@ -43,12 +43,7 @@ module.exports = function (opts, self) {
 
 		if (configOpts.notifySubscriber.reconnecting) {
 			setTimeout(function() {
-				if (configOpts.notifySubscriber.reconnecting.headerReset) {
-					MockSocket.prototype.emit.call(self, 'reconnect_attempt', configOpts.notifySubscriber.reconnecting.number);
-				} else {
 					MockSocket.prototype.emit.call(self, 'reconnecting', configOpts.notifySubscriber.reconnecting.number);
-				}
-
 			}, configOpts.notifySubscriber.reconnecting.occursAt);
 		}
 

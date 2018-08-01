@@ -74,6 +74,7 @@ describe('music', () => {
 			should.exist(proxy.allBroadcasts);
 			should.exist(proxy.allCollections);
 			should.exist(proxy.allStations);
+			should.exist(proxy.findBroadcastByStationId);
 			should.exist(proxy.getBroadcast);
 			should.exist(proxy.getCollection);
 			should.exist(proxy.getStation);
@@ -1221,6 +1222,64 @@ describe('music', () => {
 					return done();
 				})
 				.catch((err) => (done(err)));
+		});
+	});
+
+	describe('#findBroadcastByStationId', () => {
+		it('should require stationId (promise)', (done) => {
+			music.findBroadcastByStationId()
+				.then(() => {
+					return done(new Error('should require stationId'));
+				})
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('stationId is required');
+
+					return done();
+				})
+		});
+
+		it('should require stationId (callback)', (done) => {
+			music.findBroadcastByStationId(function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('stationId is required');
+				should.not.exist(result);
+
+				return done();
+			});
+		});
+
+		it('should properly retrieve broadcast (promise)', (done) => {
+			// intercept outbound request
+			nock('https://curio-music-api.apps.playnetwork.com')
+				.get('/v2/stations/test/broadcasts')
+				.reply(200, { total : 0 });
+
+			music.findBroadcastByStationId('test')
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch((err) => (done(err)));
+		});
+
+		it('should properly retrieve broadcast (callback)', (done) => {
+			// intercept outbound request
+			nock('https://curio-music-api.apps.playnetwork.com')
+				.get('/v2/stations/test/broadcasts')
+				.reply(200, { total : 0 });
+
+			music.findBroadcastByStationId('test', function (err, result) {
+				should.not.exist(err);
+				should.exist(result);
+				should.exist(requestInfo);
+
+				return done();
+			});
 		});
 	});
 

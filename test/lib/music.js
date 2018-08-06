@@ -74,7 +74,7 @@ describe('music', () => {
 			should.exist(proxy.allBroadcasts);
 			should.exist(proxy.allCollections);
 			should.exist(proxy.allStations);
-			should.exist(proxy.findBroadcastByStationId);
+			should.exist(proxy.findBroadcastsByStationId);
 			should.exist(proxy.getBroadcast);
 			should.exist(proxy.getCollection);
 			should.exist(proxy.getStation);
@@ -1225,9 +1225,9 @@ describe('music', () => {
 		});
 	});
 
-	describe('#findBroadcastByStationId', () => {
+	describe('#findBroadcastsByStationId', () => {
 		it('should require stationId (promise)', (done) => {
-			music.findBroadcastByStationId()
+			music.findBroadcastsByStationId()
 				.then(() => {
 					return done(new Error('should require stationId'));
 				})
@@ -1241,7 +1241,7 @@ describe('music', () => {
 		});
 
 		it('should require stationId (callback)', (done) => {
-			music.findBroadcastByStationId(function (err, result) {
+			music.findBroadcastsByStationId(function (err, result) {
 				should.exist(err);
 				should.exist(err.message);
 				err.message.should.contain('stationId is required');
@@ -1257,7 +1257,7 @@ describe('music', () => {
 				.get('/v2/stations/test/broadcasts')
 				.reply(200, { total : 0 });
 
-			music.findBroadcastByStationId('test')
+			music.findBroadcastsByStationId('test')
 				.then((result) => {
 					should.exist(result);
 					should.exist(requestInfo);
@@ -1273,7 +1273,7 @@ describe('music', () => {
 				.get('/v2/stations/test/broadcasts')
 				.reply(200, { total : 0 });
 
-			music.findBroadcastByStationId('test', function (err, result) {
+			music.findBroadcastsByStationId('test', function (err, result) {
 				should.not.exist(err);
 				should.exist(result);
 				should.exist(requestInfo);

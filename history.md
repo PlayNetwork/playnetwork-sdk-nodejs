@@ -1,6 +1,6 @@
 # v1.3.9 - 2018/08/01
 
-* Added support for Music/findBroadcastByStationId route
+* Added support for Music/findBroadcastsByStationId route
 
 # v1.3.8 - 2018/07/06
 

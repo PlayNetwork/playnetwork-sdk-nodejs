@@ -1,3 +1,7 @@
+# v1.3.10 - 2018/08/07
+
+* Added getProfile and updateProfile commands to provision proxy
+
 # v1.3.7 - 2018/03/28
 
 * Added command to check if original asset exists in the Asset API

@@ -1,3 +1,11 @@
+# v1.3.9 - 2018/08/01
+
+* Added support for Music/findBroadcastsByStationId route
+
+# v1.3.8 - 2018/07/06
+
+* Handled exception gracefully when a url doesn't resolve for the player
+
 # v1.3.7 - 2018/03/28
 
 * Added command to check if original asset exists in the Asset API

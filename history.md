@@ -1,3 +1,7 @@
+# v1.3.10 - 2018/08/07
+
+* Added getProfile and updateProfile commands to provision proxy
+
 # v1.3.9 - 2018/08/01
 
 * Added support for Music/findBroadcastsByStationId route

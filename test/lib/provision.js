@@ -552,6 +552,64 @@ describe('provision', () => {
 		});
 	});
 
+	describe('#getProfile', () => {
+		it('should require a profileAlias (promise)', (done) => {
+			provision.getProfile()
+				.then(() => {
+					return done(new Error('should require profileAlias'));
+				})
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('profileAlias is required');
+
+					return done();
+				});
+		});
+
+		it('should require profileAlias (callback)', (done) => {
+			provision.getProfile(function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('profileAlias is required');
+				should.not.exist(result);
+
+				return done();
+			});
+		});
+
+		it('should properly retrieve profile (promise)', (done) => {
+			// intercept outbound request
+			nock('https://provision-api.apps.playnetwork.com')
+				.get('/v2/profiles/test')
+				.reply(200, { total : 0 });
+
+			provision.getProfile('test')
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch((err) => (done(err)));
+		});
+
+		it('should properly retrieve profile (callback)', (done) => {
+			// intercept outbound request
+			nock('https://provision-api.apps.playnetwork.com')
+				.get('/v2/profiles/test')
+				.reply(200, { total : 0 });
+
+			provision.getProfile('test', function (err, result) {
+				should.not.exist(err);
+				should.exist(result);
+				should.exist(requestInfo);
+
+				return done();
+			});
+		});
+	});
+
 	describe('#updateOrder', () => {
 		let mockOrder = {
 			orderId : 'test'
@@ -616,6 +674,126 @@ describe('provision', () => {
 				.reply(200, mockOrder);
 
 			provision.updateOrder(mockOrder, function (err, result) {
+				should.not.exist(err);
+				should.exist(result);
+				should.exist(requestInfo);
+
+				return done();
+			});
+		});
+	});
+
+	describe('#updateProfile', () => {
+		let
+			mockProfileAlias = 'clientId:abc123',
+			mockProfile = {
+				profileId : 'test'
+			};
+
+		it('should require profile details (promise)', (done) => {
+			provision.updateProfile()
+				.then(() => {
+					return done(new Error('should require profile'));
+				})
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('profile is required');
+
+					return done();
+				})
+		});
+
+		it('should require profile details with profileAlias (promise)', (done) => {
+			provision.updateProfile('test')
+				.then(() => {
+					return done(new Error('should require profile'));
+				})
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('profile is required');
+
+					return done();
+				})
+		});
+
+		it('should require profile details (callback)', (done) => {
+			provision.updateProfile(function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('profile is required');
+				should.not.exist(result);
+
+				return done();
+			});
+		});
+
+		it('should require profile details with profileAlias (callback)', (done) => {
+			provision.updateProfile('test', function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('profile is required');
+				should.not.exist(result);
+
+				return done();
+			});
+		});
+
+		it('should properly update profile with profileAlias (promise)', (done) => {
+			// intercept outbound request
+			nock('https://provision-api.apps.playnetwork.com')
+				.put(`/v2/profiles/${mockProfileAlias}`)
+				.reply(200, mockProfile);
+
+			provision.updateProfile(mockProfileAlias, mockProfile)
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch((err) => (done(err)));
+		});
+
+		it('should properly update profile with profileAlias (callback)', (done) => {
+			// intercept outbound request
+			nock('https://provision-api.apps.playnetwork.com')
+				.put(`/v2/profiles/${mockProfileAlias}`)
+				.reply(200, mockProfile);
+
+			provision.updateProfile(mockProfileAlias, mockProfile, function (err, result) {
+				should.not.exist(err);
+				should.exist(result);
+				should.exist(requestInfo);
+
+				return done();
+			});
+		});
+
+		it('should properly update profile without profileAlias (promise)', (done) => {
+			// intercept outbound request
+			nock('https://provision-api.apps.playnetwork.com')
+				.put('/v2/profiles/test')
+				.reply(200, mockProfile);
+
+			provision.updateProfile(mockProfile)
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch((err) => (done(err)));
+		});
+
+		it('should properly update profile without profileAlias (callback)', (done) => {
+			// intercept outbound request
+			nock('https://provision-api.apps.playnetwork.com')
+				.put('/v2/profiles/test')
+				.reply(200, mockProfile);
+
+			provision.updateProfile(mockProfile, function (err, result) {
 				should.not.exist(err);
 				should.exist(result);
 				should.exist(requestInfo);

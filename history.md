@@ -1,3 +1,7 @@
+# v1.3.11 - 2018/08/09
+
+* Add support and distinction between filter null values vs empty string
+
 # v1.3.10 - 2018/08/07
 
 * Added getProfile and updateProfile commands to provision proxy

@@ -1,6 +1,6 @@
 {
   "name": "playnetwork-sdk",
-  "version": "1.3.10",
+  "version": "1.3.11",
   "contributors": [
     {
       "name": "Joshua Thomas",
@@ -29,6 +29,10 @@
     {
       "name": "Deepak Dahal",
       "url": "https://github.com/deepakdahal"
+    },
+    {
+      "name": "Garris Gentzel",
+      "url": "https://github.com/ggentzel"
     }
   ],
   "description": "SDK to make accessing PlayNetwork APIs when writing code in Javascript (Node.js) much easier.",

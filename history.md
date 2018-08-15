@@ -1,3 +1,7 @@
+# v1.3.12 - 2018/08/13
+
+* Added support for Music/updateBroadcast route
+
 # v1.3.11 - 2018/08/09
 
 * Add support and distinction between filter null values vs empty string

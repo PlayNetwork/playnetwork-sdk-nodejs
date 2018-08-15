@@ -80,6 +80,7 @@ describe('music', () => {
 			should.exist(proxy.getStation);
 			should.exist(proxy.mixCollection);
 			should.exist(proxy.settings);
+			should.exist(proxy.updateBroadcast);
 			proxy.settings().should.not.be.empty;
 			proxy.settings().agent.should.equal(options.agent);
 			proxy.settings().host.should.equal(options.host);
@@ -1728,6 +1729,82 @@ describe('music', () => {
 				.reply(200, { total : 0 });
 
 			music.mixCollection('test', function (err, result) {
+				should.not.exist(err);
+				should.exist(result);
+				should.exist(requestInfo);
+
+				return done();
+			});
+		});
+	});
+
+	describe('#updateBroadcast', () => {
+		let mockBroadcast = {
+			stationId : 'test'
+		};
+
+		it('should require stationId (promise)', (done) => {
+			music.updateBroadcast()
+				.then(() => {
+					return done(new Error('should require stationId'));
+				})
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('stationId is required');
+
+					return done();
+				})
+		});
+
+		it('should require broadcast (promise)', (done) => {
+			music.updateBroadcast('test')
+				.then(() => {
+					return done(new Error('should require broadcast'));
+				})
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('broadcast is required');
+
+					return done();
+				})
+		});
+
+		it('should require stationId (callback)', (done) => {
+			music.updateBroadcast(function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('stationId is required');
+				should.not.exist(result);
+
+				return done();
+			});
+		});
+
+		it('should properly update broadcast (promise)', (done) => {
+			// intercept outbound request
+			nock('https://curio-music-api.apps.playnetwork.com')
+				.put('/v2/stations/test/broadcasts')
+				.reply(202, mockBroadcast);
+
+			music.updateBroadcast('test', mockBroadcast)
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch((err) => (done(err)));
+		});
+
+		it('should properly update broadcast (callback)', (done) => {
+			// intercept outbound request
+			nock('https://curio-music-api.apps.playnetwork.com')
+				.put('/v2/stations/test/broadcasts')
+				.reply(202, mockBroadcast);
+
+			music.updateBroadcast('test', mockBroadcast, function (err, result) {
 				should.not.exist(err);
 				should.exist(result);
 				should.exist(requestInfo);

@@ -1,3 +1,7 @@
+# v1.3.13 - 2018/08/20
+
+* Fixed bug in provision.createProfile command
+
 # v1.3.12 - 2018/08/13
 
 * Added support for Music/updateBroadcast route

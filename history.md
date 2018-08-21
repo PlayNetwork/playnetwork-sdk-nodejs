@@ -1,3 +1,7 @@
+# v1.3.14 - 2018/08/21
+
+* Wired up v3 collection-api and track-api
+
 # v1.3.13 - 2018/08/20
 
 * Fixed bug in provision.createProfile command

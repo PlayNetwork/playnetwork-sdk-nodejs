@@ -145,7 +145,7 @@ describe('asset', function () {
 
 		it('should default options.method (callback)', function (done) {
 			// intercept outbound request
-			nock('https://develop-assetapi.scaffold-workers-ext-main-us.d.cld.octavelive.com')
+			nock('https://master-assetapi.scaffold-workers-ext-main-us.m.cld.octavelive.com')
 				.get('/v0/test')
 				.reply(200, { test : true });
 
@@ -160,7 +160,7 @@ describe('asset', function () {
 
 		it('should default invalid options.method (promise)', function (done) {
 			// intercept outbound request
-			nock('https://develop-assetapi.scaffold-workers-ext-main-us.d.cld.octavelive.com')
+			nock('https://master-assetapi.scaffold-workers-ext-main-us.m.cld.octavelive.com')
 				.get('/v0/test')
 				.reply(200, { test : true });
 
@@ -177,7 +177,7 @@ describe('asset', function () {
 
 		it('should lowercase options.method (promise)', function (done) {
 			// intercept outbound request
-			nock('https://develop-assetapi.scaffold-workers-ext-main-us.d.cld.octavelive.com')
+			nock('https://master-assetapi.scaffold-workers-ext-main-us.m.cld.octavelive.com')
 				.put('/v0/test')
 				.reply(202, { test : true });
 
@@ -196,7 +196,7 @@ describe('asset', function () {
 			let data = { test : true };
 
 			// intercept outbound request
-			nock('https://develop-assetapi.scaffold-workers-ext-main-us.d.cld.octavelive.com')
+			nock('https://master-assetapi.scaffold-workers-ext-main-us.m.cld.octavelive.com')
 				.post('/v0/test', data)
 				.reply(201, data);
 
@@ -362,7 +362,7 @@ describe('asset', function () {
 	describe('#version', () => {
 		it('should properly return version (promise)', (done) => {
 			// intercept outbound request
-			nock('https://develop-assetapi.scaffold-workers-ext-main-us.d.cld.octavelive.com')
+			nock('https://master-assetapi.scaffold-workers-ext-main-us.m.cld.octavelive.com')
 				.get(/\/v[0-9]{1}\/version/i)
 				.reply(200, { version : 'test' });
 
@@ -378,7 +378,7 @@ describe('asset', function () {
 
 		it('should properly return version (callback)', (done) => {
 			// intercept outbound request
-			nock('https://develop-assetapi.scaffold-workers-ext-main-us.d.cld.octavelive.com')
+			nock('https://master-assetapi.scaffold-workers-ext-main-us.m.cld.octavelive.com')
 				.get(/\/v[0-9]{1}\/version/i)
 				.reply(200, { version : 'test' });
 

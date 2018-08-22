@@ -5,11 +5,11 @@ var
 	co = require('co'),
 	nock = require('nock'),
 
-	CollectionProxy = require('../../lib/collection'),
+	TrackProxy = require('../../lib/track'),
 
 	should = chai.should();
 
-describe('collection', () => {
+describe('track', () => {
 	'use strict';
 
 	let
@@ -21,7 +21,7 @@ describe('collection', () => {
 				})
 			})
 		},
-		collection,
+		track,
 		requestInfo,
 		responseInfo;
 
@@ -31,20 +31,20 @@ describe('collection', () => {
 	});
 
 	beforeEach(() => {
-		collection = new CollectionProxy(null, ensureAuthHeaders);
+		track = new TrackProxy(null, ensureAuthHeaders);
 
 		// capture request and response info
-		collection.on('request', (info) => (requestInfo = info));
-		collection.on('response', (info) => (responseInfo = info));
+		track.on('request', (info) => (requestInfo = info));
+		track.on('response', (info) => (responseInfo = info));
 	});
 
 	describe('ctor', () => {
 		it('should properly construct', () => {
 			let
-				proxy1 = new CollectionProxy({
+				proxy1 = new TrackProxy({
 					host : 'one'
 				}),
-				proxy2 = new CollectionProxy({
+				proxy2 = new TrackProxy({
 					host : 'two'
 				});
 
@@ -52,7 +52,7 @@ describe('collection', () => {
 		});
 
 		it('should be constructable without options...', () => {
-			let proxy = new CollectionProxy();
+			let proxy = new TrackProxy();
 			proxy.settings().should.not.be.empty;
 			should.exist(proxy.settings().host);
 			should.exist(proxy.settings().secure);
@@ -68,13 +68,12 @@ describe('collection', () => {
 					rejectUnauthorized : true,
 					secure : true
 				},
-				proxy = new CollectionProxy(options);
+				proxy = new TrackProxy(options);
 
-			should.exist(proxy.allCollections);
-			should.exist(proxy.allCollectionTracks);
-			should.exist(proxy.getCollection);
+			should.exist(proxy.allTracks);
+			should.exist(proxy.getTrack);
+			should.exist(proxy.getTracks);
 			should.exist(proxy.settings);
-			should.exist(proxy.upsertCollections);
 			proxy.settings().should.not.be.empty;
 			proxy.settings().agent.should.equal(options.agent);
 			proxy.settings().host.should.equal(options.host);
@@ -84,14 +83,14 @@ describe('collection', () => {
 		});
 	});
 
-	describe('#allCollections', () => {
-		it('should properly retrieve all collections (promise)', (done) => {
+	describe('#allTracks', () => {
+		it('should properly retrieve all tracks (promise)', (done) => {
 			// intercept outbound request
-			nock('https://master-collectionapi.scaffold-workers-ext-main-us.m.cld.octavelive.com')
-				.get('/v3/collections')
+			nock('https://master-trackapi.scaffold-workers-ext-main-us.m.cld.octavelive.com')
+				.get('/v3/tracks')
 				.reply(200, { total : 0 });
 
-			collection.allCollections()
+			track.allTracks()
 				.then((result) => {
 					should.exist(result);
 					should.exist(requestInfo);
@@ -101,27 +100,27 @@ describe('collection', () => {
 				.catch((err) => (done(err)));
 		});
 
-		it('should properly retrieve all collections (callback)', (done) => {
+		it('should properly retrieve all tracks (callback)', (done) => {
 			// intercept outbound request
-			nock('https://master-collectionapi.scaffold-workers-ext-main-us.m.cld.octavelive.com')
-				.get('/v3/collections')
+			nock('https://master-trackapi.scaffold-workers-ext-main-us.m.cld.octavelive.com')
+				.get('/v3/tracks')
 				.reply(200, { total : 0 });
 
-			collection.allCollections((err, result) => {
+			track.allTracks((err, result) => {
 				should.not.exist(err);
 				should.exist(requestInfo);
 
 				return done();
-			});
+			});	
 		});
 
 		it('should properly support query filters', (done) => {
 			// intercept outbound request
-			nock('https://master-collectionapi.scaffold-workers-ext-main-us.m.cld.octavelive.com')
-				.get(/\/v3\/collections[.]*/)
+			nock('https://master-trackapi.scaffold-workers-ext-main-us.m.cld.octavelive.com')
+				.get(/\/v3\/tracks[.]*/)
 				.reply(200, { total : 0 });
 
-			collection.allCollections({
+			track.allTracks({
 				filters : {
 					mandatory : {
 						exact : {
@@ -141,53 +140,10 @@ describe('collection', () => {
 		});
 	});
 
-	describe('#allCollectionTracks', () => {
-		it('should require collectionId', (done) => {
-			collection.allCollectionTracks((err, result) => {
-				should.not.exist(result);
-				should.exist(err);
-				should.exist(err.message);
-				err.message.should.contain('collectionId is required');
-
-				return done();
-			});
-		});
-
-		it('should properly retrieve all collection tracks (promise)', (done) => {
-			// intercept outbound request
-			nock('https://master-collectionapi.scaffold-workers-ext-main-us.m.cld.octavelive.com')
-				.get('/v3/collections/test/tracks')
-				.reply(200, { total : 0 });
-
-			collection.allCollectionTracks('test')
-				.then((result) => {
-					should.exist(result);
-					should.exist(requestInfo);
-
-					return done();
-				})
-				.catch((err) => (done(err)));
-		});
-
-		it('should properly retrieve all collection tracks (callback)', (done) => {
-			// intercept outbound request
-			nock('https://master-collectionapi.scaffold-workers-ext-main-us.m.cld.octavelive.com')
-				.get('/v3/collections/test/tracks')
-				.reply(200, { total : 0 });
-
-			collection.allCollectionTracks('test', (err, result) => {
-				should.not.exist(err);
-				should.exist(requestInfo);
-
-				return done();
-			});
-		});
-	});
-
 	describe('#call', () => {
 		beforeEach(() => {
 			// override ensureAuthHeaders
-			collection.ensureAuthHeaders = () => {
+			track.ensureAuthHeaders = () => {
 				return new Promise((resolve, reject) => {
 					return resolve({
 						'x-client-id': 'test',
@@ -198,7 +154,7 @@ describe('collection', () => {
 		});
 
 		it('should require options (callback)', (done) => {
-			collection.call((err, result) => {
+			track.call((err, result) => {
 				should.exist(err);
 				should.exist(err.message);
 				err.message.should.equal('options are required');
@@ -209,7 +165,7 @@ describe('collection', () => {
 		});
 
 		it('should require options (promise)', (done) => {
-			collection
+			track
 				.call()
 				.then(() => done(new Error('should require options')))
 				.catch((err) => {
@@ -222,7 +178,7 @@ describe('collection', () => {
 		});
 
 		it('should require options.pathname (callback)', (done) => {
-			collection.call({ method : 'get' }, (err, result) => {
+			track.call({ method : 'get' }, (err, result) => {
 				should.exist(err);
 				should.exist(err.message);
 				err.message.should.equal('options.pathname is required');
@@ -233,7 +189,7 @@ describe('collection', () => {
 		});
 
 		it('should require options.pathname (promise)', (done) => {
-			collection
+			track
 				.call({ method : 'get' })
 				.then(() => done(new Error('should require options.pathname')))
 				.catch((err) => {
@@ -247,11 +203,11 @@ describe('collection', () => {
 
 		it('should default options.method (callback)', (done) => {
 			// intercept outbound request
-			nock('https://master-collectionapi.scaffold-workers-ext-main-us.m.cld.octavelive.com')
+			nock('https://master-trackapi.scaffold-workers-ext-main-us.m.cld.octavelive.com')
 				.get('/v3/test')
 				.reply(200, { test : true });
 
-			collection.call({ pathname : '/v3/test' }, (err, result) => {
+			track.call({ pathname : '/v3/test' }, (err, result) => {
 				should.not.exist(err);
 				should.exist(result);
 				should.exist(requestInfo);
@@ -262,11 +218,11 @@ describe('collection', () => {
 
 		it('should default invalid options.method (promise)', (done) => {
 			// intercept outbound request
-			nock('https://master-collectionapi.scaffold-workers-ext-main-us.m.cld.octavelive.com')
+			nock('https://master-trackapi.scaffold-workers-ext-main-us.m.cld.octavelive.com')
 				.get('/v3/test')
 				.reply(200, { test : true });
 
-			collection
+			track
 				.call({ pathname : '/v3/test', method : { invalid : true } })
 				.then((result) => {
 					should.exist(result);
@@ -279,11 +235,11 @@ describe('collection', () => {
 
 		it('should lowercase options.method (promise)', (done) => {
 			// intercept outbound request
-			nock('https://master-collectionapi.scaffold-workers-ext-main-us.m.cld.octavelive.com')
+			nock('https://master-trackapi.scaffold-workers-ext-main-us.m.cld.octavelive.com')
 				.put('/v3/test')
 				.reply(202, { test : true });
 
-			collection
+			track
 				.call({ pathname : '/v3/test', method : 'PUT' })
 				.then((result) => {
 					should.exist(result);
@@ -298,11 +254,11 @@ describe('collection', () => {
 			let data = { test : true };
 
 			// intercept outbound request
-			nock('https://master-collectionapi.scaffold-workers-ext-main-us.m.cld.octavelive.com')
+			nock('https://master-trackapi.scaffold-workers-ext-main-us.m.cld.octavelive.com')
 				.post('/v3/test', data)
 				.reply(201, data);
 
-			collection
+			track
 				.call({ pathname : '/v3/test', method : 'POST', data : data })
 				.then((result) => {
 					should.exist(result);
@@ -314,39 +270,39 @@ describe('collection', () => {
 		});
 	});
 
-	describe('#getCollection', () => {
-		it('should require collectionId (promise)', (done) => {
-			collection.getCollection()
+	describe('#getTrack', () => {
+		it('should require trackAlias (promise)', (done) => {
+			track.getTrack()
 				.then(() => {
-					return done(new Error('should require collectionId'));
+					return done(new Error('should require trackAlias'));
 				})
 				.catch((err) => {
 					should.exist(err);
 					should.exist(err.message);
-					err.message.should.contain('collectionId is required');
+					err.message.should.contain('trackAlias is required');
 
 					return done();
 				});
 		});
 
-		it('should require collectionId (callback)', (done) => {
-			collection.getCollection((err, result) => {
+		it('should require trackAlias (callback)', (done) => {
+			track.getTrack((err, result) => {
 				should.exist(err);
 				should.exist(err.message);
-				err.message.should.contain('collectionId is required');
+				err.message.should.contain('trackAlias is required');
 				should.not.exist(result);
 
 				return done();
 			});
 		});
 
-		it('should properly retrieve collection (promise)', (done) => {
+		it('should properly retrieve track (promise)', (done) => {
 			// intercept outbound request
-			nock('https://master-collectionapi.scaffold-workers-ext-main-us.m.cld.octavelive.com')
-				.get('/v3/collections/test')
+			nock('https://master-trackapi.scaffold-workers-ext-main-us.m.cld.octavelive.com')
+				.get('/v3/tracks/test')
 				.reply(200, { total : 0 });
 
-			collection.getCollection('test')
+			track.getTrack('test')
 				.then((result) => {
 					should.exist(result);
 					should.exist(requestInfo);
@@ -356,13 +312,13 @@ describe('collection', () => {
 				.catch((err) => (done(err)));
 		});
 
-		it('should properly retrieve collection (callback)', (done) => {
+		it('should properly retrieve track (callback)', (done) => {
 			// intercept outbound request
-			nock('https://master-collectionapi.scaffold-workers-ext-main-us.m.cld.octavelive.com')
-				.get('/v3/collections/test')
+			nock('https://master-trackapi.scaffold-workers-ext-main-us.m.cld.octavelive.com')
+				.get('/v3/tracks/test')
 				.reply(200, { total : 0 });
 
-			collection.getCollection('test', (err, result) => {
+			track.getTrack('test', (err, result) => {
 				should.not.exist(err);
 				should.exist(result);
 				should.exist(requestInfo);
@@ -372,86 +328,59 @@ describe('collection', () => {
 		});
 	});
 
-	describe('#upsertCollections', () => {
-		let mockCollection = {
-			collectionId : 'test',
-			title : 'testTitle'
-		};
+	describe('#getTracks', () => {
+		let mockTracks = ['trackId:test', 'isrc:ABC'];
 
-		it('should require collection details (promise)', (done) => {
-			collection.upsertCollections()
-				.then(() => {
-					return done(new Error('should require collections'));
-				})
-				.catch((err) => {
-					should.exist(err);
-					should.exist(err.message);
-					err.message.should.contain('collections are required');
-
-					return done();
-				})
-		});
-
-		it('should require collection details (callback)', (done) => {
-			collection.upsertCollections({}, (err, result) => {
+		it('should require tracks (callback)', (done) => {
+			track.getTracks((err, result) => {
+				should.not.exist(result);
 				should.exist(err);
 				should.exist(err.message);
-				err.message.should.contain('collections are required');
-				should.not.exist(result);
+				err.message.should.contain('tracks are required');
 
 				return done();
 			});
 		});
 
-		it('should require collectionId', (done) => {
-			collection.upsertCollections({ other : true }, (err, result) => {
-				should.not.exist(result);
-				should.exist(err);
-				should.exist(err.message);
-				err.message.should.contain('collectionId is required');
-
-				return done();
-			});
-		});
-
-		it('should validate all collections in an array', (done) => {
-			collection.upsertCollections([mockCollection, { other : true }], (err, result) => {
-				should.not.exist(result);
-				should.exist(err);
-				should.exist(err.message);
-				err.message.should.contain('collection 1 of 2');
-				err.message.should.contain('collectionId is required');
-
-				return done();
-			});
-		});
-
-		it('should properly upsert collection (promise)', (done) => {
+		it('should convert one track to array (promise)', (done) => {
 			// intercept outbound request
-			nock('https://master-collectionapi.scaffold-workers-ext-main-us.m.cld.octavelive.com')
-				.put('/v3/collections')
-				.reply(200, mockCollection);
+			nock('https://master-trackapi.scaffold-workers-ext-main-us.m.cld.octavelive.com')
+				.post('/v3/tracks/aliases')
+				.reply(200, mockTracks);
 
-			collection.upsertCollections({
-					title : 'testing',
-					collectionId : 'testId'
-				})
+			track.getTracks(mockTracks[0])
 				.then((result) => {
 					should.exist(result);
 					should.exist(requestInfo);
 
 					return done();
 				})
-				.catch(done);
+				.catch((err) => (done(err)));
 		});
 
-		it('should properly upsert collection (callback)', (done) => {
+		it('should properly get multiple tracks (promise)', (done) => {
 			// intercept outbound request
-			nock('https://master-collectionapi.scaffold-workers-ext-main-us.m.cld.octavelive.com')
-				.put('/v3/collections')
-				.reply(200, mockCollection);
+			nock('https://master-trackapi.scaffold-workers-ext-main-us.m.cld.octavelive.com')
+				.post('/v3/tracks/aliases')
+				.reply(200, mockTracks);
 
-			collection.upsertCollections(mockCollection, (err, result) => {
+			track.getTracks(mockTracks)
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch((err) => (done(err)));
+		});
+
+		it('should properly get multiple tracks (callback)', (done) => {
+			// intercept outbound request
+			nock('https://master-trackapi.scaffold-workers-ext-main-us.m.cld.octavelive.com')
+				.post('/v3/tracks/aliases')
+				.reply(200, mockTracks);
+
+			track.getTracks(mockTracks, (err, result) => {
 				should.not.exist(err);
 				should.exist(result);
 				should.exist(requestInfo);

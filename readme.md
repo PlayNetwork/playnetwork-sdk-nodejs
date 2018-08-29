@@ -22,24 +22,12 @@ npm install playnetwork-sdk
 
 ### Music
 
-This module can be used to interact with the [CURIOMusic API](https://curio-music-api.apps.playnetwork.com/v2/docs) to retrieve content programming and track meta-data.
-
-#### Custom Playlists
-
-* [addPlaylistTracks](#addplaylisttracks)
-* [allPlaylists](#allplaylists)
-* [checkPlaylistTrack](#checkplaylisttrack)
-* [createPlaylist](#createplaylist)
-* [deletePlaylistTrack](#deleteplaylisttrack)
-* [getPlaylist](#getplaylist)
-* [deletePlaylist](#deleteplaylist)
-* [updatePlaylist](#updateplaylist)
+This module can be used to interact with the [Collection API](https://master-collectionapi.scaffold-workers-ext-main-us.m.cld.octavelive.com/v3/docs), [Track API](https://master-trackapi.scaffold-workers-ext-main-us.m.cld.octavelive.com/v3/docs), and [Station API]() to retrieve content programming and track meta-data.
 
 #### Collections
 
 * [allCollections](#allcollections)
 * [getCollection](#getcollection)
-* [mixCollection](#mixcollection)
 
 #### Stations
 
@@ -56,7 +44,6 @@ This module can be used to interact with the [CURIOMusic API](https://curio-musi
 #### Tracks
 
 * [allCollectionTracks](#allcollectiontracks)
-* [allPlaylistTracks](#allplaylisttracks)
 * [allStationTracks](#allstationtracks)
 * [allTracks](#alltracks)
 * [getTrack](#gettrack)
@@ -205,8 +192,15 @@ The supported options are as follows:
   * `secure` - defaults to `true`, defines when the API uses TLS
   * `cacheTokens`
 * `music`
-  * `host` - the hostname of the music API
-  * `secure` - defaults to `true`, defines when the API uses TLS
+  * `collection`
+    * `host` - the hostname of the collection API
+    * `secure` - defaults to `true`, defines when the API uses TLS
+  * `station`
+    * `host` - the hostname of the station API
+    * `secure` - defaults to `true`, defines when the API uses TLS
+  * `track`
+    * `host` - the hostname of the track API
+    * `secure` - defaults to `true`, defines when the API uses TLS
 * `playback`
   * `host` - the hostname of the playback API
   * `secure` - defaults to `true`, defines when the API uses TLS
@@ -233,7 +227,15 @@ var
       host : 'sandbox-key-api.apps.playnetwork.com'
     },
     music : {
-      host : 'sandbox-curio-music-api.apps.playnetwork.com'
+      collection : {
+        host : 'sandbox-collection-api.apps.playnetwork.com'
+      },
+      station : {
+        host : 'sandbox-station-api.apps.playnetwork.com'
+      },
+      track : {
+        host : 'sandbox-track-api.apps.playnetwork.com'
+      }
     },
     playback : {
       host : 'sandbox-playback-api.apps.playnetwork.com'
@@ -314,43 +316,6 @@ playnetwork -a content -c getLegacyAssetStream <legacy.trackToken> > ~/Downloads
 ### Music Module
 
 The music module is designed to simplify interaction with the [PlayNetwork CURIOMusic API](https://curio-music-api.apps.playnetwork.com/v2/docs). This module supports the following methods:
-
-#### #addPlaylistTracks
-
-This method can be used to add tracks to an existing custom playlist.
-
-**Usage:** `client.music.addPlaylistTracks(playlistId, tracks, callback)`
-
-* `playlistId` - _(required)_ - defines the playlist to which tracks should be added
-* `tracks` - _(required)_ - an array of track objects to add to the playlist
-  * _NOTE:_ assetId or legacy.trackToken must be supplied
-* `callback` - _(optional)_ - a function callback that accepts two arguments
-  * `err` - populated with details in the event of an error
-  * `result` - result set details
-
-```javascript
-var
-  playlistId = '<PLAYLIST_ID>',
-  tracks = [{
-    assetId : '<ASSET_ID>'
-  }, {
-    legacy : {
-      trackToken : 12345
-    }
-  }];
-
-client
-  .music
-  .addPlaylistTracks(playlistId, tracks)
-  .then((result) => {
-    console.log('successfully added tracks to playlist %s', playlistId);
-  })
-  .catch((err) => {
-    console.error(err);
-  });
-```
-
-[back to top](#usage)
 
 #### #allBroadcasts
 
@@ -457,79 +422,6 @@ client
       'found %d tracks from collection %s',
       result.total,
       collectionId);
-  }).catch((err) => {
-    console.error(err);
-  });
-```
-
-[back to top](#usage)
-
-#### #allPlaylists
-
-This method can be used to retrieve a paginated result set of custom playlists from the API. The playlists returned are constrained to those created by the clientId specified in the `#configure` method.
-
-**Usage:** `client.music.allPlaylists(options, callback)`
-
-* `options` - _(optional)_ - can be used to supply additional filters and sorting instructions
-  * `start` - the index at which to start selection of items
-  * `count` - the total number of items to retrieve (maximum value is `100`)
-  * `filters` - additional field projections along with mandatory and optional filters (see [API documentation](https://curio-music-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
-  * `sort` - additional sorting parameters for result (see [API documentation](https://curio-music-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
-* `callback` - _(optional)_ - a function callback that accepts two arguments
-  * `err` - populated with details in the event of an error
-  * `result` - result set details
-
-```javascript
-client
-  .music
-  .allPlaylists({
-    start : 0,
-    count : 100,
-    filters : {
-      mandatory : {
-        exact : {
-          'legacy.playlistToken' : 4550361
-        }
-      }
-    }
-  }).then((result) => {
-    console.log('found %d playlists', result.total);
-  }).catch((err) => {
-    console.error(err);
-  });
-```
-
-[back to top](#usage)
-
-#### #allPlaylistTracks
-
-This method can be used to retrieve a paginated set of tracks from a custom playlist in the API.
-
-**Usage:** `client.music.allPlaylistTracks(playlistId, options, callback)`
-
-* `playlistId` - _(required)_ - defines the playlist for which tracks should be retrieved
-* `options` - _(optional)_ - can be used to supply additional filters and sorting instructions
-  * `start` - the index at which to start selection of items
-  * `count` - the total number of items to retrieve (maximum value is `100`)
-  * `filters` - additional field projections along with mandatory and optional filters (see [API documentation](https://curio-music-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
-  * `sort` - additional sorting parameters for result (see [API documentation](https://curio-music-api.apps.playnetwork.com/v2/docs?clientId=c96d584b909240ba9cacf1877c0bba09#filtering-and-sorting) for more details)
-* `callback` - _(optional)_ - a function callback that accepts two arguments
-  * `err` - populated with details in the event of an error
-  * `result` - result set details
-
-```javascript
-var playlistId = '<PLAYLIST_ID>';
-
-client
-  .music
-  .allPlaylistTracks(playlistId, {
-    start : 0,
-    count : 100
-  }).then((result) => {
-    console.log(
-      'found %d tracks from playlist %s',
-      result.total,
-      playlistId);
   }).catch((err) => {
     console.error(err);
   });
@@ -644,44 +536,6 @@ client
 
 [back to top](#usage)
 
-#### #checkPlaylistTrack
-
-This method can be used to verify if a track exists within a station. Because a track can be added to a custom playlist multiple times, this method may be handy for understanding whether track is already within the custom playlist prior to adding it again.
-
-**Usage:** `client.music.checkPlaylistTrack(playlistId, trackAlias, callback)`
-
-* `playlistId` - _(required)_ - defines the playlist
-* `trackAlias` - _(required)_ - defines the track to verify
-* `callback` - _(optional)_ - a function callback that accepts two arguments
-  * `err` - populated with details in the event of an error
-  * exists - a boolean (`true` or `false`) representing whether the track exists within the requested playlist
-
-```javascript
-var
-  playlistId = '<PLAYLIST_ID>',
-  trackAlias = ['tracktoken', 12345].join(':');
-
-client
-  .music
-  .checkPlaylistTrack(playlistId, trackAlias).then((exists) => {
-    if (exists) {
-      console.log(
-        'track %s exists in playlist %s',
-        trackAlias,
-        playlistId);
-    } else {
-      console.log(
-        'track %s does not exist in playlist %s',
-        trackAlias,
-        playlistId);
-    }
-  }).catch((err) => {
-    console.error(err);
-  });
-```
-
-[back to top](#usage)
-
 #### #createBroadcast
 
 This method can be used to create a new broadcast for an existing station.
@@ -714,39 +568,6 @@ client
 
 [back to top](#usage)
 
-#### #createPlaylist
-
-This method can be used to create a new custom playlist.
-
-**Usage:** `client.music.createPlaylist(playlist, callback)`
-
-* `playlist` - _(required)_ - defines the details of the playlist
-  * `title` - _(required)_ - the name of the custom playlist
-  * `tracks` - _(optional)_ - the tracks that should be added to the playlist at the time it is created
-* `callback` - _(optional)_ - a function callback that accepts two arguments
-  * `err` - populated with details in the event of an error
-  * `result` - the response from the API
-
-```javascript
-var info = {
-  title : 'Vorster\'s Favorite Hits'
-};
-
-client
-  .music
-  .createPlaylist(info)
-  .then((playlist) => {
-    console.log(
-      'successfully created playlist with id %s',
-      playlist.playlistId);
-  })
-  .catch((err) => {
-    console.error(err);
-  });
-```
-
-[back to top](#usage)
-
 #### #deleteBroadcast
 
 This method can be used to delete an existing broadcast schedule from within a station.
@@ -770,66 +591,6 @@ client
     console.log(
       'successfully deleted broadcast with id %s',
       broadcastId);
-  })
-  .catch((err) => {
-    console.error(err);
-  });
-```
-
-[back to top](#usage)
-
-#### #deletePlaylist
-
-This method can be used to delete an existing custom playlist.
-
-**Usage:** `client.music.deletePlaylist(playlistId, callback)`
-
-* `playlistId` - _(required)_ - defines the playlist to delete
-* `callback` - _(optional)_ - a function callback that accepts a single argument
-  * `err` - populated with details in the event of an error
-
-```javascript
-var playlistId = '<PLAYLIST_ID>';
-
-client
-  .music
-  .deletePlaylist(playlistId)
-  .then((playlist) => {
-    console.log(
-      'successfully deleted playlist with id %s',
-      playlistId);
-  })
-  .catch((err) => {
-    console.error(err);
-  });
-```
-
-[back to top](#usage)
-
-#### #deletePlaylistTrack
-
-This method can be used to remove an existing track from a custom playlist.
-
-**Usage:** `client.music.deletePlaylistTrack(playlistId, trackAlias, callback)`
-
-* `playlistId` - _(required)_ - defines the playlist from which the track should be removed
-* `trackAlias` - _(required)_ - defines the track to remove
-* `callback` - _(optional)_ - a function callback that accepts a single argument
-  * `err` - populated with details in the event of an error
-
-```javascript
-var
-  playlistId = '<PLAYLIST_ID>',
-  trackAlias = 'tracktoken:1234';
-
-client
-  .music
-  .deletePlaylistTrack(playlistId, trackAlias)
-  .then((playlist) => {
-    console.log(
-      'successfully deleted track %s from playlist with id %s',
-      trackAlias,
-      playlistId);
   })
   .catch((err) => {
     console.error(err);
@@ -891,35 +652,6 @@ client
     console.log(
       'successfully retrieved collection %s',
       collection.collectionId);
-  })
-  .catch((err) => {
-    console.error(err);
-  });
-```
-
-[back to top](#usage)
-
-#### #getPlaylist
-
-To retrieve a specific custom playlist by identifier, use this method.
-
-**Usage:** `client.music.getPlaylist(playlistId, callback)`
-
-* `playlistId` - _(required)_ - defines the custom playlist that should be retrieved
-* `callback` - _(optional)_ - a function callback that accepts a single argument
-  * `err` - populated with details in the event of an error
-  * `playlist` - the playlist
-
-```javascript
-var playlistId = '<PLAYLIST_ID>';
-
-client
-  .music
-  .getPlaylist(playlistId)
-  .then((customPlaylist) => {
-    console.log(
-      'successfully retrieved custom playlist %s',
-      customPlaylist.collectionId);
   })
   .catch((err) => {
     console.error(err);
@@ -1016,78 +748,6 @@ client
     console.log(
       'successfully retrieved %d tracks',
       tracks.length);
-  })
-  .catch((err) => {
-    console.error(err);
-  });
-```
-
-[back to top](#usage)
-
-#### #mixCollection
-
-This method allows for the lookup of multiple tracks by a specific alias. This specific functionality comes in handy when attempting to perform a bulk lookup against the CURIOMusic API.
-
-**Usage:** `client.music.getTracks(aliasList, callback)`
-
-* `collection` - _(required)_ - defines the collection from which the mix should be created
-* `options` - _(optional)_ - defines the characteristics of the mix
-  * `artistSeparation` - _(optional)_ - the number of songs to play before repeating an artist (defaults to 5)
-  * `beginDate` - _(optional)_ - the date and time of when to start the mix (defaults to the current date and time)
-  * `duration` - _(optional)_ - the length, in minutes, that the mix should be generated for (defaults to 1440 which is 24 hours)
-  * `randomMix` - _(optional)_ - can be `true` or `false` - when true, tracks are pulled randomly from within the collection (defaults to true)
-  * `titleSeparation` - _(optional)_ - the number of songs to play before repeating a title (defaults to 5)
-* `callback` - _(optional)_ - a function callback that accepts a single argument
-  * `err` - populated with details in the event of an error
-  * `mix` - the mixed queue of tracks from the collection
-    * `options` - details regarding how the mix was created
-    * `queue` - the mixed list of tracks from the collection
-
-```javascript
-var collectionId = '<COLLECTION_ID>';
-
-client
-  .music
-  .mixCollection(collectionId)
-  .then((mix) => {
-    console.log(
-      'successfully created mix with %d tracks',
-      mix.queue.length);
-  })
-  .catch((err) => {
-    console.error(err);
-  });
-```
-
-[back to top](#usage)
-
-#### #updatePlaylist
-
-This method can be used to update an existing custom playlist.
-
-**Usage:** `client.music.updatePlaylist(playlist, callback)`
-
-* `playlist` - _(required)_ - defines the details of the playlist
-  * `playlistId` - _(required)_ - the identifier of the playlist
-  * `title` - _(optional)_ - the name of the custom playlist
-  * `tracks` - _(optional)_ - the tracks that should be added to the playlist at the time it is created
-* `callback` - _(optional)_ - a function callback that accepts two arguments
-  * `err` - populated with details in the event of an error
-  * `playlist` - the response from the API
-
-```javascript
-var playlist = {
-  playlistId : '<PLAYLIST_ID',
-  title : 'Vorster\'s Favorite Hits (redux)'
-};
-
-client
-  .music
-  .updatePlaylist(playlist)
-  .then((playlist) => {
-    console.log(
-      'successfully updated playlist with id %s',
-      playlist.playlistId);
   })
   .catch((err) => {
     console.error(err);

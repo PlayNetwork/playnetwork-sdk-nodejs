@@ -696,9 +696,9 @@ This method provides the ability to retrieve a single track by identifier.
 **Usage:** `client.music.getTrack(alias, callback)`
 
 * `alias` - _(required)_ - defines the track that should be retrieved
-  * can be the `assetId` for the track
-  * can be `trackToken:12345` where the `12345` refers to a `legacy.trackToken` value for a track
-  * can be the spotify URI (i.e. `spotify:track:1Ynbmv088`)
+  * can be the `trackId` for the track
+  * can be `isrc:QMRSZ1401150` where the `QMRSZ1401150` refers to the ISRC
+  * can be `appleId:1234`
 * `callback` - _(optional)_ - a function callback that accepts a single argument
   * `err` - populated with details in the event of an error
   * `track` - the track
@@ -728,9 +728,9 @@ This method allows for the lookup of multiple tracks by a specific alias. This s
 **Usage:** `client.music.getTracks(aliasList, callback)`
 
 * `aliasList` - _(required)_ - defines an array of tracks that should be retrieved
-  * can be the `assetId` for the track
-  * can be `trackToken:12345` where the `12345` refers to a `legacy.trackToken` value for a track
-  * can be the spotify URI (i.e. `spotify:track:1Ynbmv088`)
+  * can be the `trackId` for the track
+  * can be the `isrc` (i.e. `isrc:QMRSZ1401150`)
+  * can be the `appleId` (i.e. `appleId:1234`)
 * `callback` - _(optional)_ - a function callback that accepts a single argument
   * `err` - populated with details in the event of an error
   * `tracks` - an array of tracks found

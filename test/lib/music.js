@@ -1028,63 +1028,74 @@ describe('music', () => {
 		});
 	});
 
-	// describe('#getStation', () => {
-	// 	it('should require stationId (promise)', (done) => {
-	// 		music.getStation()
-	// 			.then(() => {
-	// 				return done(new Error('should require stationId'));
-	// 			})
-	// 			.catch((err) => {
-	// 				should.exist(err);
-	// 				should.exist(err.message);
-	// 				err.message.should.contain('stationId is required');
+	describe('#getStation', () => {
+		it('should require stationId (promise)', (done) => {
+			music.getStation()
+				.then(() => {
+					return done(new Error('should require stationId'));
+				})
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('stationId is required');
 
-	// 				return done();
-	// 			})
-	// 	});
+					return done();
+				})
+		});
 
-	// 	it('should require stationId (callback)', (done) => {
-	// 		music.getStation(function (err, result) {
-	// 			should.exist(err);
-	// 			should.exist(err.message);
-	// 			err.message.should.contain('stationId is required');
-	// 			should.not.exist(result);
+		it('should require stationId (callback)', (done) => {
+			music.getStation(function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('stationId is required');
+				should.not.exist(result);
 
-	// 			return done();
-	// 		});
-	// 	});
+				return done();
+			});
+		});
 
-	// 	it('should properly retrieve station (promise)', (done) => {
-	// 		// intercept outbound request
-	// 		nock('https://curio-music-api.apps.playnetwork.com')
-	// 			.get('/v2/stations/test')
-	// 			.reply(200, { total : 0 });
+		it('should work', (done) => {
+			music.getStation('test')
+				.then((result) => {
+					should.exist(result);
 
-	// 		music.getStation('test')
-	// 			.then((result) => {
-	// 				should.exist(result);
-	// 				should.exist(requestInfo);
+					return done();
+				})
+				.catch((err) => (done(err)));
+		});
 
-	// 				return done();
-	// 			})
-	// 			.catch((err) => (done(err)));
-	// 	});
+		/*
+		it('should properly retrieve station (promise)', (done) => {
+			// intercept outbound request
+			nock('https://curio-music-api.apps.playnetwork.com')
+				.get('/v2/stations/test')
+				.reply(200, { total : 0 });
 
-	// 	it('should properly retrieve station (callback)', (done) => {
-	// 		// intercept outbound request
-	// 		nock('https://curio-music-api.apps.playnetwork.com')
-	// 			.get('/v2/stations/test')
-	// 			.reply(200, { total : 0 });
+			music.getStation('test')
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
 
-	// 		music.getStation('test', function (err, result) {
-	// 			should.not.exist(err);
-	// 			should.exist(result);
-	// 			should.exist(requestInfo);
+					return done();
+				})
+				.catch((err) => (done(err)));
+		});
 
-	// 			return done();
-	// 		});
-	// 	});
-	// });
+		it('should properly retrieve station (callback)', (done) => {
+			// intercept outbound request
+			nock('https://curio-music-api.apps.playnetwork.com')
+				.get('/v2/stations/test')
+				.reply(200, { total : 0 });
+
+			music.getStation('test', function (err, result) {
+				should.not.exist(err);
+				should.exist(result);
+				should.exist(requestInfo);
+
+				return done();
+			});
+		});*/
+	});
 
 	describe('#getTrack', () => {
 		it('should require trackAlias (promise)', (done) => {

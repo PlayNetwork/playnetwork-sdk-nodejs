@@ -2,6 +2,10 @@
 
 * Wired up v3 collection-api and track-api to Music
 
+# v1.3.14 - 2018/08/30
+
+* Addressed issue in Trello Ticket 574
+
 # v1.3.13 - 2018/08/20
 
 * Fixed bug in provision.createProfile command

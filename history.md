@@ -1,6 +1,10 @@
+# v1.3.17 - 2018/09/19
+
+* Fixing mock stations to add grouping -- private
+
 # v1.3.15 - 2018/08/21
 
-* Wired up v3 collection-api and track-api to Music
+* Wired up v3 collection-api and track-api to Music -- private
 
 # v1.3.14 - 2018/08/30
 

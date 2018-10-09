@@ -40,6 +40,7 @@ This module can be used to interact with the [Collection API](https://master-col
 * [createBroadcast](#createbroadcast)
 * [deleteBroadcast](#deletebroadcast)
 * [getBroadcast](#getbroadcast)
+* [updateBroadcast](#updateBroadcast)
 
 #### Tracks
 
@@ -748,6 +749,39 @@ client
     console.log(
       'successfully retrieved %d tracks',
       tracks.length);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
+
+[back to top](#usage)
+
+#### #updateBroadcast
+
+This method allows for the lookup of multiple tracks by a specific alias. This specific functionality comes in handy when attempting to perform a bulk lookup against the CURIOMusic API.
+
+**Usage:** `client.music.updateBroadcast(stationId, broadcastId, broadcast, callback)`
+
+* `stationId` - _(required)_ - defines the station of the broadcast to update
+* `broadcastId` - _(required)_ - defines the broadcast to update
+* `broadcast` - _(required)_ - defines the updated broadcast
+* `callback` - _(optional)_ - a function callback that accepts a single argument
+  * `err` - populated with details in the event of an error
+  * `broadcast` - the broadcast result with updates applied
+
+```javascript
+var
+  stationId = '<STATION_ID>',
+  broadcastId = '<BROADCAST_ID>';
+
+client
+  .music
+  .updateBroadcast(stationId, broadcastId)
+  .then((broadcast) => {
+    console.log(
+      'successfully updated broadcast with id %s',
+      broadcast.broadcastId);
   })
   .catch((err) => {
     console.error(err);

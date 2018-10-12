@@ -16,8 +16,8 @@ describe('claim', () => {
 	'use strict';
 
 	let
-        claim,
-        ensureAuthHeaders = function () {
+		claim,
+		ensureAuthHeaders = function () {
 			return new Promise((resolve, reject) => {
 				return resolve({
 					'x-client-id': 'test',
@@ -26,17 +26,17 @@ describe('claim', () => {
 			})
 		},
 		mockClaims = {
-            'mock-service-id': {
-                'mock-key-1': 'mock-value-1',
-                'mock-key-2': 'mock-value-2',
-                'mock-key-3': 'mock-value-3'
-            },
-            'mock-service-id-2': {
-                'mock-key-1': 'mock-value-1',
-                'mock-key-2': 'mock-value-2',
-                'mock-key-3': 'mock-value-3'
-            }
-        },
+			'mock-service-id': {
+				'mock-key-1': 'mock-value-1',
+				'mock-key-2': 'mock-value-2',
+				'mock-key-3': 'mock-value-3'
+			},
+			'mock-service-id-2': {
+				'mock-key-1': 'mock-value-1',
+				'mock-key-2': 'mock-value-2',
+				'mock-key-3': 'mock-value-3'
+			}
+		},
 		requestInfo,
 		responseInfo;
 
@@ -46,7 +46,7 @@ describe('claim', () => {
 	});
 
 	beforeEach(() => {
-        claim = new ClaimProxy(null, ensureAuthHeaders);
+		claim = new ClaimProxy(null, ensureAuthHeaders);
 
 		// capture request and response info
 		claim.on('request', (info) => (requestInfo = info));
@@ -85,13 +85,13 @@ describe('claim', () => {
 				},
 				proxy = new ClaimProxy(options, ensureAuthHeaders);
 
-            should.exist(proxy.allClaims);
-            should.exist(proxy.allClaimsForClient);
+			should.exist(proxy.allClaims);
+			should.exist(proxy.allClaimsForClient);
 			should.exist(proxy.settings);
 			proxy.settings().should.not.be.empty;
 			proxy.settings().agent.should.equal(options.agent);
-            proxy.settings().host.should.equal(options.host);
-            proxy.settings().maxRetries.should.equal(options.maxRetries);
+			proxy.settings().host.should.equal(options.host);
+			proxy.settings().maxRetries.should.equal(options.maxRetries);
 			proxy.settings().port.should.equal(options.port);
 			proxy.settings().rejectUnauthorized.should.equal(options.rejectUnauthorized);
 			proxy.settings().secure.should.equal(options.secure);
@@ -99,12 +99,12 @@ describe('claim', () => {
 	});
 
 	describe('#allClaims', () => {
-        const mockClientId = 'mock-client-id';
-        const mockServiceId = 'mock-service-id';
+		const mockClientId = 'mock-client-id';
+		const mockServiceId = 'mock-service-id';
 
 		it('should properly retrieve all claims for a given client and service (promise)', (done) => {
-            // intercept outbound request
-            
+			// intercept outbound request
+			
 			nock('https://claim-api.apps.playnetwork.com')
 				.get(`/v0/clients/${mockClientId}/services/${mockServiceId}/claims`)
 				.reply(200, { total : 0 });
@@ -124,8 +124,8 @@ describe('claim', () => {
 		const mockClientId = 'mock-client-id';
 
 		it('should properly retrieve all claims for a given client (promise)', (done) => {
-            // intercept outbound request
-            
+			// intercept outbound request
+			
 			nock('https://claim-api.apps.playnetwork.com')
 				.get(`/v0/clients/${mockClientId}/claims`)
 				.reply(200, { total : 0 });
@@ -139,5 +139,5 @@ describe('claim', () => {
 				})
 				.catch((err) => (done(err)));
 		});
-    });
+	});
 });

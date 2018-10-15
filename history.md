@@ -1,4 +1,4 @@
-# v1.3.17 - 2018/10/15
+# v1.3.19 - 2018/10/15
 
 * Added support for claims retrieval by clientId
 

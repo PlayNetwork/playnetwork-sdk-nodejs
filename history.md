@@ -1,3 +1,7 @@
+# v1.3.17 - 2018/10/15
+
+* Added support for claims retrieval by clientId
+
 # v1.3.13 - 2018/08/20
 
 * Fixed bug in provision.createProfile command

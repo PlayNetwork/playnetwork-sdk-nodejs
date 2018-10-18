@@ -1,3 +1,8 @@
+# v1.4.0 - 2018/10/15
+
+* Http(s).request now uses a keep-alive agent by default
+* "Connection: keep-alive" headers are now sent on every HTTP request by default
+
 # v1.3.19 - 2018/10/15
 
 * Added support for claims retrieval by clientId

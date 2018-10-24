@@ -190,6 +190,91 @@ describe('key', () => {
 		});
 	});
 
+	describe('#createClient', () => {
+		beforeEach(() => {
+			// override ensureAuthHeaders
+			key.ensureAuthHeaders = function () {
+				return new Promise((resolve, reject) => {
+					return resolve({
+						'x-client-id': 'test',
+						'x-authentication-token': 'test'
+					})
+				})
+			};
+		});
+
+		let mockClient = {
+			name : 'test client'
+		};
+
+		it('should require client details (promise)', (done) => {
+			key.createClient()
+				.then(() => {
+					return done(new Error('should require client'));
+				})
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('client is required');
+
+					return done();
+				})
+		});
+
+		it('should require client details (callback)', (done) => {
+			key.createClient(function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('client is required');
+				should.not.exist(result);
+
+				return done();
+			});
+		});
+
+		it('should require name', (done) => {
+			key.createClient({ other : true }, function (err, result) {
+				should.not.exist(result);
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('client name is required');
+
+				return done();
+			});
+		});
+
+		it('should properly create client (promise)', (done) => {
+			// intercept outbound request
+			nock('https://key-api.apps.playnetwork.com')
+				.post('/v0/clients')
+				.reply(200, mockClient);
+
+			key.createClient(mockClient)
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch((err) => (done(err)));
+		});
+
+		it('should properly create client (callback)', (done) => {
+			// intercept outbound request
+			nock('https://key-api.apps.playnetwork.com')
+				.post('/v0/clients')
+				.reply(200, mockClient);
+
+			key.createClient(mockClient, function (err, result) {
+				should.not.exist(err);
+				should.exist(result);
+				should.exist(requestInfo);
+
+				return done();
+			});
+		});
+	});
+
 	describe('#disableClient', () => {
 		beforeEach(() => {
 			// override ensureAuthHeaders

@@ -1,3 +1,7 @@
+# v1.4.1 - 2018/10/24
+
+* Added additional support methods for keys
+
 # v1.4.0 - 2018/10/15
 
 * Http(s).request now uses a keep-alive agent by default

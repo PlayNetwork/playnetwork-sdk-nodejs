@@ -104,7 +104,7 @@ describe('claim', () => {
 
 		it('should properly retrieve all claims for a given client and service (promise)', (done) => {
 			// intercept outbound request
-			
+
 			nock('https://claim-api.apps.playnetwork.com')
 				.get(`/v0/clients/${mockClientId}/services/${mockServiceId}/claims`)
 				.reply(200, { total : 0 });
@@ -125,7 +125,7 @@ describe('claim', () => {
 
 		it('should properly retrieve all claims for a given client (promise)', (done) => {
 			// intercept outbound request
-			
+
 			nock('https://claim-api.apps.playnetwork.com')
 				.get(`/v0/clients/${mockClientId}/claims`)
 				.reply(200, { total : 0 });
@@ -138,6 +138,98 @@ describe('claim', () => {
 					return done();
 				})
 				.catch((err) => (done(err)));
+		});
+	});
+
+	describe('#createClaims', () => {
+		const mockClaims = {
+			name : 'test claims'
+		};
+		const mockClientId = 'mock-client-id';
+		const mockServiceId = 'mock-service-id';
+
+		it('should require clientId (promise)', (done) => {
+			claim.createClaims()
+				.then(() => {
+					return done(new Error('should require client'));
+				})
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('clientId is required');
+
+					return done();
+				})
+		});
+
+		it('should require serviceId (promise)', (done) => {
+			claim.createClaims(mockClientId)
+				.then(() => {
+					return done(new Error('should require serviceId'));
+				})
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('serviceId is required');
+
+					return done();
+				})
+		});
+
+		it('should require claim details (promise)', (done) => {
+			claim.createClaims(mockClientId, mockServiceId)
+				.then(() => {
+					return done(new Error('should require claims'));
+				})
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('claims are required');
+
+					return done();
+				})
+		});
+
+		it('should require claim details (callback)', (done) => {
+			claim.createClaims(mockClientId, mockServiceId, function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('claims are required');
+				should.not.exist(result);
+
+				return done();
+			});
+		});
+
+		it('should properly create claims (promise)', (done) => {
+			// intercept outbound request
+			nock('https://claim-api.apps.playnetwork.com')
+				.post(`/v0/clients/${mockClientId}/services/${mockServiceId}/claims`)
+				.reply(201, mockClaims);
+
+			claim.createClaims(mockClientId, mockServiceId, mockClaims)
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch((err) => (done(err)));
+		});
+
+		it('should properly create claims (callback)', (done) => {
+			// intercept outbound request
+			nock('https://claim-api.apps.playnetwork.com')
+				.post(`/v0/clients/${mockClientId}/services/${mockServiceId}/claims`)
+				.reply(201, mockClaims);
+
+			claim.createClaims(mockClientId, mockServiceId, mockClaims, function (err, result) {
+				should.not.exist(err);
+				should.exist(result);
+				should.exist(requestInfo);
+
+				return done();
+			});
 		});
 	});
 });

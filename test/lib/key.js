@@ -247,7 +247,7 @@ describe('key', () => {
 			// intercept outbound request
 			nock('https://key-api.apps.playnetwork.com')
 				.post('/v0/clients')
-				.reply(200, mockClient);
+				.reply(201, mockClient);
 
 			key.createClient(mockClient)
 				.then((result) => {
@@ -263,7 +263,7 @@ describe('key', () => {
 			// intercept outbound request
 			nock('https://key-api.apps.playnetwork.com')
 				.post('/v0/clients')
-				.reply(200, mockClient);
+				.reply(201, mockClient);
 
 			key.createClient(mockClient, function (err, result) {
 				should.not.exist(err);

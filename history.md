@@ -1,3 +1,7 @@
+# v1.4.4 - 2018/10/31
+
+* Fixed bug preventing asset downloads
+
 # v1.4.3 - 2018/10/31
 
 * Added support for updating clients

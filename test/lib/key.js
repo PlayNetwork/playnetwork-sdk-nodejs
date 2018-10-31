@@ -878,7 +878,7 @@ describe('key', () => {
 				.catch((err) => {
 					should.exist(err);
 					should.exist(err.message);
-					err.message.should.contain('client is required');
+					err.message.should.contain('client details are required');
 
 					return done();
 				})
@@ -888,7 +888,7 @@ describe('key', () => {
 			key.updateClient(mockClientId, function (err, result) {
 				should.exist(err);
 				should.exist(err.message);
-				err.message.should.contain('client is required');
+				err.message.should.contain('client details are required');
 				should.not.exist(result);
 
 				return done();

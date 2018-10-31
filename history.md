@@ -1,3 +1,8 @@
+# v1.4.3 - 2018/10/31
+
+* Added support for updating clients
+* Added support for updating claims
+
 # v1.4.1 - 2018/10/24
 
 * Added additional support methods for keys

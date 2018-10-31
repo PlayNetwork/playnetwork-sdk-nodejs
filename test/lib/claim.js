@@ -232,4 +232,96 @@ describe('claim', () => {
 			});
 		});
 	});
+
+	describe('#updateClaims', () => {
+		const mockClaims = {
+			name : 'test claims'
+		};
+		const mockClientId = 'mock-client-id';
+		const mockServiceId = 'mock-service-id';
+
+		it('should require clientId (promise)', (done) => {
+			claim.updateClaims()
+				.then(() => {
+					return done(new Error('should require client'));
+				})
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('clientId is required');
+
+					return done();
+				})
+		});
+
+		it('should require serviceId (promise)', (done) => {
+			claim.updateClaims(mockClientId)
+				.then(() => {
+					return done(new Error('should require serviceId'));
+				})
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('serviceId is required');
+
+					return done();
+				})
+		});
+
+		it('should require claim details (promise)', (done) => {
+			claim.updateClaims(mockClientId, mockServiceId)
+				.then(() => {
+					return done(new Error('should require claims'));
+				})
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('claims are required');
+
+					return done();
+				})
+		});
+
+		it('should require claim details (callback)', (done) => {
+			claim.updateClaims(mockClientId, mockServiceId, function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('claims are required');
+				should.not.exist(result);
+
+				return done();
+			});
+		});
+
+		it('should properly update claims (promise)', (done) => {
+			// intercept outbound request
+			nock('https://claim-api.apps.playnetwork.com')
+				.put(`/v0/clients/${mockClientId}/services/${mockServiceId}/claims`)
+				.reply(202, mockClaims);
+
+			claim.updateClaims(mockClientId, mockServiceId, mockClaims)
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch((err) => (done(err)));
+		});
+
+		it('should properly update claims (callback)', (done) => {
+			// intercept outbound request
+			nock('https://claim-api.apps.playnetwork.com')
+				.put(`/v0/clients/${mockClientId}/services/${mockServiceId}/claims`)
+				.reply(202, mockClaims);
+
+			claim.updateClaims(mockClientId, mockServiceId, mockClaims, function (err, result) {
+				should.not.exist(err);
+				should.exist(result);
+				should.exist(requestInfo);
+
+				return done();
+			});
+		});
+	});
 });

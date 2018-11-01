@@ -1,3 +1,29 @@
+# v2.0.0 - 2018/11/01
+
+* Reved major version and reverse merged updates from default branch v1.4.4
+
+# v1.4.4 - 2018/10/31
+
+* Fixed bug preventing asset downloads
+
+# v1.4.3 - 2018/10/31
+
+* Added support for updating clients
+* Added support for updating claims
+
+# v1.4.1 - 2018/10/24
+
+* Added additional support methods for keys
+
+# v1.4.0 - 2018/10/15
+
+* Http(s).request now uses a keep-alive agent by default
+* "Connection: keep-alive" headers are now sent on every HTTP request by default
+
+# v1.3.19 - 2018/10/15
+
+* Added support for claims retrieval by clientId
+
 # v1.3.17 - 2018/09/19
 
 * Fixing mock stations to add grouping -- private

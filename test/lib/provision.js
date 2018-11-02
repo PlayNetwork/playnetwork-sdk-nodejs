@@ -377,7 +377,7 @@ describe('provision', () => {
 				.then((result) => {
 					should.exist(result);
 					should.exist(requestInfo);
-					
+
 					return done();
 				})
 				.catch((err) => (done(err)));
@@ -391,7 +391,6 @@ describe('provision', () => {
 
 			provision.checkUpdate((err, result) => {
 				if (err) {
-					console.log(err);
 					return done(err);
 				}
 
@@ -429,7 +428,6 @@ describe('provision', () => {
 
 			provision.allApplications((err, result) => {
 				if(err) {
-					console.log(err);
 					return done(err);
 				}
 
@@ -466,7 +464,6 @@ describe('provision', () => {
 
 			provision.getClientCredentials('5', function(err, result) {
 				if (err) {
-					console.log(err);
 					return done(err);
 				}
 

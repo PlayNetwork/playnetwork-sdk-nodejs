@@ -1,3 +1,7 @@
+# v1.4.5 - 2018/11/02
+
+* Fixed bug in many sub-modules where ensuring authentication headers was called improperly
+
 # v1.4.4 - 2018/10/31
 
 * Fixed bug preventing asset downloads

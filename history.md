@@ -1,3 +1,7 @@
+# v2.1.1 - 2018/11/07
+
+* Accidentally published wrong version, bumping version and republishing
+
 # v2.1.0 - 2018/11/07
 
 * Added call to check that asset exists and returns asset id in header

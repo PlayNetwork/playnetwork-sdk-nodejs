@@ -1,3 +1,7 @@
+# v2.1.0 - 2018/11/07
+
+* Added call to check that asset exists and returns asset id in header
+
 # v2.0.0 - 2018/11/01
 
 * Reved major version and reverse merged updates from default branch v1.4.4

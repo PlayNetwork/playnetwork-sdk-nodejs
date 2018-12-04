@@ -86,7 +86,22 @@ module.exports = (function (app) {
 		if (!app.args.command) {
 			usage('invalid usage: command is required');
 			return;
-		} else if (Object.keys(lib[app.args.api]).indexOf(app.args.command) < 0) {
+		} else {
+			var libCmd = lib[app.args.api];
+			app.args.command.split('.').forEach((current) => {
+				libCmd = (libCmd && libCmd[current]) ? libCmd[current] : null;
+			});
+
+			if (!libCmd) {
+				usage(`invalid usage: command specifed (${app.args.command}) is invalid`);
+				return;
+			}
+		}
+
+		let cp = app.args.command.split('.');
+		if (cp.length == 2 && Object.keys(lib[app.args.api][cp[0]]).indexOf(cp[1]) < 0) {
+			return;
+		} else if (cp.length == 1 && Object.keys(lib[app.args.api]).indexOf(app.args.command) < 0) {
 			usage(`invalid usage: command specifed (${app.args.command}) is invalid`);
 			return;
 		}
@@ -174,7 +189,12 @@ module.exports = (function (app) {
 		}
 
 		// run it...
-		return yield lib[app.args.api][app.args.command]
+		var libCmd = lib[app.args.api];
+		app.args.command.split('.').forEach((current) => {
+			libCmd = libCmd[current];
+		});
+
+		return yield libCmd
 			.apply(null, app.args.commandArgs)
 			.then((result) => {
 				if (!result) {

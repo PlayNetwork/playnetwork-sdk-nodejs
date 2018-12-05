@@ -87,11 +87,14 @@ module.exports = (function (app) {
 			usage('invalid usage: command is required');
 			return;
 		} else {
-			var libCmd = lib[app.args.api];
-			app.args.command.split('.').forEach((current) => {
-				libCmd = (libCmd && libCmd[current]) ? libCmd[current] : null;
-			});
-
+			let libCmd = (() => {
+				var libCmd = lib[app.args.api];
+				app.args.command.split('.').forEach((current) => {
+					libCmd = (libCmd && libCmd[current]) ? libCmd[current] : null;
+				});
+				return libCmd;
+			})();
+	
 			if (!libCmd) {
 				usage(`invalid usage: command specifed (${app.args.command}) is invalid`);
 				return;
@@ -181,10 +184,13 @@ module.exports = (function (app) {
 		}
 
 		// run it...
-		var libCmd = lib[app.args.api];
-		app.args.command.split('.').forEach((current) => {
-			libCmd = libCmd[current];
-		});
+		let libCmd = (() => {
+			var libCmd = lib[app.args.api];
+			app.args.command.split('.').forEach((current) => {
+				libCmd = libCmd[current];
+			});
+			return libCmd;
+		})();
 
 		return yield libCmd
 			.apply(null, app.args.commandArgs)

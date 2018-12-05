@@ -1,4 +1,4 @@
-# v2.1.2 - 2018/12/05
+# v2.1.3 - 2018/12/05
 
 * Fixed bug preventing uppercase asset identifiers i.e. ISRC and UPC
 

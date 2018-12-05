@@ -98,14 +98,6 @@ module.exports = (function (app) {
 			}
 		}
 
-		let cp = app.args.command.split('.');
-		if (cp.length == 2 && Object.keys(lib[app.args.api][cp[0]]).indexOf(cp[1]) < 0) {
-			return;
-		} else if (cp.length == 1 && Object.keys(lib[app.args.api]).indexOf(app.args.command) < 0) {
-			usage(`invalid usage: command specifed (${app.args.command}) is invalid`);
-			return;
-		}
-
 		// show command specific help...
 		if (showHelp) {
 			// TODO: build support for command specific help

@@ -1,3 +1,7 @@
+# v2.1.2 - 2018/12/4
+
+* Merge develop and vnext; relocate old curio routes to v2 namespace
+
 # v2.1.1 - 2018/11/07
 
 * Accidentally published wrong version, bumping version and republishing
@@ -5,6 +9,10 @@
 # v2.1.0 - 2018/11/07
 
 * Added call to check that asset exists and returns asset id in header
+
+# v1.4.5 - 2018/11/02
+
+* Fixed bug in many sub-modules where ensuring authentication headers was called improperly
 
 # v2.0.0 - 2018/11/01
 

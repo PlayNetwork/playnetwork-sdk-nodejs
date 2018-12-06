@@ -1055,6 +1055,10 @@ describe('music', () => {
 		});
 
 		it('should work', (done) => {
+			nock('https://master-stationapi.scaffold-workers-ext-main-us.m.cld.octavelive.com')
+				.get('/v3/stations/test')
+				.reply(200, { total : 0 });
+
 			music.getStation('test')
 				.then((result) => {
 					should.exist(result);

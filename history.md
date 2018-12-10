@@ -1,3 +1,7 @@
+# v2.1.3 - 2018/12/05
+
+* Fixed bug preventing uppercase asset identifiers i.e. ISRC and UPC
+
 # v2.1.2 - 2018/12/4
 
 * Merge develop and vnext; relocate old curio routes to v2 namespace

@@ -1,3 +1,7 @@
+# v2.2.0 - 2019/02/15
+
+* Added support for originals upsert and reverse lookup for original via asset
+
 # v2.1.3 - 2018/12/05
 
 * Fixed bug preventing uppercase asset identifiers i.e. ISRC and UPC

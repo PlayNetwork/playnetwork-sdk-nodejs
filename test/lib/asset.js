@@ -299,6 +299,33 @@ describe('asset', function () {
 		});
 	});
 
+	describe('#getOriginalByAsset', function () {
+		it('should require asset (promise)', function (done) {
+			asset.getOriginalByAsset()
+				.then(() => {
+					return done(new Error('should require asset'));
+				})
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('asset is required');
+
+					return done();
+				});
+		});
+
+		it('should require asset (callback)', function (done) {
+			asset.getOriginalByAsset(function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('asset is required');
+				should.not.exist(result);
+
+				return done();
+			});
+		});
+	});
+
 	describe('#updateOriginal', function () {
 		it('should require original (promise)', function (done) {
 			asset.updateOriginal()
@@ -353,6 +380,29 @@ describe('asset', function () {
 				should.exist(err);
 				should.exist(err.message);
 				err.message.should.contain('assets are required');
+				should.not.exist(result);
+				return done();
+			});
+		});
+	});
+
+	it('#upsertOriginals', function () {
+		it('should require originals (promise)', function (done) {
+			asset.upsertOriginals()
+				.then(() => {
+					return done(new Error('should require originals'));
+				})
+				.catch((err) => {
+					should.exist(err);
+					return done();
+				});
+		});
+
+		it('should require originals (callback)', function (done) {
+			asset.upsertOriginals(function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('originals are required');
 				should.not.exist(result);
 				return done();
 			});

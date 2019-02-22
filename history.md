@@ -1,3 +1,7 @@
+# v2.2.1 - 2019/02/19
+
+* Add orderAction to provision module
+
 # v2.2.0 - 2019/02/15
 
 * Added support for originals upsert and reverse lookup for original via asset

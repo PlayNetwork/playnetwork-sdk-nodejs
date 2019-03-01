@@ -1,3 +1,7 @@
+# v2.2.2 - 2019/03/01
+
+* Adjusted playback module to accept `isrc` or `trackId` as a content identifier
+
 # v2.2.1 - 2019/02/19
 
 * Add orderAction to provision module

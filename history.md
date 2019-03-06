@@ -1,3 +1,7 @@
+# v2.2.2 - 2019/03/06
+
+* Added support for filtering out assets that don't exist
+
 # v2.2.2 - 2019/03/01
 
 * Adjusted playback module to accept `isrc` or `trackId` as a content identifier

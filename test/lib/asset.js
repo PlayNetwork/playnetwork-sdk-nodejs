@@ -272,6 +272,33 @@ describe('asset', function () {
 		});
 	});
 
+	describe('#filterAssets', function (done) {
+		it('should require assets (promise)', function (done) {
+			asset.filterAssets()
+				.then(() => {
+					return done(new Error('should require assets'));
+				})
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('assets are required');
+
+					return done();
+				});
+		});
+
+		it('should require assets (callback)', function (done) {
+			asset.filterAssets(function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('assets are required');
+				should.not.exist(result);
+
+				return done();
+			});
+		});
+	});
+
 	describe('#getAssetStream', function () {
 		it('should require asset (promise)', function (done) {
 			asset.getAssetStream()

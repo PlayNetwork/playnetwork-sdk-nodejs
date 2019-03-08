@@ -4,11 +4,8 @@
 var
 	chai = require('chai'),
 	nock = require('nock'),
-
-	request = require('../../lib/request'),
-
+	request = require('../../lib/request');
 	should = chai.should();
-
 
 describe('request', () => {
 	'use strict';

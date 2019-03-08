@@ -1,3 +1,7 @@
+# v1.4.6 - 2018/11/02
+
+* Fixed bug that were not allowing the use of a connection pool
+
 # v1.4.5 - 2018/11/02
 
 * Fixed bug in many sub-modules where ensuring authentication headers was called improperly

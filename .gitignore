@@ -1,4 +1,5 @@
 .DS_Store
+.nvmrc
 lib-cov
 node_modules
 reports

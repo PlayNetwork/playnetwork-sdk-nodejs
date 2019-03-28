@@ -1,3 +1,7 @@
+# v2.2.3 - 2019/03/27
+
+Enables the use of a request pool for all requests
+
 # v2.2.2 - 2019/03/06
 
 * Added support for filtering out assets that don't exist

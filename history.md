@@ -1,6 +1,10 @@
+# v2.2.4 - 2019/10/10
+
+* Add promo message support to playback.recordPlay()
+
 # v2.2.3 - 2019/03/27
 
-Enables the use of a request pool for all requests
+* Enables the use of a request pool for all requests
 
 # v2.2.2 - 2019/03/06
 

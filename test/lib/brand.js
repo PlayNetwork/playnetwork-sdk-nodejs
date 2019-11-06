@@ -89,7 +89,7 @@ describe('brand', () => {
 	describe('#allBrands', () => {
 		it('should properly retrieve all brands (promise)', (done) => {
 			// intercept outbound request
-			nock('https://master-brandapi.scaffold-workers-main-us.m.cld.octavelive.com')
+			nock('https://master-brand-api.apps.playnetwork.com')
 				.get('/v1/brands')
 				.reply(200, { total : 0 });
 
@@ -105,7 +105,7 @@ describe('brand', () => {
 
 		it('should properly retrieve all brands (callback)', (done) => {
 			// intercept outbound request
-			nock('https://master-brandapi.scaffold-workers-main-us.m.cld.octavelive.com')
+			nock('https://master-brand-api.apps.playnetwork.com')
 				.get('/v1/brands')
 				.reply(200, { total : 0 });
 
@@ -119,7 +119,7 @@ describe('brand', () => {
 
 		it('should properly support query filters', (done) => {
 			// intercept outbound request
-			nock('https://master-brandapi.scaffold-workers-main-us.m.cld.octavelive.com')
+			nock('https://master-brand-api.apps.playnetwork.com')
 				.get(/\/v1\/brands[.]*/)
 				.reply(200, { total : 0 });
 
@@ -156,7 +156,7 @@ describe('brand', () => {
 
 		it('should properly get a brand (promise)', (done) => {
 			// intercept outbound request
-			nock('https://master-brandapi.scaffold-workers-main-us.m.cld.octavelive.com')
+			nock('https://master-brand-api.apps.playnetwork.com')
 				.get('/v1/brands/test')
 				.reply(200, { brandId : 'test' });
 
@@ -172,7 +172,7 @@ describe('brand', () => {
 
 		it('should properly get a brand (callback)', (done) => {
 			// intercept outbound request
-			nock('https://master-brandapi.scaffold-workers-main-us.m.cld.octavelive.com')
+			nock('https://master-brand-api.apps.playnetwork.com')
 				.get('/v1/brands/test')
 				.reply(200, { brandId : 'test' });
 
@@ -186,7 +186,7 @@ describe('brand', () => {
 
 		it('should properly support options', (done) => {
 			// intercept outbound request
-			nock('https://master-brandapi.scaffold-workers-main-us.m.cld.octavelive.com')
+			nock('https://master-brand-api.apps.playnetwork.com')
 				.get('/v1/brands/test?testing=yes')
 				.reply(200, { locationId : 'test' });
 
@@ -213,7 +213,7 @@ describe('brand', () => {
 
 		it('should properly retrieve all curation groups (promise)', (done) => {
 			// intercept outbound request
-			nock('https://master-brandapi.scaffold-workers-main-us.m.cld.octavelive.com')
+			nock('https://master-brand-api.apps.playnetwork.com')
 				.get('/v1/brands/test/curationGroups')
 				.reply(200, { total : 0 });
 
@@ -229,7 +229,7 @@ describe('brand', () => {
 
 		it('should properly retrieve all curation groups (callback)', (done) => {
 			// intercept outbound request
-			nock('https://master-brandapi.scaffold-workers-main-us.m.cld.octavelive.com')
+			nock('https://master-brand-api.apps.playnetwork.com')
 				.get('/v1/brands/test/curationGroups')
 				.reply(200, { total : 0 });
 
@@ -243,7 +243,7 @@ describe('brand', () => {
 
 		it('should properly support query filters', (done) => {
 			// intercept outbound request
-			nock('https://master-brandapi.scaffold-workers-main-us.m.cld.octavelive.com')
+			nock('https://master-brand-api.apps.playnetwork.com')
 				.get(/\/v1\/brands\/test\/curationGroups[.]*/)
 				.reply(200, { total : 0 });
 
@@ -293,7 +293,7 @@ describe('brand', () => {
 
 		it('should properly get a brand (promise)', (done) => {
 			// intercept outbound request
-			nock('https://master-brandapi.scaffold-workers-main-us.m.cld.octavelive.com')
+			nock('https://master-brand-api.apps.playnetwork.com')
 				.get('/v1/brands/test/curationGroups/test2')
 				.reply(200, { brandId : 'test' });
 
@@ -309,7 +309,7 @@ describe('brand', () => {
 
 		it('should properly get a brand (callback)', (done) => {
 			// intercept outbound request
-			nock('https://master-brandapi.scaffold-workers-main-us.m.cld.octavelive.com')
+			nock('https://master-brand-api.apps.playnetwork.com')
 				.get('/v1/brands/test/curationGroups/test2')
 				.reply(200, { brandId : 'test' });
 
@@ -323,7 +323,7 @@ describe('brand', () => {
 
 		it('should properly support options', (done) => {
 			// intercept outbound request
-			nock('https://master-brandapi.scaffold-workers-main-us.m.cld.octavelive.com')
+			nock('https://master-brand-api.apps.playnetwork.com')
 				.get('/v1/brands/test/curationGroups/test2?testing=yes')
 				.reply(200, { locationId : 'test' });
 
@@ -339,7 +339,7 @@ describe('brand', () => {
 	describe('#version', () => {
 		it('should properly return version (promise)', (done) => {
 			// intercept outbound request
-			nock('https://master-brandapi.scaffold-workers-main-us.m.cld.octavelive.com')
+			nock('https://master-brand-api.apps.playnetwork.com')
 				.get(/\/v[0-9]{1}\/version/i)
 				.reply(200, { version : 'test' });
 
@@ -355,7 +355,7 @@ describe('brand', () => {
 
 		it('should properly return version (callback)', (done) => {
 			// intercept outbound request
-			nock('https://master-brandapi.scaffold-workers-main-us.m.cld.octavelive.com')
+			nock('https://master-brand-api.apps.playnetwork.com')
 				.get(/\/v[0-9]{1}\/version/i)
 				.reply(200, { version : 'test' });
 

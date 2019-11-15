@@ -1,3 +1,7 @@
+# v2.2.5 - 2019/11/15
+
+* Added support for Brand API.
+
 # v2.2.4 - 2019/10/10
 
 * Add promo message support to playback.recordPlay()

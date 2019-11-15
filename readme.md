@@ -20,6 +20,15 @@ npm install playnetwork-sdk
 
 - - -
 
+### Brands
+
+This module can be used to interact with the [Brand API](https://master-brandapi.scaffold-workers-main-us.m.cld.octavelive.com/v1/docs)
+
+* [allBrands](#allbrands)
+* [getBrand](#getbrand)
+* [allCurationGroups](#allcurationgroups)
+* [getCurationGroup](#getcurationgroup)
+
 ### Music
 
 This module can be used to interact with the [Collection API](https://master-collectionapi.scaffold-workers-ext-main-us.m.cld.octavelive.com/v3/docs), [Track API](https://master-trackapi.scaffold-workers-ext-main-us.m.cld.octavelive.com/v3/docs), and [Station API]() to retrieve content programming and track meta-data.
@@ -313,6 +322,119 @@ playnetwork -a content -c getLegacyAssetStream <legacy.trackToken> > ~/Downloads
 [back to top](#usage)
 
 - - -
+
+
+### Brands Module
+
+The brands module is designed to simplify interaction with the [Brands API](https://master-brandapi.scaffold-workers-main-us.m.cld.octavelive.com/v1/docs). This module supports the following methods:
+
+#### #allBrands
+
+This method can be used to retrieve a paginated result set of brands created for the specified client.
+
+**Usage:** `client.brands.allBrands(options, callback)`
+
+* `options` - _(optional)_ - can be used to supply additional filters and sorting instructions
+  * `start` - the index at which to start selection of items
+  * `count` - the total number of items to retrieve (maximum value is `100`)
+  * `filters` - additional field projections along with mandatory and optional filters (see [API documentation](https://master-brandapi.scaffold-workers-main-us.m.cld.octavelive.com/v1/docs) for more details)
+* `callback` - _(optional)_ - a function callback that accepts two arguments
+  * `err` - populated with details in the event of an error
+  * `result` - result set details
+
+```javascript
+client
+  .brands
+  .allBrands()
+  .then((result) => {
+    console.log(
+      'found %d brands',
+      result.total)
+  }).catch((err) => {
+    console.error(err);
+  });
+```
+
+#### #getBrand
+
+To retrieve a specific brand for a client, by brandId identifier, use this method.
+
+**Usage:** `client.brands.getBrand(brandId, callback)`
+
+* `brandId` - _(required)_ - defines the brand for which details should be retrieved
+* `callback` - _(optional)_ - a function callback that accepts two arguments
+  * `err` - populated with details in the event of an error
+  * `result` - result set details
+
+```javascript
+var brandId = '<BRAND_ID>';
+
+client
+  .brands
+  .getBrand(brandId)
+  .then((result) => {
+    console.log(
+      'successfully retrieved brand %s',
+      brandId);
+  }).catch((err) => {
+    console.error(err);
+  });
+```
+
+#### #allCurationGroups
+
+This method can be used to retrieve a result set of curation groups created for the specified brand.
+
+**Usage:** `client.brands.allCurationGroups(brandId, callback)`
+
+* `brandId` - _(required)_ - defines the brand for which curation groups should be retrieved
+* `callback` - _(optional)_ - a function callback that accepts two arguments
+  * `err` - populated with details in the event of an error
+  * `result` - result set details
+
+```javascript
+var brandId = '<BRAND_ID>';
+
+client
+  .brands
+  .allCurationGroups(brandId)
+  .then((result) => {
+    console.log(
+      'successfully retrieved curation groups for brand %s',
+      brandId);
+  }).catch((err) => {
+    console.error(err);
+  });
+```
+
+#### #getCurationGroup
+
+To retrieve a specific curation group for a brand, by brandId and curationGroupId identifier, use this method.
+
+**Usage:** `client.brands.getCurationGroup(brandId, curationGroupId, callback)`
+
+* `brandId` - _(required)_ - defines the brand for which curation groups should be retrieved
+* `curationGroupId` - _(required)_ - defines the curation group for which details should be retrieved
+* `callback` - _(optional)_ - a function callback that accepts two arguments
+  * `err` - populated with details in the event of an error
+  * `result` - result set details
+
+```javascript
+var
+  brandId = '<BRAND_ID>',
+  curationGroupId = '<CURATION_GROUP_ID>';
+
+client
+  .brands
+  .getCurationGroup(brandId,curationGroupId)
+  .then((result) => {
+    console.log(
+      'successfully retrieved curation group %s',
+      curationGroupId);
+  }).catch((err) => {
+    console.error(err);
+  });
+```
 
 ### Music Module
 

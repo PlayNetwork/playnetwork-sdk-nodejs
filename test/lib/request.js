@@ -519,7 +519,7 @@ describe('request', () => {
 
 					// fail twice
 					nock(`https://${options.host}`)[method]('/v0/tests/retry')
-						.times(5)
+						.times(3)
 						.reply(responseBody.statusCode, responseBody);
 
 					// succeed on 3rd retry

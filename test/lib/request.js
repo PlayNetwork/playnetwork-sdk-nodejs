@@ -492,9 +492,9 @@ describe('request', () => {
 			});
 		});
 	});
-	describe('request methods', () => {
+	describe('request methods', function () {
 		['delete', 'get', 'head', 'post', 'put'].forEach((method) => {
-			describe(`#${method}`, () => {
+			describe(`#${method}`, function () {
 				let
 					options = {
 						host : `test-${method}.playnetwork.com`,
@@ -508,11 +508,11 @@ describe('request', () => {
 					// capture request and response info
 					req.on('request', (info) => (requestInfo = info));
 
-				afterEach(() => {
+				afterEach(function() {
 					nock.cleanAll();
 					requestInfo = undefined;
 				});
-				it('should properly retry on 500s and based on exponential backoff', function (done) {
+				it('should properly retry on 500s and based on exponential backoff', function(done) {
 
 					// intercept outbound request
 					let responseBody = { message : 'overload', statusCode : 503 };

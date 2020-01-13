@@ -550,18 +550,22 @@ describe('provision', () => {
 	});
 
 	describe('#getProfile', () => {
-		it('should properly retrieve profile even without profileAlias', (done) => {
+		it('should properly retrieve profile even without profileAlias', function (done) {
 			// intercept outbound request
 			nock('https://provision-api.apps.playnetwork.com')
 				.get('/v2/profiles/clientId:test')
 				.reply(200, { total : 0 });
 
 			provision.getProfile()
-				.then(() => done())
-				.catch((err) => done(err));
+				.then(function () {
+					return done();
+				})
+				.catch(function (err) {
+					return done(err);
+				})
 		});
 
-		it('should properly retrieve profile even without profileAlias (callback)', (done) => {
+		it('should properly retrieve profile even without profileAlias (callback)', function (done) {
 			// intercept outbound request
 			nock('https://provision-api.apps.playnetwork.com')
 				.get('/v2/profiles/clientId:test')
@@ -570,7 +574,6 @@ describe('provision', () => {
 			provision.getProfile(function (err, result) {
 				should.not.exist(err);
 				should.exist(result);
-
 				return done();
 			});
 		});

@@ -550,27 +550,30 @@ describe('provision', () => {
 	});
 
 	describe('#getProfile', () => {
-		it('should require a profileAlias (promise)', (done) => {
-			provision.getProfile()
-				.then(() => {
-					return done(new Error('should require profileAlias'));
-				})
-				.catch((err) => {
-					should.exist(err);
-					should.exist(err.message);
-					err.message.should.contain('profileAlias is required');
+		it('should properly retrieve profile even without profileAlias', function (done) {
+			// intercept outbound request
+			nock('https://provision-api.apps.playnetwork.com')
+				.get('/v2/profiles/clientId:test')
+				.reply(200, { total : 0 });
 
+			provision.getProfile()
+				.then(function () {
 					return done();
-				});
+				})
+				.catch(function (err) {
+					return done(err);
+				})
 		});
 
-		it('should require profileAlias (callback)', (done) => {
-			provision.getProfile(function (err, result) {
-				should.exist(err);
-				should.exist(err.message);
-				err.message.should.contain('profileAlias is required');
-				should.not.exist(result);
+		it('should properly retrieve profile even without profileAlias (callback)', function (done) {
+			// intercept outbound request
+			nock('https://provision-api.apps.playnetwork.com')
+				.get('/v2/profiles/clientId:test')
+				.reply(200, { total : 0 });
 
+			provision.getProfile(function (err, result) {
+				should.not.exist(err);
+				should.exist(result);
 				return done();
 			});
 		});

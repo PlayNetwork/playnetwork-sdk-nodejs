@@ -1,3 +1,7 @@
+# v2.2.6 - 2020/01/08
+
+* Added backoff mechanism to any request called with setting totalTimeout.
+
 # v2.2.5 - 2019/11/15
 
 * Added support for Brand API.

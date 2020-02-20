@@ -31,7 +31,9 @@ describe('validation', () => {
 					port : 8080,
 					rejectUnauthorized : true,
 					secure : true,
-					timeout : 60000
+					timeout : 60000,
+					totalTimeout: 5000,
+					initialDelay: 50
 				},
 				outputOptions = validation.applyOptionalParameters(inputOptions);
 
@@ -45,6 +47,10 @@ describe('validation', () => {
 			outputOptions.rejectUnauthorized.should.equal(true);
 			outputOptions.should.have.property('timeout');
 			outputOptions.timeout.should.equal(60000);
+			outputOptions.should.have.property('totalTimeout');
+			outputOptions.totalTimeout.should.equal(5000);
+			outputOptions.should.have.property('initialDelay');
+			outputOptions.initialDelay.should.equal(50);
 
 			should.not.exist(outputOptions.host);
 			should.not.exist(outputOptions.secure);
@@ -81,6 +87,9 @@ describe('validation', () => {
 			outputOptions.secure.should.equal(true);
 			outputOptions.should.have.property('timeout');
 			outputOptions.timeout.should.equal(60000);
+
+			should.not.exist(outputOptions.totalTimeout);
+			should.not.exist(outputOptions.initialDelay);
 		});
 	});
 

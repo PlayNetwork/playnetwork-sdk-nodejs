@@ -489,4 +489,52 @@ describe('request', () => {
 			});
 		});
 	});
+	describe('request methods', function () {
+		['delete', 'get', 'head', 'post', 'put'].forEach((method) => {
+			describe(`#${method}`, function () {
+				let
+					options = {
+						host : `test-${method}.playnetwork.com`,
+						totalTimeout: 4000,
+						initialDelay: 1,
+						secure : true
+					},
+					requestInfo,
+					req = new request.Request(options);
+
+					// capture request and response info
+					req.on('request', (info) => (requestInfo = info));
+
+				afterEach(function() {
+					nock.cleanAll();
+					requestInfo = undefined;
+				});
+				it('should properly retry on 500s and based on exponential backoff', function(done) {
+
+					// intercept outbound request
+					let responseBody = { message : 'overload', statusCode : 503 };
+
+					// fail twice
+					nock(`https://${options.host}`)[method]('/v0/tests/retry')
+						.times(3)
+						.reply(responseBody.statusCode, responseBody);
+
+					// succeed on 3rd retry
+					nock(`https://${options.host}`)[method]('/v0/tests/retry')
+						.times(1)
+						.reply(200);
+
+					return req[method](
+						{ path : '/v0/tests/retry' },
+						function (err, response) {
+							should.not.exist(err);
+							requestInfo.totalTimeout.should.be.equal(options.totalTimeout);
+							requestInfo.initialDelay.should.be.equal(options.initialDelay);
+
+							return done();
+						});
+				});
+			});
+		});
+	});
 });

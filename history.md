@@ -1,3 +1,15 @@
+# v1.4.9 - 2020/02/27
+
+* Added backoff mechanism to any request called with setting totalTimeout.
+
+# v1.4.8 - 2020/01/29
+
+*  Handle JSON.parse failure
+
+# v1.4.7 - 2020/01/14
+
+* Add ability to get profile based on authentication headers
+
 # v1.4.6 - 2018/11/02
 
 * Fixed bug that were not allowing the use of a connection pool

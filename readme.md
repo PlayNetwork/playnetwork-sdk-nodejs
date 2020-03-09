@@ -200,25 +200,39 @@ The supported options are as follows:
 * `content`
   * `host` - the hostname of the content API
   * `secure` - defaults to `true`, defines when the API uses TLS
+  * `totalTimeout` - In miliseconds to activate the expotential backoff mechanism
+  * `initialDelay` - Override the initial delay for 30ms.
 * `key`
   * `host` - the hostname of the key API
   * `secure` - defaults to `true`, defines when the API uses TLS
+  * `totalTimeout` - In miliseconds to activate the expotential backoff mechanism
+  * `initialDelay` - Override the initial delay for 30ms.
   * `cacheTokens`
 * `music`
   * `host` - the hostname of the music API
   * `secure` - defaults to `true`, defines when the API uses TLS
+  * `totalTimeout` - In miliseconds to activate the expotential backoff mechanism
+  * `initialDelay` - Override the initial delay for 30ms.
 * `playback`
   * `host` - the hostname of the playback API
   * `secure` - defaults to `true`, defines when the API uses TLS
+  * `totalTimeout` - In miliseconds to activate the expotential backoff mechanism
+  * `initialDelay` - Override the initial delay for 30ms.
 * `player`
   * `host` - the hostname of the playerservice app
   * `secure` - defaults to `true`, defines when the API uses TLS
+  * `totalTimeout` - In miliseconds to activate the expotential backoff mechanism
+  * `initialDelay` - Override the initial delay for 30ms.
 * `provision`
   * `host` - the hostname of the provision API
   * `secure` - defaults to `true`, defines when the API uses TLS
+  * `totalTimeout` - In miliseconds to activate the expotential backoff mechanism
+  * `initialDelay` - Override the initial delay for 30ms.
 * `settings`
   * `host` - the hostname
-  * `secure` -
+  * `secure` - defaults to `true`, defines when the API uses TLS
+  * `totalTimeout` - In miliseconds to activate the expotential backoff mechanism
+  * `initialDelay` - Override the initial delay for 30ms.
 
 See the following example that configures the SDK for interaction with a sandbox PlayNetwork environment (**_note:** this is an example only).
 
@@ -227,7 +241,9 @@ var
   playnetwork = require('playnetwork-sdk'),
   options = {
     content : {
-      host : 'sandbox-content-api.apps.playnetwork.com'
+      host : 'sandbox-content-api.apps.playnetwork.com',
+      host : 'sandbox-content-api.apps.playnetwork.com',
+      totalTimeout: 40000 //ms To activate exponential backoff mechanism.
     },
     key : {
       host : 'sandbox-key-api.apps.playnetwork.com'

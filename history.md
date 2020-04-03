@@ -1,3 +1,7 @@
+# v2.2.8 - 2020/04/03
+
+* Added support for socket options for player-service socket.
+
 # v2.2.7 - 2020/02/19
 
 * Added backoff mechanism to any request called with setting totalTimeout.

@@ -1,3 +1,7 @@
+# v1.4.11 - 2020/04/14
+
+* Use retry/exponential backoff mechanisms for rawStream requests.
+
 # v1.4.9 - 2020/02/27
 
 * Added backoff mechanism to any request called with setting totalTimeout.

@@ -508,12 +508,16 @@ describe('request', () => {
 					// capture request and response info
 					req.on('request', (info) => (requestInfo = info));
 
+				beforeEach(() => {
+					delete options.rawStream;
+				});
+
 				afterEach(function() {
 					nock.cleanAll();
 					requestInfo = undefined;
 				});
-				it('should properly retry on 500s and based on exponential backoff', function(done) {
 
+				it('should properly retry on 500s and based on exponential backoff', function(done) {
 					// intercept outbound request
 					let responseBody = { message : 'overload', statusCode : 503 };
 
@@ -533,6 +537,31 @@ describe('request', () => {
 							should.not.exist(err);
 							requestInfo.totalTimeout.should.be.equal(options.totalTimeout);
 							requestInfo.initialDelay.should.be.equal(options.initialDelay);
+
+							return done();
+						});
+				});
+
+				it('should properly retry on 500s and based on exponential backoff for rawStream requests', function (done) {
+					options.rawStream = true;
+
+					// intercept outbound request
+					let responseBody = { message : 'overload', statusCode : 503 };
+
+					// fail twice
+					nock(`https://${options.host}`)[method]('/v0/tests/retry')
+						.times(2)
+						.reply(responseBody.statusCode, responseBody);
+
+					// succeed on 3rd retry
+					nock(`https://${options.host}`)[method]('/v0/tests/retry')
+						.times(1)
+						.reply(200);
+
+					return req[method](
+						{ path : '/v0/tests/retry' },
+						function (err, response) {
+							should.not.exist(err);
 
 							return done();
 						});

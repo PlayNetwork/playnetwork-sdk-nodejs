@@ -632,4 +632,47 @@ describe('location', () => {
 			});
 		});
 	});
+
+	describe('#getLocationsByAliases', () => {
+		it('should require locationAliasList', (done) => {
+			location.getLocationsByAliases(function (err, result) {
+				should.exist(err);
+				should.not.exist(result);
+				should.exist(err.message);
+				err.message.should.equal('locationAliasList is required');
+
+				return done();
+			});
+		});
+
+		it('should properly get locations (promise)', (done) => {
+			// intercept outbound request
+			nock('https://location-api.apps.playnetwork.com')
+				.post('/v0/locations/aliases')
+				.reply(200, { test : true });
+
+			location.getLocationsByAliases(['locationToken:test'])
+				.then((result) => {
+					should.exist(result);
+					should.exist(requestInfo);
+
+					return done();
+				})
+				.catch((err) => (done(err)));
+		});
+
+		it('should properly get locations (callback)', (done) => {
+			// intercept outbound request
+			nock('https://location-api.apps.playnetwork.com')
+				.post('/v0/locations/aliases')
+				.reply(200, { test : true });
+
+			location.getLocationsByAliases(['locationToken:test'], function (err, result) {
+				should.not.exist(err);
+				should.exist(requestInfo);
+
+				return done();
+			});
+		});
+	});
 });

@@ -1,26 +1,71 @@
-# v1.4.11 - 2020/04/14
+# v2.2.9 - 2020/06/09
 
+* Update services host URLs.
+
+# v2.2.8 - 2020/04/03
+
+* Added support for socket options for player-service socket.
 * Use retry/exponential backoff mechanisms for rawStream requests.
 
-# v1.4.9 - 2020/02/27
+# v2.2.7 - 2020/02/19
 
 * Added backoff mechanism to any request called with setting totalTimeout.
 
-# v1.4.8 - 2020/01/29
+# v2.2.6 - 2020/01/08
 
-*  Handle JSON.parse failure
+* Added backoff mechanism to any request called with setting totalTimeout.
 
-# v1.4.7 - 2020/01/14
+# v2.2.5 - 2019/11/15
 
-* Add ability to get profile based on authentication headers
+* Added support for Brand API.
 
-# v1.4.6 - 2018/11/02
+# v2.2.4 - 2019/10/10
 
-* Fixed bug that were not allowing the use of a connection pool
+* Add promo message support to playback.recordPlay()
+
+# v2.2.3 - 2019/03/27
+
+* Enables the use of a request pool for all requests
+
+# v2.2.2 - 2019/03/06
+
+* Added support for filtering out assets that don't exist
+
+# v2.2.2 - 2019/03/01
+
+* Adjusted playback module to accept `isrc` or `trackId` as a content identifier
+
+# v2.2.1 - 2019/02/19
+
+* Add orderAction to provision module
+
+# v2.2.0 - 2019/02/15
+
+* Added support for originals upsert and reverse lookup for original via asset
+
+# v2.1.3 - 2018/12/05
+
+* Fixed bug preventing uppercase asset identifiers i.e. ISRC and UPC
+
+# v2.1.2 - 2018/12/4
+
+* Merge develop and vnext; relocate old curio routes to v2 namespace
+
+# v2.1.1 - 2018/11/07
+
+* Accidentally published wrong version, bumping version and republishing
+
+# v2.1.0 - 2018/11/07
+
+* Added call to check that asset exists and returns asset id in header
 
 # v1.4.5 - 2018/11/02
 
 * Fixed bug in many sub-modules where ensuring authentication headers was called improperly
+
+# v2.0.0 - 2018/11/01
+
+* Reved major version and reverse merged updates from default branch v1.4.4
 
 # v1.4.4 - 2018/10/31
 
@@ -43,6 +88,18 @@
 # v1.3.19 - 2018/10/15
 
 * Added support for claims retrieval by clientId
+
+# v1.3.17 - 2018/09/19
+
+* Fixing mock stations to add grouping -- private
+
+# v1.3.15 - 2018/08/21
+
+* Wired up v3 collection-api and track-api to Music -- private
+
+# v1.3.14 - 2018/08/30
+
+* Addressed issue in Trello Ticket 574
 
 # v1.3.13 - 2018/08/20
 

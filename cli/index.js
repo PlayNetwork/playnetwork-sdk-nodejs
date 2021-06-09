@@ -86,9 +86,19 @@ module.exports = (function (app) {
 		if (!app.args.command) {
 			usage('invalid usage: command is required');
 			return;
-		} else if (Object.keys(lib[app.args.api]).indexOf(app.args.command) < 0) {
-			usage(`invalid usage: command specifed (${app.args.command}) is invalid`);
-			return;
+		} else {
+			let libCmd = (() => {
+				var libCmd = lib[app.args.api];
+				app.args.command.split('.').forEach((current) => {
+					libCmd = (libCmd && libCmd[current]) ? libCmd[current] : null;
+				});
+				return libCmd;
+			})();
+	
+			if (!libCmd) {
+				usage(`invalid usage: command specifed (${app.args.command}) is invalid`);
+				return;
+			}
 		}
 
 		// show command specific help...
@@ -174,7 +184,15 @@ module.exports = (function (app) {
 		}
 
 		// run it...
-		return yield lib[app.args.api][app.args.command]
+		let libCmd = (() => {
+			var libCmd = lib[app.args.api];
+			app.args.command.split('.').forEach((current) => {
+				libCmd = libCmd[current];
+			});
+			return libCmd;
+		})();
+
+		return yield libCmd
 			.apply(null, app.args.commandArgs)
 			.then((result) => {
 				if (!result) {

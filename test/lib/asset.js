@@ -145,7 +145,7 @@ describe('asset', function () {
 
 		it('should default options.method (callback)', function (done) {
 			// intercept outbound request
-			nock('https://develop-assetapi.scaffold-workers-ext-main-us.d.cld.octavelive.com')
+			nock('https://master-assetapi.scaffold-workers-ext-main-us.m.cld.octavelive.com')
 				.get('/v0/test')
 				.reply(200, { test : true });
 
@@ -160,7 +160,7 @@ describe('asset', function () {
 
 		it('should default invalid options.method (promise)', function (done) {
 			// intercept outbound request
-			nock('https://develop-assetapi.scaffold-workers-ext-main-us.d.cld.octavelive.com')
+			nock('https://master-assetapi.scaffold-workers-ext-main-us.m.cld.octavelive.com')
 				.get('/v0/test')
 				.reply(200, { test : true });
 
@@ -177,7 +177,7 @@ describe('asset', function () {
 
 		it('should lowercase options.method (promise)', function (done) {
 			// intercept outbound request
-			nock('https://develop-assetapi.scaffold-workers-ext-main-us.d.cld.octavelive.com')
+			nock('https://master-assetapi.scaffold-workers-ext-main-us.m.cld.octavelive.com')
 				.put('/v0/test')
 				.reply(202, { test : true });
 
@@ -196,7 +196,7 @@ describe('asset', function () {
 			let data = { test : true };
 
 			// intercept outbound request
-			nock('https://develop-assetapi.scaffold-workers-ext-main-us.d.cld.octavelive.com')
+			nock('https://master-assetapi.scaffold-workers-ext-main-us.m.cld.octavelive.com')
 				.post('/v0/test', data)
 				.reply(201, data);
 
@@ -272,6 +272,33 @@ describe('asset', function () {
 		});
 	});
 
+	describe('#filterAssets', function (done) {
+		it('should require assets (promise)', function (done) {
+			asset.filterAssets()
+				.then(() => {
+					return done(new Error('should require assets'));
+				})
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('assets are required');
+
+					return done();
+				});
+		});
+
+		it('should require assets (callback)', function (done) {
+			asset.filterAssets(function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('assets are required');
+				should.not.exist(result);
+
+				return done();
+			});
+		});
+	});
+
 	describe('#getAssetStream', function () {
 		it('should require asset (promise)', function (done) {
 			asset.getAssetStream()
@@ -289,6 +316,33 @@ describe('asset', function () {
 
 		it('should require asset (callback)', function (done) {
 			asset.getAssetStream(function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('asset is required');
+				should.not.exist(result);
+
+				return done();
+			});
+		});
+	});
+
+	describe('#getOriginalByAsset', function () {
+		it('should require asset (promise)', function (done) {
+			asset.getOriginalByAsset()
+				.then(() => {
+					return done(new Error('should require asset'));
+				})
+				.catch((err) => {
+					should.exist(err);
+					should.exist(err.message);
+					err.message.should.contain('asset is required');
+
+					return done();
+				});
+		});
+
+		it('should require asset (callback)', function (done) {
+			asset.getOriginalByAsset(function (err, result) {
 				should.exist(err);
 				should.exist(err.message);
 				err.message.should.contain('asset is required');
@@ -359,10 +413,33 @@ describe('asset', function () {
 		});
 	});
 
+	it('#upsertOriginals', function () {
+		it('should require originals (promise)', function (done) {
+			asset.upsertOriginals()
+				.then(() => {
+					return done(new Error('should require originals'));
+				})
+				.catch((err) => {
+					should.exist(err);
+					return done();
+				});
+		});
+
+		it('should require originals (callback)', function (done) {
+			asset.upsertOriginals(function (err, result) {
+				should.exist(err);
+				should.exist(err.message);
+				err.message.should.contain('originals are required');
+				should.not.exist(result);
+				return done();
+			});
+		});
+	});
+
 	describe('#version', () => {
 		it('should properly return version (promise)', (done) => {
 			// intercept outbound request
-			nock('https://develop-assetapi.scaffold-workers-ext-main-us.d.cld.octavelive.com')
+			nock('https://master-assetapi.scaffold-workers-ext-main-us.m.cld.octavelive.com')
 				.get(/\/v[0-9]{1}\/version/i)
 				.reply(200, { version : 'test' });
 
@@ -378,7 +455,7 @@ describe('asset', function () {
 
 		it('should properly return version (callback)', (done) => {
 			// intercept outbound request
-			nock('https://develop-assetapi.scaffold-workers-ext-main-us.d.cld.octavelive.com')
+			nock('https://master-assetapi.scaffold-workers-ext-main-us.m.cld.octavelive.com')
 				.get(/\/v[0-9]{1}\/version/i)
 				.reply(200, { version : 'test' });
 

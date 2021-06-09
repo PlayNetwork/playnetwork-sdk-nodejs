@@ -1,6 +1,6 @@
 {
   "name": "playnetwork-sdk",
-  "version": "1.4.13",
+  "version": "2.2.9",
   "contributors": [
     {
       "name": "Joshua Thomas",
@@ -39,8 +39,8 @@
       "url": "https://github.com/privard"
     },
     {
-      "name": "Ian Calderon",
-      "url": "https://github.com/iancl"
+      "name": "Benjamin Morin",
+      "url": "https://github.com/benjamin-morin"
     }
   ],
   "description": "SDK to make accessing PlayNetwork APIs when writing code in Javascript (Node.js) much easier.",

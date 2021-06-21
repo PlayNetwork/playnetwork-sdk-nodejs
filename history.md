@@ -1,3 +1,7 @@
+# v2.2.9 - 2020/06/09
+
+* Update services host URLs.
+
 # v2.2.8 - 2020/04/03
 
 * Added support for socket options for player-service socket.
